@@ -6,7 +6,6 @@ import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.ulyxspigot.ulyxspigot.async.UlyxAsyncChunkSending;
 import org.ulyxspigot.ulyxspigot.async.UlyxAsyncDataSaving;
 import org.ulyxspigot.ulyxspigot.async.UlyxAsyncInventoryUpdates;
 import org.ulyxspigot.ulyxspigot.async.UlyxAsyncPacketSending;
@@ -27,7 +26,6 @@ public final class UlyxConfig {
     private static boolean asyncTrackerEnabled = true;
     private static boolean asyncPathfindingEnabled = true;
     private static int asyncPathfindingThreads = 2;
-    private static boolean asyncChunksSendingEnabled = true;
     private static boolean asyncDataSavingEnabled = true;
     private static boolean asyncInventoryUpdatesEnabled = false;
     private static boolean asyncPacketSendingEnabled = false;
@@ -80,14 +78,12 @@ public final class UlyxConfig {
         asyncTrackerEnabled = getBoolean("asynchronous.tracker.enabled", asyncTrackerEnabled);
         asyncPathfindingEnabled = getBoolean("asynchronous.pathfinding.enabled", asyncPathfindingEnabled);
         asyncPathfindingThreads = Math.max(0, getInt("asynchronous.pathfinding.threads", asyncPathfindingThreads));
-        asyncChunksSendingEnabled = getBoolean("asynchronous.chunks-sending.enabled", asyncChunksSendingEnabled);
         asyncDataSavingEnabled = getBoolean("asynchronous.data-saving.enabled", asyncDataSavingEnabled);
         asyncInventoryUpdatesEnabled = getBoolean("asynchronous.inventory-updates.enabled", asyncInventoryUpdatesEnabled);
         asyncPacketSendingEnabled = getBoolean("asynchronous.packet-sending.enabled", asyncPacketSendingEnabled);
 
         UlyxAsyncPathfinding.reconfigure(asyncPathfindingEnabled, asyncPathfindingThreads);
         UlyxAsyncPacketSending.reconfigure(asyncPacketSendingEnabled);
-        UlyxAsyncChunkSending.reconfigure(asyncChunksSendingEnabled);
         UlyxAsyncDataSaving.reconfigure(asyncDataSavingEnabled);
         UlyxAsyncInventoryUpdates.reconfigure(asyncInventoryUpdatesEnabled);
 
@@ -112,12 +108,6 @@ public final class UlyxConfig {
         ensureLoaded();
         return asyncPathfindingThreads;
     }
-
-    public static boolean isAsyncChunksSendingEnabled() {
-        ensureLoaded();
-        return asyncChunksSendingEnabled;
-    }
-
     public static boolean isAsyncDataSavingEnabled() {
         ensureLoaded();
         return asyncDataSavingEnabled;

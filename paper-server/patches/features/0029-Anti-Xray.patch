@@ -167,23 +167,6 @@ index 1d11f936dfda6cdcae0c4193eed2e5b1e8a793dc..84d19d79e77cec6a5d64f59fbcce703e
      }
  
      public void destroyAndAck(BlockPos pos, int sequence, String message) {
-diff --git a/net/minecraft/server/network/PlayerChunkSender.java b/net/minecraft/server/network/PlayerChunkSender.java
-index c65b274b965b95eae33690e63c5da2d5a9f2981a..644948d64791d0ffa4166375d0f4419f1ffa214a 100644
---- a/net/minecraft/server/network/PlayerChunkSender.java
-+++ b/net/minecraft/server/network/PlayerChunkSender.java
-@@ -79,7 +79,10 @@ public class PlayerChunkSender {
-     }
- 
--    private static void sendChunk(ServerGamePacketListenerImpl packetListener, ServerLevel level, LevelChunk chunk) {
-+    public static void sendChunk(ServerGamePacketListenerImpl packetListener, ServerLevel level, LevelChunk chunk) { // Paper - rewrite chunk system - public
--        packetListener.send(new ClientboundLevelChunkWithLightPacket(chunk, level.getLightEngine(), null, null));
-+        // Paper start - Anti-Xray
-+        final boolean shouldModify = level.chunkPacketBlockController.shouldModify(packetListener.player, chunk);
-+        packetListener.send(new ClientboundLevelChunkWithLightPacket(chunk, level.getLightEngine(), null, null, shouldModify));
-+        // Paper end - Anti-Xray
-         // Paper start - PlayerChunkLoadEvent
-         if (io.papermc.paper.event.packet.PlayerChunkLoadEvent.getHandlerList().getRegisteredListeners().length > 0) {
-             new io.papermc.paper.event.packet.PlayerChunkLoadEvent(new org.bukkit.craftbukkit.CraftChunk(chunk), packetListener.getPlayer().getBukkitEntity()).callEvent();
 diff --git a/net/minecraft/server/players/PlayerList.java b/net/minecraft/server/players/PlayerList.java
 index dec9dd8e42f90ccf7e5e3ad945e459d07159250d..989ac565c47a70c7947cb7315d0f5c2cfecd0363 100644
 --- a/net/minecraft/server/players/PlayerList.java
