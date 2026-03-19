@@ -6,7 +6,10 @@ import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.ulyxspigot.ulyxspigot.async.UlyxAsyncChunkSending;
 import org.ulyxspigot.ulyxspigot.async.UlyxAsyncDataSaving;
+import org.ulyxspigot.ulyxspigot.async.UlyxAsyncInventoryUpdates;
+import org.ulyxspigot.ulyxspigot.async.UlyxAsyncPacketSending;
 import org.ulyxspigot.ulyxspigot.async.UlyxAsyncPathfinding;
 
 public final class UlyxConfig {
@@ -76,7 +79,10 @@ public final class UlyxConfig {
         asyncPacketSendingEnabled = getBoolean("asynchronous.packet-sending.enabled", asyncPacketSendingEnabled);
 
         UlyxAsyncPathfinding.reconfigure(asyncPathfindingEnabled, asyncPathfindingThreads);
+        UlyxAsyncPacketSending.reconfigure(asyncPacketSendingEnabled);
+        UlyxAsyncChunkSending.reconfigure(asyncChunksSendingEnabled);
         UlyxAsyncDataSaving.reconfigure(asyncDataSavingEnabled);
+        UlyxAsyncInventoryUpdates.reconfigure(asyncInventoryUpdatesEnabled);
 
         try {
             config.save(CONFIG_FILE);
@@ -100,9 +106,24 @@ public final class UlyxConfig {
         return asyncPathfindingThreads;
     }
 
+    public static boolean isAsyncChunksSendingEnabled() {
+        ensureLoaded();
+        return asyncChunksSendingEnabled;
+    }
+
     public static boolean isAsyncDataSavingEnabled() {
         ensureLoaded();
         return asyncDataSavingEnabled;
+    }
+
+    public static boolean isAsyncInventoryUpdatesEnabled() {
+        ensureLoaded();
+        return asyncInventoryUpdatesEnabled;
+    }
+
+    public static boolean isAsyncPacketSendingEnabled() {
+        ensureLoaded();
+        return asyncPacketSendingEnabled;
     }
 
     private static void set(String path, Object value) {

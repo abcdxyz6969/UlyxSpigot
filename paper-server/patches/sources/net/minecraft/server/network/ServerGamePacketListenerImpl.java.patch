@@ -2439,8 +2439,8 @@
 +                    case DENY:
 +                        // Reset the slot
 +                        if (packet.slotNum() >= 0) {
-+                            this.player.connection.send(new net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket(this.player.inventoryMenu.containerId, this.player.inventoryMenu.incrementStateId(), packet.slotNum(), this.player.inventoryMenu.getSlot(packet.slotNum()).getItem()));
-+                            this.player.connection.send(new net.minecraft.network.protocol.game.ClientboundSetCursorItemPacket(ItemStack.EMPTY.copy())); // Paper - correctly set cursor
++                            org.ulyxspigot.ulyxspigot.async.UlyxAsyncInventoryUpdates.send(this.player.connection, new net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket(this.player.inventoryMenu.containerId, this.player.inventoryMenu.incrementStateId(), packet.slotNum(), this.player.inventoryMenu.getSlot(packet.slotNum()).getItem()));
++                            org.ulyxspigot.ulyxspigot.async.UlyxAsyncInventoryUpdates.send(this.player.connection, new net.minecraft.network.protocol.game.ClientboundSetCursorItemPacket(ItemStack.EMPTY.copy())); // Paper - correctly set cursor
 +                        }
 +                        return;
 +                }
