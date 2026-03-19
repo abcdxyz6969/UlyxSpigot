@@ -31,7 +31,7 @@
                  }
 @@ -75,6 +_,11 @@
  
-     private static void sendChunk(ServerGamePacketListenerImpl packetListener, ServerLevel level, LevelChunk chunk) {
+     public static void sendChunk(ServerGamePacketListenerImpl packetListener, ServerLevel level, LevelChunk chunk) { // Paper - rewrite chunk system - public
 -        packetListener.send(new ClientboundLevelChunkWithLightPacket(chunk, level.getLightEngine(), null, null));
 +        org.ulyxspigot.ulyxspigot.async.UlyxAsyncChunkSending.send(
 +            packetListener,

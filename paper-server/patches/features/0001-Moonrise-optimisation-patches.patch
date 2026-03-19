@@ -27665,19 +27665,6 @@ index f7bd29f062baa396ba25d987149159571ee8fa8a..bf5e460b89d7c0fcdcb8826ba693bd23
      public WorldGenRegion(ServerLevel level, StaticCache2D<GenerationChunkHolder> cache, ChunkStep generatingStep, ChunkAccess center) {
          this.generatingStep = generatingStep;
          this.cache = cache;
-diff --git a/net/minecraft/server/network/PlayerChunkSender.java b/net/minecraft/server/network/PlayerChunkSender.java
-index f41ddc6f23786d3d3def15aa32ab3782d4839e5f..c65b274b965b95eae33690e63c5da2d5a9f2981a 100644
---- a/net/minecraft/server/network/PlayerChunkSender.java
-+++ b/net/minecraft/server/network/PlayerChunkSender.java
-@@ -78,7 +78,7 @@ public class PlayerChunkSender {
-         }
-     }
- 
--    private static void sendChunk(ServerGamePacketListenerImpl packetListener, ServerLevel level, LevelChunk chunk) {
-+    public static void sendChunk(ServerGamePacketListenerImpl packetListener, ServerLevel level, LevelChunk chunk) { // Paper - rewrite chunk system - public
-         packetListener.send(new ClientboundLevelChunkWithLightPacket(chunk, level.getLightEngine(), null, null));
-         // Paper start - PlayerChunkLoadEvent
-         if (io.papermc.paper.event.packet.PlayerChunkLoadEvent.getHandlerList().getRegisteredListeners().length > 0) {
 diff --git a/net/minecraft/server/network/config/PrepareSpawnTask.java b/net/minecraft/server/network/config/PrepareSpawnTask.java
 index 4016d26304a0bf3894eed2bef72113b2ca2d7a6f..5014840bf5d7ef53a4fea8aa6f3b25eb4033ff96 100644
 --- a/net/minecraft/server/network/config/PrepareSpawnTask.java
