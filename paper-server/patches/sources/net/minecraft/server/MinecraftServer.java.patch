@@ -1174,7 +1174,7 @@
      @DontObfuscate
      public String getServerModName() {
 -        return "vanilla";
-+        return io.papermc.paper.ServerBuildInfo.buildInfo().brandName(); // Paper
++        return org.ulyxspigot.ulyxspigot.UlyxConfig.getServerBrandNameDisplay(); // UlyxSpigot - configurable brand display
      }
  
      public SystemReport fillSystemReport(SystemReport systemReport) {
