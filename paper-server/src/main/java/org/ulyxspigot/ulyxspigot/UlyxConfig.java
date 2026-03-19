@@ -48,6 +48,13 @@ public final class UlyxConfig {
         }
     }
 
+    public static void reload() {
+        synchronized (LOAD_LOCK) {
+            loadConfig();
+            loaded = true;
+        }
+    }
+
     private static void loadConfig() {
         final File parent = CONFIG_FILE.getParentFile();
         if (parent != null && !parent.exists() && !parent.mkdirs()) {
