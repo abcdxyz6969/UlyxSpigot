@@ -21,10 +21,10 @@ public final class UlyxAsyncDataSaving {
     private UlyxAsyncDataSaving() {
     }
 
-    public static synchronized void reconfigure() {
+    public static synchronized void reconfigure(boolean enabled) {
         shutdown();
 
-        if (!UlyxConfig.isAsyncDataSavingEnabled()) {
+        if (!enabled) {
             return;
         }
 

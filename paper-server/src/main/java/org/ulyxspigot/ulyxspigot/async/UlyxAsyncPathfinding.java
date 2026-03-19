@@ -25,14 +25,14 @@ public final class UlyxAsyncPathfinding {
     private UlyxAsyncPathfinding() {
     }
 
-    public static synchronized void reconfigure() {
+    public static synchronized void reconfigure(boolean enabled, int configuredThreads) {
         shutdown();
 
-        if (!UlyxConfig.isAsyncPathfindingEnabled()) {
+        if (!enabled) {
             return;
         }
 
-        int threads = UlyxConfig.getAsyncPathfindingThreads();
+        int threads = configuredThreads;
         if (threads <= 0) {
             threads = Math.max(1, Runtime.getRuntime().availableProcessors() / 4);
         }

@@ -75,8 +75,8 @@ public final class UlyxConfig {
         asyncInventoryUpdatesEnabled = getBoolean("asynchronous.inventory-updates.enabled", asyncInventoryUpdatesEnabled);
         asyncPacketSendingEnabled = getBoolean("asynchronous.packet-sending.enabled", asyncPacketSendingEnabled);
 
-        UlyxAsyncPathfinding.reconfigure();
-        UlyxAsyncDataSaving.reconfigure();
+        UlyxAsyncPathfinding.reconfigure(asyncPathfindingEnabled, asyncPathfindingThreads);
+        UlyxAsyncDataSaving.reconfigure(asyncDataSavingEnabled);
 
         try {
             config.save(CONFIG_FILE);
