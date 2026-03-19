@@ -296,44 +296,6 @@ index 0000000000000000000000000000000000000000..1b8193587814225c2ef2c5d9e667436e
 +        }
 +    }
 +}
-diff --git a/ca/spottedleaf/moonrise/paper/PaperHooks.java b/ca/spottedleaf/moonrise/paper/PaperHooks.java
-index 2a5069d11f47d11726f08b597988f8a58546824b..bf051b6443edd32ecdbd177e02f40965477638de 100644
---- a/ca/spottedleaf/moonrise/paper/PaperHooks.java
-+++ b/ca/spottedleaf/moonrise/paper/PaperHooks.java
-@@ -13,6 +13,7 @@ import net.minecraft.server.level.ChunkHolder;
- import net.minecraft.server.level.GenerationChunkHolder;
- import net.minecraft.server.level.ServerLevel;
- import net.minecraft.server.level.ServerPlayer;
-+import net.minecraft.server.level.TicketType;
- import net.minecraft.world.entity.Entity;
- import net.minecraft.world.entity.boss.enderdragon.EnderDragonPart;
- import net.minecraft.world.level.BlockGetter;
-@@ -150,7 +151,15 @@ public final class PaperHooks extends BaseChunkSystemHooks implements PlatformHo
- 
-     @Override
-     public long[] getCounterTypesUncached(final net.minecraft.server.level.TicketType type) {
--        return new long[0];
-+        final it.unimi.dsi.fastutil.longs.LongArrayList ret = new it.unimi.dsi.fastutil.longs.LongArrayList();
-+        if (type == TicketType.FORCED) {
-+            ret.add(ca.spottedleaf.moonrise.patches.chunk_system.ticket.ChunkSystemTicketType.COUNTER_TYPE_FORCED);
-+        }
-+        if (type.shouldKeepDimensionActive()) {
-+            ret.add(ca.spottedleaf.moonrise.patches.chunk_system.ticket.ChunkSystemTicketType.COUNTER_TYPE_KEEP_DIMENSION_ACTIVE);
-+        }
-+
-+        return ret.toLongArray();
-     }
- 
-     @Override
-@@ -249,7 +258,7 @@ public final class PaperHooks extends BaseChunkSystemHooks implements PlatformHo
-     @Override
-     public void postLoadProtoChunk(final ServerLevel world, final ProtoChunk chunk) {
-         try (final net.minecraft.util.ProblemReporter.ScopedCollector scopedCollector = new net.minecraft.util.ProblemReporter.ScopedCollector(chunk.problemPath(), LOGGER)) {
--            net.minecraft.world.level.chunk.status.ChunkStatusTasks.postLoadProtoChunk(world, net.minecraft.world.level.storage.TagValueInput.create(scopedCollector, world.registryAccess(), chunk.getEntities()));
-+            net.minecraft.world.level.chunk.status.ChunkStatusTasks.postLoadProtoChunk(world, net.minecraft.world.level.storage.TagValueInput.create(scopedCollector, world.registryAccess(), chunk.getEntities()), chunk.getPos()); // Paper - rewrite chunk system - add ChunkPos param
-         }
-     }
- 
 diff --git a/ca/spottedleaf/moonrise/paper/util/BaseChunkSystemHooks.java b/ca/spottedleaf/moonrise/paper/util/BaseChunkSystemHooks.java
 index ce81e9f4f1e80be3b4f0cbdd95609990f9006534..3e7b616cbd196f56393719e84c7118ab47308337 100644
 --- a/ca/spottedleaf/moonrise/paper/util/BaseChunkSystemHooks.java
