@@ -50,4 +50,8 @@ paper-generator.settings.gradle.kts
 # Don't track patched vanilla submodules
 paper-server/src/minecraft/
 
-.git
+
+leaf-forcode
+divinemc-forcode
+
+UlyxSpigot.zip

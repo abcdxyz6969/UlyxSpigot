@@ -1,0 +1,36 @@
+# This is the main configuration file for UlyxSpigot.
+# These options are experimental and should be tested before production use.
+
+config-version: 1
+
+# Brand name shown in server list ping and F3 brand info.
+server-brand-name-display: UlyxSpigot
+
+asynchronous:
+  tracker:
+    # Enables Asynchronous Entity Tracker.
+    # Recommended value: true
+    enabled: true
+  pathfinding:
+    # Enables Asynchronous Entity Pathfinder.
+    # Recommended value: true
+    enabled: true
+    # Configure the maximum amount of threads for pathfinding.
+    # 0 = available processor / 4.
+    threads: 2
+  chunks-sending:
+    # Optimizes chunk packet sending through multiple threads.
+    # Recommended value: true
+    enabled: true
+  data-saving:
+    # Optimizes world/player data saving through multiple threads.
+    # Recommended value: true
+    enabled: true
+  inventory-updates:
+    # Optimizes inventory updates through multiple threads.
+    # Recommended value: false
+    enabled: false
+  packet-sending:
+    # Optimizes packet sending through multiple threads.
+    # Recommended value: false
+    enabled: false

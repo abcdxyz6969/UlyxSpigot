@@ -96,15 +96,20 @@ diff --git a/net/minecraft/server/players/PlayerList.java b/net/minecraft/server
 index 38c30d98a200dd2a5c888cc080e9c77795f0e0c4..dec9dd8e42f90ccf7e5e3ad945e459d07159250d 100644
 --- a/net/minecraft/server/players/PlayerList.java
 +++ b/net/minecraft/server/players/PlayerList.java
-@@ -412,6 +412,7 @@ public abstract class PlayerList {
+@@ -412,6 +412,11 @@ public abstract class PlayerList {
  
      protected void save(ServerPlayer player) {
          if (!player.getBukkitEntity().isPersistent()) return; // CraftBukkit
 +        player.lastSave = MinecraftServer.currentTick; // Paper - Incremental chunk and player saving
-         this.playerIo.save(player);
+-        this.playerIo.save(player);
++        if (org.ulyxspigot.ulyxspigot.UlyxConfig.isAsyncDataSavingEnabled()) {
++            org.ulyxspigot.ulyxspigot.async.UlyxAsyncDataSaving.savePlayerData(this.playerIo, player);
++        } else {
++            this.playerIo.save(player);
++        }
          ServerStatsCounter serverStatsCounter = player.getStats(); // CraftBukkit
          if (serverStatsCounter != null) {
-@@ -941,9 +942,23 @@ public abstract class PlayerList {
+@@ -941,9 +946,23 @@ public abstract class PlayerList {
      }
  
      public void saveAll() {

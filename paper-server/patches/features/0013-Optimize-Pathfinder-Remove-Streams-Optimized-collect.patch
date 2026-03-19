@@ -19,7 +19,7 @@ diff --git a/net/minecraft/world/level/pathfinder/PathFinder.java b/net/minecraf
 index d1cd00f0842f6fba1fa188de59bf111a4235bf8a..168b475b38b2872b27c1ab15f6846323ac16dd2c 100644
 --- a/net/minecraft/world/level/pathfinder/PathFinder.java
 +++ b/net/minecraft/world/level/pathfinder/PathFinder.java
-@@ -47,28 +47,32 @@ public class PathFinder {
+@@ -47,28 +47,36 @@ public class PathFinder {
          if (start == null) {
              return null;
          } else {
@@ -39,6 +39,10 @@ index d1cd00f0842f6fba1fa188de59bf111a4235bf8a..168b475b38b2872b27c1ab15f6846323
  
 -    private @Nullable Path findPath(Node node, Map<Target, BlockPos> targets, float maxRange, int reachRange, float maxVisitedNodesMultiplier) {
 +    private @Nullable Path findPath(Node node, List<Map.Entry<Target, BlockPos>> positions, float maxRange, int reachRange, float maxVisitedNodesMultiplier) { // Paper - optimize collection
++        if (org.ulyxspigot.ulyxspigot.UlyxConfig.isAsyncPathfindingEnabled() && org.ulyxspigot.ulyxspigot.async.UlyxAsyncPathfinding.canOffload()) {
++            return org.ulyxspigot.ulyxspigot.async.UlyxAsyncPathfinding.supply(() -> this.findPath(node, positions, maxRange, reachRange, maxVisitedNodesMultiplier));
++        }
++
          ProfilerFiller profilerFiller = Profiler.get();
          profilerFiller.push("find_path");
          profilerFiller.markForCharting(MetricCategory.PATH_FINDING);
@@ -58,7 +62,7 @@ index d1cd00f0842f6fba1fa188de59bf111a4235bf8a..168b475b38b2872b27c1ab15f6846323
          int i1 = (int)(this.maxVisitedNodes * maxVisitedNodesMultiplier);
  
          while (!this.openSet.isEmpty()) {
-@@ -79,14 +83,18 @@ public class PathFinder {
+@@ -79,14 +87,18 @@ public class PathFinder {
              Node node1 = this.openSet.pop();
              node1.closed = true;
  
