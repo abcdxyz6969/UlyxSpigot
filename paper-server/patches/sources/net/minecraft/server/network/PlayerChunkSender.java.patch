@@ -29,20 +29,10 @@
                          this.batchQuota = this.batchQuota - list.size();
                      }
                  }
-@@ -75,6 +_,11 @@
+@@ -75,7 +_,7 @@
  
 -    private static void sendChunk(ServerGamePacketListenerImpl packetListener, ServerLevel level, LevelChunk chunk) {
 +    public static void sendChunk(ServerGamePacketListenerImpl packetListener, ServerLevel level, LevelChunk chunk) { // Paper - rewrite chunk system - public
--        packetListener.send(new ClientboundLevelChunkWithLightPacket(chunk, level.getLightEngine(), null, null));
-+        org.ulyxspigot.ulyxspigot.async.UlyxAsyncChunkSending.send(
-+            packetListener,
-+            new ClientboundLevelChunkWithLightPacket(chunk, level.getLightEngine(), null, null)
-+        );
-+        // Paper start - PlayerChunkLoadEvent
-+        if (io.papermc.paper.event.packet.PlayerChunkLoadEvent.getHandlerList().getRegisteredListeners().length > 0) {
-+            new io.papermc.paper.event.packet.PlayerChunkLoadEvent(new org.bukkit.craftbukkit.CraftChunk(chunk), packetListener.getPlayer().getBukkitEntity()).callEvent();
-+        }
-+        // Paper end - PlayerChunkLoadEvent
-         ChunkPos pos = chunk.getPos();
-         if (SharedConstants.DEBUG_VERBOSE_SERVER_EVENTS) {
-             LOGGER.debug("SEN {}", pos);
+         packetListener.send(new ClientboundLevelChunkWithLightPacket(chunk, level.getLightEngine(), null, null));
+         // Paper start - PlayerChunkLoadEvent
+         if (io.papermc.paper.event.packet.PlayerChunkLoadEvent.getHandlerList().getRegisteredListeners().length > 0) {
