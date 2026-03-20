@@ -270,8 +270,7 @@
  
 -            this.wakeUpAllPlayers();
 +            if (!event.isCancelled()) this.wakeUpAllPlayers(); // Paper - only wake up players if time skip event is not cancelled
--            if (this.getGameRules().get(GameRules.ADVANCE_WEATHER) && this.isRaining()) {
-+            if (this.getGameRules().get(GameRules.ADVANCE_WEATHER) && !org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableWeatherCycle() && this.isRaining()) {
+             if (this.getGameRules().get(GameRules.ADVANCE_WEATHER) && this.isRaining()) {
                  this.resetWeatherCycle();
              }
 @@ -369,9 +_,9 @@
@@ -391,8 +390,7 @@
                  if (heightmapPos.getY() == this.getMinY() - 1) {
                      heightmapPos = heightmapPos.above(2);
                  }
-@@ -740,8 +_,10 @@
-+                if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableWeatherCycle()) {
+@@ -740,8 +_,8 @@
                  this.serverLevelData.setThunderTime(thunderTime);
                  this.serverLevelData.setRainTime(rainTime);
                  this.serverLevelData.setClearWeatherTime(clearWeatherTime);
@@ -400,7 +398,6 @@
 -                this.serverLevelData.setRaining(isRaining1);
 +                this.serverLevelData.setThundering(isThundering, org.bukkit.event.weather.ThunderChangeEvent.Cause.NATURAL); // Paper - Add cause to Weather/ThunderChangeEvents
 +                this.serverLevelData.setRaining(isRaining1, org.bukkit.event.weather.WeatherChangeEvent.Cause.NATURAL); // Paper - Add cause to Weather/ThunderChangeEvents
-+                }
              }
  
              this.oThunderLevel = this.thunderLevel;
@@ -527,13 +524,12 @@
 @@ -867,6 +_,7 @@
      public void save(@Nullable ProgressListener progress, boolean flush, boolean skipSave) {
          ServerChunkCache chunkSource = this.getChunkSource();
--        if (!skipSave) {
-+        if (!skipSave && !org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableWorldDataSaving()) {
+         if (!skipSave) {
 +            org.bukkit.Bukkit.getPluginManager().callEvent(new org.bukkit.event.world.WorldSaveEvent(this.getWorld())); // CraftBukkit
              if (progress != null) {
                  progress.progressStartNoAbort(Component.translatable("menu.savingLevel"));
              }
-@@ -883,11 +_,20 @@
+@@ -883,11 +_,18 @@
                  this.entityManager.autoSave();
              }
          }
@@ -541,10 +537,8 @@
 +        // CraftBukkit start - moved from MinecraftServer#saveAllChunks
 +        ServerLevel serverLevel1 = this;
 +
-+        if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableWorldDataSaving()) {
-+            this.serverLevelData.setCustomBossEvents(this.server.getCustomBossEvents().save(this.registryAccess()));
-+            this.levelStorageAccess.saveDataTag(this.server.registryAccess(), this.serverLevelData, this.server.getPlayerList().getSingleplayerData());
-+        }
++        this.serverLevelData.setCustomBossEvents(this.server.getCustomBossEvents().save(this.registryAccess()));
++        this.levelStorageAccess.saveDataTag(this.server.registryAccess(), this.serverLevelData, this.server.getPlayerList().getSingleplayerData());
 +        // CraftBukkit end
      }
  
