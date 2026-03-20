@@ -67,7 +67,7 @@
          ContainerHelper.saveAllItems(output, this.items);
          output.store("RecipesUsed", RECIPES_USED_CODEC, this.recipesUsed);
      }
-@@ -161,11 +_,22 @@
+@@ -161,11 +_,23 @@
  
              int maxStackSize = furnace.getMaxStackSize();
 +            furnace.cookSpeedMultiplier = Math.max(0.01D, org.ulyxspigot.ulyxspigot.UlyxConfig.getBehaviorCookSpeedMultiplier()); // UlyxSpigot - configurable furnace cook speed

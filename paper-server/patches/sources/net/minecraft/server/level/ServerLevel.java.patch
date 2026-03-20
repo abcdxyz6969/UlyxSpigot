@@ -391,7 +391,7 @@
                  if (heightmapPos.getY() == this.getMinY() - 1) {
                      heightmapPos = heightmapPos.above(2);
                  }
-@@ -740,8 +_,8 @@
+@@ -740,8 +_,10 @@
 +                if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableWeatherCycle()) {
                  this.serverLevelData.setThunderTime(thunderTime);
                  this.serverLevelData.setRainTime(rainTime);
@@ -533,7 +533,7 @@
              if (progress != null) {
                  progress.progressStartNoAbort(Component.translatable("menu.savingLevel"));
              }
-@@ -883,11 +_,18 @@
+@@ -883,11 +_,20 @@
                  this.entityManager.autoSave();
              }
          }

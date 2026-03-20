@@ -60,7 +60,7 @@
              }
          }
  
-@@ -445,8 +_,8 @@
+@@ -445,7 +_,7 @@
          profilerFiller.push("livingEntityBaseTick");
          if (this.isAlive() && this.level() instanceof ServerLevel serverLevel1) {
              boolean flag = this instanceof Player;
