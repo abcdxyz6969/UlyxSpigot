@@ -10,6 +10,7 @@ import org.ulyxspigot.ulyxspigot.async.UlyxAsyncDataSaving;
 import org.ulyxspigot.ulyxspigot.async.UlyxAsyncInventoryUpdates;
 import org.ulyxspigot.ulyxspigot.async.UlyxAsyncPacketSending;
 import org.ulyxspigot.ulyxspigot.async.UlyxAsyncPathfinding;
+import org.ulyxspigot.ulyxspigot.async.UlyxAsyncTracker;
 
 public final class UlyxConfig {
     private static final String HEADER = "This is the main configuration file for UlyxSpigot.\n"
@@ -134,6 +135,7 @@ public final class UlyxConfig {
         behaviorDisableSkyBrightnessUpdates = getBoolean("behavior.disableSkyBrightnessUpdates", behaviorDisableSkyBrightnessUpdates);
         behaviorDisableDolphinTreasureGoal = getBoolean("behavior.disableDolphinTreasureGoal", behaviorDisableDolphinTreasureGoal);
 
+        UlyxAsyncTracker.reconfigure(asyncTrackerEnabled);
         UlyxAsyncPathfinding.reconfigure(asyncPathfindingEnabled, asyncPathfindingThreads);
         UlyxAsyncPacketSending.reconfigure(asyncPacketSendingEnabled);
         UlyxAsyncDataSaving.reconfigure(asyncDataSavingEnabled);
@@ -149,6 +151,11 @@ public final class UlyxConfig {
     public static String getServerBrandNameDisplay() {
         ensureLoaded();
         return serverBrandNameDisplay;
+    }
+
+    public static boolean isAsyncTrackerEnabled() {
+        ensureLoaded();
+        return asyncTrackerEnabled;
     }
 
     public static boolean isAsyncPathfindingEnabled() {

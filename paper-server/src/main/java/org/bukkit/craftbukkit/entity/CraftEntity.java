@@ -303,6 +303,10 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
             return false;
         }
 
+        if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorAllowTeleportationWithPassengers() && !entity.getPassengers().isEmpty()) {
+            return false;
+        }
+
         final Set<net.minecraft.world.entity.Relative> relativeFlags = EnumSet.noneOf(net.minecraft.world.entity.Relative.class);
         for (final TeleportFlag flag : flags) {
             if (flag instanceof TeleportFlag.Relative relativeFlag) {

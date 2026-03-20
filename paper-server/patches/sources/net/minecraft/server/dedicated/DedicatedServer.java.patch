@@ -322,13 +322,14 @@
      }
  
      @Override
-@@ -623,7 +_,11 @@
+@@ -623,7 +_,12 @@
      @Override
      public boolean enforceSecureProfile() {
          DedicatedServerProperties properties = this.getProperties();
 -        return properties.enforceSecureProfile && properties.onlineMode && this.services.canValidateProfileKeys();
 +        // Paper start - Add setting for proxy online mode status
-+        return properties.enforceSecureProfile
++        return !org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableChatReporting()
++            && properties.enforceSecureProfile
 +            && io.papermc.paper.configuration.GlobalConfiguration.get().proxies.isProxyOnlineMode()
 +            && this.services.canValidateProfileKeys();
 +        // Paper end - Add setting for proxy online mode status

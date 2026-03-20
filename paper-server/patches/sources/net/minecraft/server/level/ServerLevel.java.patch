@@ -219,7 +219,7 @@
 @@ -304,7 +_,15 @@
          this.waypointManager = new ServerWaypointManager();
          this.environmentAttributes = EnvironmentAttributeSystem.builder().addDefaultLayers(this).build();
-         this.updateSkyBrightness();
+         if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableSkyBrightnessUpdates()) this.updateSkyBrightness();
 -    }
 +        this.getCraftServer().addWorld(this.getWorld()); // CraftBukkit
 +    }
@@ -270,7 +270,7 @@
  
 -            this.wakeUpAllPlayers();
 +            if (!event.isCancelled()) this.wakeUpAllPlayers(); // Paper - only wake up players if time skip event is not cancelled
-             if (this.getGameRules().get(GameRules.ADVANCE_WEATHER) && this.isRaining()) {
+             if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableWeatherCycle() && this.getGameRules().get(GameRules.ADVANCE_WEATHER) && this.isRaining()) {
                  this.resetWeatherCycle();
              }
 @@ -369,9 +_,9 @@
@@ -391,13 +391,13 @@
                      heightmapPos = heightmapPos.above(2);
                  }
 @@ -740,8 +_,8 @@
-                 this.serverLevelData.setThunderTime(thunderTime);
-                 this.serverLevelData.setRainTime(rainTime);
+                 this.serverLevelData.setThunderTime(org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableWeatherCycle() ? this.serverLevelData.getThunderTime() : thunderTime);
+                 this.serverLevelData.setRainTime(org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableWeatherCycle() ? this.serverLevelData.getRainTime() : rainTime);
                  this.serverLevelData.setClearWeatherTime(clearWeatherTime);
 -                this.serverLevelData.setThundering(isThundering);
 -                this.serverLevelData.setRaining(isRaining1);
-+                this.serverLevelData.setThundering(isThundering, org.bukkit.event.weather.ThunderChangeEvent.Cause.NATURAL); // Paper - Add cause to Weather/ThunderChangeEvents
-+                this.serverLevelData.setRaining(isRaining1, org.bukkit.event.weather.WeatherChangeEvent.Cause.NATURAL); // Paper - Add cause to Weather/ThunderChangeEvents
++                this.serverLevelData.setThundering(org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableWeatherCycle() ? this.serverLevelData.isThundering() : isThundering, org.bukkit.event.weather.ThunderChangeEvent.Cause.NATURAL); // Paper - Add cause to Weather/ThunderChangeEvents
++                this.serverLevelData.setRaining(org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableWeatherCycle() ? this.serverLevelData.isRaining() : isRaining1, org.bukkit.event.weather.WeatherChangeEvent.Cause.NATURAL); // Paper - Add cause to Weather/ThunderChangeEvents
              }
  
              this.oThunderLevel = this.thunderLevel;
@@ -443,18 +443,18 @@
 -        this.serverLevelData.setThunderTime(0);
 -        this.serverLevelData.setThundering(false);
 +        // CraftBukkit start
-+        this.serverLevelData.setRaining(false, org.bukkit.event.weather.WeatherChangeEvent.Cause.SLEEP); // Paper - Add cause to Weather/ThunderChangeEvents
++        this.serverLevelData.setRaining(org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableWeatherCycle() ? this.serverLevelData.isRaining() : false, org.bukkit.event.weather.WeatherChangeEvent.Cause.SLEEP); // Paper - Add cause to Weather/ThunderChangeEvents
 +        // If we stop due to everyone sleeping we should reset the weather duration to some other random value.
 +        // Not that everyone ever manages to get the whole server to sleep at the same time....
-+        if (!this.serverLevelData.isRaining()) {
++        if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableWeatherCycle() && !this.serverLevelData.isRaining()) {
 +            this.serverLevelData.setRainTime(0);
 +        }
 +        // CraftBukkit end
-+        this.serverLevelData.setThundering(false, org.bukkit.event.weather.ThunderChangeEvent.Cause.SLEEP); // Paper - Add cause to Weather/ThunderChangeEvents
++        this.serverLevelData.setThundering(org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableWeatherCycle() ? this.serverLevelData.isThundering() : false, org.bukkit.event.weather.ThunderChangeEvent.Cause.SLEEP); // Paper - Add cause to Weather/ThunderChangeEvents
 +        // CraftBukkit start
 +        // If we stop due to everyone sleeping we should reset the weather duration to some other random value.
 +        // Not that everyone ever manages to get the whole server to sleep at the same time....
-+        if (!this.serverLevelData.isThundering()) {
++        if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableWeatherCycle() && !this.serverLevelData.isThundering()) {
 +            this.serverLevelData.setThunderTime(0);
 +        }
 +        // CraftBukkit end
@@ -524,7 +524,7 @@
 @@ -867,6 +_,7 @@
      public void save(@Nullable ProgressListener progress, boolean flush, boolean skipSave) {
          ServerChunkCache chunkSource = this.getChunkSource();
-         if (!skipSave) {
+         if (!skipSave && !org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableWorldDataSaving()) {
 +            org.bukkit.Bukkit.getPluginManager().callEvent(new org.bukkit.event.world.WorldSaveEvent(this.getWorld())); // CraftBukkit
              if (progress != null) {
                  progress.progressStartNoAbort(Component.translatable("menu.savingLevel"));
@@ -537,8 +537,8 @@
 +        // CraftBukkit start - moved from MinecraftServer#saveAllChunks
 +        ServerLevel serverLevel1 = this;
 +
-+        this.serverLevelData.setCustomBossEvents(this.server.getCustomBossEvents().save(this.registryAccess()));
-+        this.levelStorageAccess.saveDataTag(this.server.registryAccess(), this.serverLevelData, this.server.getPlayerList().getSingleplayerData());
++        if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableWorldDataSaving()) this.serverLevelData.setCustomBossEvents(this.server.getCustomBossEvents().save(this.registryAccess()));
++        if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableWorldDataSaving()) this.levelStorageAccess.saveDataTag(this.server.registryAccess(), this.serverLevelData, this.server.getPlayerList().getSingleplayerData());
 +        // CraftBukkit end
      }
  

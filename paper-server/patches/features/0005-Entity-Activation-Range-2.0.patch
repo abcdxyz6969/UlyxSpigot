@@ -18,7 +18,7 @@ new file mode 100644
 index 0000000000000000000000000000000000000000..c18823746ab2edcab536cb1589b7720e3af07e0f
 --- /dev/null
 +++ b/io/papermc/paper/entity/activation/ActivationRange.java
-@@ -0,0 +1,334 @@
+@@ -0,0 +1,337 @@
 +package io.papermc.paper.entity.activation;
 +
 +import net.minecraft.core.BlockPos;
@@ -309,6 +309,9 @@ index 0000000000000000000000000000000000000000..c18823746ab2edcab536cb1589b7720e
 +     * @return
 +     */
 +    public static boolean checkIfActive(final Entity entity) {
++        if (org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableActivationRange()) {
++            return true;
++        }
 +        // Never safe to skip fireworks or item gravity
 +        if (entity instanceof FireworkRocketEntity || (entity instanceof ItemEntity && (entity.tickCount + entity.getId()) % 4 == 0)) { // Needed for item gravity, see ItemEntity tick
 +            return true;

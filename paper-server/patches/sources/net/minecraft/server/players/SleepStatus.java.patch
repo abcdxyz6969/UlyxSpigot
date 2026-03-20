@@ -36,6 +36,6 @@
          }
  
 -        return (i1 > 0 || this.sleepingPlayers > 0) && (i != this.activePlayers || i1 != this.sleepingPlayers);
-+        return anySleep && (i1 > 0 || this.sleepingPlayers > 0) && (i != this.activePlayers || i1 != this.sleepingPlayers); // CraftBukkit
++        return !org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableSleepAnnounceStatus() && anySleep && (i1 > 0 || this.sleepingPlayers > 0) && (i != this.activePlayers || i1 != this.sleepingPlayers); // CraftBukkit
      }
  }

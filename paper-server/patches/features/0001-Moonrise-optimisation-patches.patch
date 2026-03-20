@@ -24879,7 +24879,7 @@ index b6d96f521929feddd2176fd93eef77f0af33e865..93845d083dc7fce80069bc279207ef43
 -            this.updateChunkTracking(serverPlayer);
 +        // Paper start - optimise entity tracker
 +        if (true) {
-+            this.newTrackerTick();
++            if (org.ulyxspigot.ulyxspigot.UlyxConfig.isAsyncTrackerEnabled() && org.ulyxspigot.ulyxspigot.async.UlyxAsyncTracker.isEnabled()) org.ulyxspigot.ulyxspigot.async.UlyxAsyncTracker.tick(this.level); else this.newTrackerTick();
 +            return;
          }
 +        // Paper end - optimise entity tracker
