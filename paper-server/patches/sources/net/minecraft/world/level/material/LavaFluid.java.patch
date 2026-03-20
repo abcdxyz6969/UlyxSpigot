@@ -1,9 +1,12 @@
 --- a/net/minecraft/world/level/material/LavaFluid.java
 +++ b/net/minecraft/world/level/material/LavaFluid.java
-@@ -94,6 +_,13 @@
+@@ -94,6 +_,16 @@
                      BlockState blockState = level.getBlockState(blockPos);
                      if (blockState.isAir()) {
                          if (this.hasFlammableNeighbours(level, blockPos)) {
++                            if (org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableLavaCatchesBlocksOnFire()) {
++                                continue;
++                            }
 +                            // CraftBukkit start - Prevent lava putting something on fire
 +                            if (!level.getBlockState(blockPos).is(Blocks.FIRE)) {
 +                                if (org.bukkit.craftbukkit.event.CraftEventFactory.callBlockIgniteEvent(level, blockPos, pos).isCancelled()) {
@@ -14,10 +17,13 @@
                              level.setBlockAndUpdate(blockPos, BaseFireBlock.getState(level, blockPos));
                              return;
                          }
-@@ -109,6 +_,14 @@
+@@ -109,6 +_,17 @@
                      }
  
                      if (level.isEmptyBlock(blockPos1.above()) && this.isFlammable(level, blockPos1)) {
++                        if (org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableLavaCatchesBlocksOnFire()) {
++                            continue;
++                        }
 +                        // CraftBukkit start - Prevent lava putting something on fire
 +                        BlockPos up = blockPos1.above();
 +                        if (!level.getBlockState(up).is(Blocks.FIRE)) {

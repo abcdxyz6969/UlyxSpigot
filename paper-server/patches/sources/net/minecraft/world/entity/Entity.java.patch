@@ -612,11 +612,12 @@
      }
  
      public final void setOldPosAndRot() {
-@@ -1769,6 +_,7 @@
+@@ -1769,6 +_,8 @@
      public void push(Entity entity) {
          if (!this.isPassengerOfSameVehicle(entity)) {
              if (!entity.noPhysics && !this.noPhysics) {
-+                if (this.level.paperConfig().collisions.onlyPlayersCollide && !(entity instanceof ServerPlayer || this instanceof ServerPlayer)) return; // Paper - Collision option for requiring a player participant
++                if (org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableEntityCollisions()) return; // UlyxSpigot - disable entity collisions
++                if ((this.level.paperConfig().collisions.onlyPlayersCollide || org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorOnlyPlayersPushEntities()) && !(entity instanceof ServerPlayer || this instanceof ServerPlayer)) return; // Paper, UlyxSpigot - Collision option for requiring a player participant
                  double d = entity.getX() - this.getX();
                  double d1 = entity.getZ() - this.getZ();
                  double max = Mth.absMax(d, d1);

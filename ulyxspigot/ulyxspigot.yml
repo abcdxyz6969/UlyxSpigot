@@ -18,10 +18,6 @@ asynchronous:
     # Configure the maximum amount of threads for pathfinding.
     # 0 = available processor / 4.
     threads: 2
-  chunks-sending:
-    # Optimizes chunk packet sending through multiple threads.
-    # Recommended value: true
-    enabled: true
   data-saving:
     # Optimizes world/player data saving through multiple threads.
     # Recommended value: true
@@ -34,3 +30,55 @@ asynchronous:
     # Optimizes packet sending through multiple threads.
     # Recommended value: false
     enabled: false
+
+behavior:
+  # Allows the Bukkit API to teleport entities with passengers.
+  allowTeleportationWithPassengers: false
+  # Prevents worlds from setting the player initial spawn point.
+  disableInitialWorldSpawn: false
+  # Disables world data saving.
+  disableWorldDataSaving: true
+  # Disables Minecraft Chat Signing to prevent player reporting.
+  disableChatReporting: true
+  # Disables entity portal tick handling (Affects players).
+  disablePortalHandling: false
+  # Disables Spigot Activation Range System.
+  disableActivationRange: true
+  # Disables entity AI. Acts like Spigot's nerfSpawnerMobs but for all mobs.
+  disableEntityAI: true
+  # Disables turtle helmet ticking (Effects won't work).
+  disableTurtleHelmetTicking: true
+  # Makes items on death no longer spread far away from the death location.
+  oldDeathItemDropBehavior: false
+  # Reverts food regeneration to 1.8 version.
+  revertFoodRegeneration: false
+  # Makes the speed of cooking configurable.
+  cookSpeedMultiplier: 1.0
+  # Makes entities only pushable by players.
+  onlyPlayersPushEntities: true
+  # Disables entity suffocation check.
+  disableEntitySuffocationCheck: false
+  # Disables entity world border damage check.
+  disableEntityWorldBorderDamageCheck: false
+  # Disables lava from catching others blocks on fire.
+  disableLavaCatchesBlocksOnFire: false
+  # Disables leaf decay.
+  disableLeafDecay: true
+  # Disables ender dragon fight ticking.
+  disableDragonFightTicking: true
+  # Prevents warden player tracking.
+  disableWardenSpawnTracking: true
+  # Disables player sleep announcing.
+  disableSleepAnnounceStatus: true
+  # Disables entity brain.
+  disableEntityBrain: true
+  # Disables player statistic updates.
+  disablePlayerStats: false
+  # Disables entity collisions.
+  disableEntityCollisions: false
+  # Disables world weather cycle.
+  disableWeatherCycle: true
+  # Disables world sky brightness updates.
+  disableSkyBrightnessUpdates: true
+  # Disables dolphin treasure search goals.
+  disableDolphinTreasureGoal: true

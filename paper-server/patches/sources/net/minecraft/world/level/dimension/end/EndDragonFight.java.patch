@@ -111,7 +111,10 @@
          }
  
          return enderDragon;
-@@ -439,6 +_,10 @@
+@@ -439,6 +_,13 @@
++            if (org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableDragonFightTicking()) {
++                return;
++            }
              this.ticksSinceDragonSeen = 0;
              if (dragon.hasCustomName()) {
                  this.dragonEvent.setName(dragon.getDisplayName());

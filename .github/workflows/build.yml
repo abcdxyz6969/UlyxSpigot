@@ -37,11 +37,18 @@ jobs:
         run: |
           ./gradlew --no-daemon --max-workers=4 :paper-server:createMojmapBundlerJar
 
-      - name: Upload artifacts
+      - name: Upload bundler artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ulyxspigot-build
+          name: ulyxspigot-bundler
+          path: paper-server/build/libs/*bundler*.jar
+          if-no-files-found: error
+
+      - name: Upload server artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ulyxspigot-server
           path: |
             paper-server/build/libs/*.jar
-            paper-server/build/libs/*bundler*.jar
-          if-no-files-found: warn
+            !paper-server/build/libs/*bundler*.jar
+          if-no-files-found: error

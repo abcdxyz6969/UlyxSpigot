@@ -18,7 +18,7 @@
      }
  
      public void save() {
-+        if (org.spigotmc.SpigotConfig.disableStatSaving) return; // Spigot
++        if (org.spigotmc.SpigotConfig.disableStatSaving || org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisablePlayerStats()) return; // Spigot, UlyxSpigot
          try {
              FileUtil.createDirectoriesSafe(this.file.getParent());
  
@@ -26,7 +26,7 @@
  
      @Override
      public void setValue(Player player, Stat<?> stat, int value) {
-+        if (org.spigotmc.SpigotConfig.disableStatSaving) return; // Spigot
++        if (org.spigotmc.SpigotConfig.disableStatSaving || org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisablePlayerStats()) return; // Spigot, UlyxSpigot
 +        if (stat.getType() == Stats.CUSTOM && stat.getValue() instanceof final net.minecraft.resources.Identifier key && org.spigotmc.SpigotConfig.forcedStats.get(key) != null) return; // Paper - disable saving forced stats
          super.setValue(player, stat, value);
          this.dirty.add(stat);
