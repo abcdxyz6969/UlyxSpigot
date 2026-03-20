@@ -26583,7 +26583,8 @@ index 061bc47972d9c67375c0ff9461c506625c80108c..7656665352632fc718bea91dcfd3dd41
 @@ -449,6 +693,20 @@ public class ServerLevel extends Level implements ServerEntityGetter, WorldGenLe
          this.waypointManager = new ServerWaypointManager();
          this.environmentAttributes = EnvironmentAttributeSystem.builder().addDefaultLayers(this).build();
-         this.updateSkyBrightness();
+-        this.updateSkyBrightness();
++        if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableSkyBrightnessUpdates()) this.updateSkyBrightness();
 +        // Paper start - rewrite chunk system
 +        this.moonrise$setEntityLookup(new ca.spottedleaf.moonrise.patches.chunk_system.level.entity.server.ServerEntityLookup((ServerLevel)(Object)this, ((ServerLevel)(Object)this).new EntityCallbacks()));
 +        this.chunkTaskScheduler = new ca.spottedleaf.moonrise.patches.chunk_system.scheduling.ChunkTaskScheduler((ServerLevel)(Object)this);
@@ -26773,7 +26774,8 @@ index 061bc47972d9c67375c0ff9461c506625c80108c..7656665352632fc718bea91dcfd3dd41
 +    public void save(@Nullable ProgressListener progress, boolean flush, boolean skipSave, boolean close) {
 +        // Paper end - add close param
          ServerChunkCache chunkSource = this.getChunkSource();
-         if (!skipSave) {
+-        if (!skipSave) {
++        if (!skipSave && !org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableWorldDataSaving()) {
              org.bukkit.Bukkit.getPluginManager().callEvent(new org.bukkit.event.world.WorldSaveEvent(this.getWorld())); // CraftBukkit
 @@ -1116,13 +1420,18 @@ public class ServerLevel extends Level implements ServerEntityGetter, WorldGenLe
                  progress.progressStage(Component.translatable("menu.savingChunks"));
