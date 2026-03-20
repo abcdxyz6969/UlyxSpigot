@@ -17,23 +17,17 @@
      }
  
      public void clientTick(Level level, BlockPos pos) {
-@@ -81,13 +_,25 @@
+@@ -81,13 +_,19 @@
      }
  
      public void serverTick(ServerLevel level, BlockPos pos) {
-+        this.minSpawnDelay = org.ulyxspigot.ulyxspigot.UlyxConfig.getSpawnerMinSpawnDelay();
-+        this.maxSpawnDelay = Math.max(this.minSpawnDelay, org.ulyxspigot.ulyxspigot.UlyxConfig.getSpawnerMaxSpawnDelay());
-+        this.spawnCount = org.ulyxspigot.ulyxspigot.UlyxConfig.getSpawnerSpawnCount();
-+        this.maxNearbyEntities = org.ulyxspigot.ulyxspigot.UlyxConfig.isSpawnerDisableMaxNearbyEntitiesCheck() ? Integer.MAX_VALUE : org.ulyxspigot.ulyxspigot.UlyxConfig.getSpawnerMaxNearbyEntities();
-+        this.requiredPlayerRange = org.ulyxspigot.ulyxspigot.UlyxConfig.getSpawnerRequiredPlayerRange();
-+        this.spawnRange = org.ulyxspigot.ulyxspigot.UlyxConfig.getSpawnerSpawnRange();
-+        if (this.spawnCount <= 0 || this.maxNearbyEntities <= 0) return; // Paper - Ignore impossible spawn tick, UlyxSpigot
++        if (spawnCount <= 0 || maxNearbyEntities <= 0) return; // Paper - Ignore impossible spawn tick
 +        // Paper start - Configurable mob spawner tick rate
 +        if (spawnDelay > 0 && --tickDelay > 0) return;
 +        tickDelay = level.paperConfig().tickRates.mobSpawner;
 +        if (tickDelay == -1) { return; } // If disabled
 +        // Paper end - Configurable mob spawner tick rate
-         if ((org.ulyxspigot.ulyxspigot.UlyxConfig.isSpawnerDisableNearbyPlayersCheck() || this.isNearPlayer(level, pos)) && level.isSpawnerBlockEnabled()) {
+         if (this.isNearPlayer(level, pos) && level.isSpawnerBlockEnabled()) {
 -            if (this.spawnDelay == -1) {
 +            if (this.spawnDelay < -tickDelay) { // Paper - Configurable mob spawner tick rate
                  this.delay(level, pos);
@@ -45,7 +39,7 @@
              } else {
                  boolean flag = false;
                  RandomSource random = level.getRandom();
-@@ -125,6 +_,26 @@
+@@ -125,6 +_,21 @@
                                  continue;
                              }
  
@@ -63,18 +57,13 @@
 +                                continue;
 +                            }
 +                            // Paper end - PreCreatureSpawnEvent
-+                            if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isSpawnerDisableWaterPreventSpawnCheck()
-+                                && level.getBlockState(BlockPos.containing(vec3)).getFluidState().is(net.minecraft.tags.FluidTags.WATER)) {
-+                                continue;
-+                            }
-+
 +
                              Entity entity = EntityType.loadEntityRecursive(valueInput, level, EntitySpawnReason.SPAWNER, entity1 -> {
                                  entity1.snapTo(vec3.x, vec3.y, vec3.z, entity1.getYRot(), entity1.getXRot());
                                  return entity1;
-@@ -158,7 +_,20 @@
+@@ -158,9 +_,22 @@
                                  }
-
+ 
                                  nextSpawnData.getEquipment().ifPresent(mob::equip);
 +                                // Spigot start
 +                                if (mob.level().spigotConfig.nerfSpawnerMobs) {
@@ -82,7 +71,7 @@
 +                                }
 +                                // Spigot end
                              }
-
+ 
 -                            if (!level.tryAddFreshEntityWithPassengers(entity)) {
 +                            // Paper start
 +                            entity.spawnedViaMobSpawner = true;
@@ -96,21 +85,10 @@
                                  this.delay(level, pos);
                                  return;
                              }
-@@ -168,6 +_,7 @@
-                             entity.snapTo(entity.getX(), entity.getY(), entity.getZ(), random.nextFloat() * 360.0F, 0.0F);
-                             if (entity instanceof Mob mob) {
--                                if (nextSpawnData.getCustomSpawnRules().isEmpty() && !mob.checkSpawnRules(level, EntitySpawnReason.SPAWNER)
--                                    || !mob.checkSpawnObstruction(level)) {
-+                                final boolean ulyxMobSpecificRulesFailed = nextSpawnData.getCustomSpawnRules().isEmpty() && !mob.checkSpawnRules(level, EntitySpawnReason.SPAWNER);
-+                                final boolean ulyxObstructionFailed = !(org.ulyxspigot.ulyxspigot.UlyxConfig.isSpawnerDisableObstructionCheck() || org.ulyxspigot.ulyxspigot.UlyxConfig.isSpawnerDisableWaterPreventSpawnCheck()) && !mob.checkSpawnObstruction(level);
-+                                if (ulyxMobSpecificRulesFailed || ulyxObstructionFailed) {
-                                     continue;
-                                 }
-
-@@ -171,6 +_,6 @@
+@@ -171,7 +_,7 @@
                                  ((Mob)entity).spawnAnim();
                              }
-
+ 
 -                            flag = true;
 +                            //flag = true; // Paper - moved up above cancellable event
                          }
