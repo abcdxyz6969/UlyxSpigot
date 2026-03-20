@@ -2,8 +2,10 @@ package org.ulyxspigot.ulyxspigot.async;
 
 import com.mojang.logging.LogUtils;
 import it.unimi.dsi.fastutil.io.FastByteArrayOutputStream;
+import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -13,13 +15,12 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
-import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
-import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.level.storage.PlayerDataStorage;
+import net.minecraft.world.level.storage.TagValueOutput;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.slf4j.Logger;
@@ -111,13 +112,29 @@ public final class UlyxAsyncDataSaving {
 
                 final Path currentPath = path.resolve(stringUuid + ".dat");
                 final Path backupPath = path.resolve(stringUuid + ".dat_old");
-                Util.safeReplaceFile(currentPath, tempPath, backupPath);
+                replaceWithBackup(currentPath, tempPath, backupPath);
             } catch (Exception ex) {
                 Bukkit.getLogger().log(Level.WARNING, "[UlyxSpigot] Failed to save player data for " + playerName, ex);
             }
         }
 
         SAVE_LOCKS.remove(uuid, lock);
+    }
+
+    private static void replaceWithBackup(Path currentPath, Path tempPath, Path backupPath) throws Exception {
+        if (Files.exists(currentPath)) {
+            try {
+                Files.move(currentPath, backupPath, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+            } catch (AtomicMoveNotSupportedException ignored) {
+                Files.move(currentPath, backupPath, StandardCopyOption.REPLACE_EXISTING);
+            }
+        }
+
+        try {
+            Files.move(tempPath, currentPath, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+        } catch (AtomicMoveNotSupportedException ignored) {
+            Files.move(tempPath, currentPath, StandardCopyOption.REPLACE_EXISTING);
+        }
     }
 
     public static synchronized void shutdown() {
