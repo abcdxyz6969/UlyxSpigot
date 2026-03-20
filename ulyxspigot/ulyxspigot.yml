@@ -37,17 +37,17 @@ behavior:
   # Prevents worlds from setting the player initial spawn point.
   disableInitialWorldSpawn: false
   # Disables world data saving.
-  disableWorldDataSaving: true
+  disableWorldDataSaving: false
   # Disables Minecraft Chat Signing to prevent player reporting.
-  disableChatReporting: true
+  disableChatReporting: false
   # Disables entity portal tick handling (Affects players).
   disablePortalHandling: false
   # Disables Spigot Activation Range System.
-  disableActivationRange: true
+  disableActivationRange: false
   # Disables entity AI. Acts like Spigot's nerfSpawnerMobs but for all mobs.
-  disableEntityAI: true
+  disableEntityAI: false
   # Disables turtle helmet ticking (Effects won't work).
-  disableTurtleHelmetTicking: true
+  disableTurtleHelmetTicking: false
   # Makes items on death no longer spread far away from the death location.
   oldDeathItemDropBehavior: false
   # Reverts food regeneration to 1.8 version.
@@ -55,7 +55,7 @@ behavior:
   # Makes the speed of cooking configurable.
   cookSpeedMultiplier: 1.0
   # Makes entities only pushable by players.
-  onlyPlayersPushEntities: true
+  onlyPlayersPushEntities: false
   # Disables entity suffocation check.
   disableEntitySuffocationCheck: false
   # Disables entity world border damage check.
@@ -63,22 +63,22 @@ behavior:
   # Disables lava from catching others blocks on fire.
   disableLavaCatchesBlocksOnFire: false
   # Disables leaf decay.
-  disableLeafDecay: true
+  disableLeafDecay: false
   # Disables ender dragon fight ticking.
-  disableDragonFightTicking: true
+  disableDragonFightTicking: false
   # Prevents warden player tracking.
-  disableWardenSpawnTracking: true
+  disableWardenSpawnTracking: false
   # Disables player sleep announcing.
-  disableSleepAnnounceStatus: true
+  disableSleepAnnounceStatus: false
   # Disables entity brain.
-  disableEntityBrain: true
+  disableEntityBrain: false
   # Disables player statistic updates.
   disablePlayerStats: false
   # Disables entity collisions.
   disableEntityCollisions: false
   # Disables world weather cycle.
-  disableWeatherCycle: true
+  disableWeatherCycle: false
   # Disables world sky brightness updates.
-  disableSkyBrightnessUpdates: true
+  disableSkyBrightnessUpdates: false
   # Disables dolphin treasure search goals.
-  disableDolphinTreasureGoal: true
+  disableDolphinTreasureGoal: false

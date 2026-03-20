@@ -40,6 +40,16 @@
              }
          }
      }
+@@ -392,6 +_,11 @@
+
+         @Override
+         public boolean canUse() {
++            if (org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableDolphinTreasureGoal()) {
++                return false;
++            }
+             return this.dolphin.gotFish() && this.dolphin.getAirSupply() >= 100;
+         }
+
 @@ -479,7 +_,7 @@
  
          @Override

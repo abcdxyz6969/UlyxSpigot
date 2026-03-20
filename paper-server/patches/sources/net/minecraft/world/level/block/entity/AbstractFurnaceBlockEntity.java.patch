@@ -70,6 +70,7 @@
 @@ -161,11 +_,22 @@
  
              int maxStackSize = furnace.getMaxStackSize();
++            furnace.cookSpeedMultiplier = Math.max(0.01D, org.ulyxspigot.ulyxspigot.UlyxConfig.getBehaviorCookSpeedMultiplier()); // UlyxSpigot - configurable furnace cook speed
              if (!furnace.isLit() && canBurn(level.registryAccess(), recipeHolder, singleRecipeInput, furnace.items, maxStackSize)) {
 -                furnace.litTimeRemaining = furnace.getBurnDuration(level.fuelValues(), itemStack);
 +                // CraftBukkit start

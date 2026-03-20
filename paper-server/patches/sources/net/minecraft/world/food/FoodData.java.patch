@@ -48,7 +48,8 @@
          }
  
          boolean flag = serverLevel.getGameRules().get(GameRules.NATURAL_HEALTH_REGENERATION);
-         if (flag && this.saturationLevel > 0.0F && player.isHurt() && this.foodLevel >= 20) {
+-        if (flag && this.saturationLevel > 0.0F && player.isHurt() && this.foodLevel >= 20) {
++        if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorRevertFoodRegeneration() && flag && this.saturationLevel > 0.0F && player.isHurt() && this.foodLevel >= 20) {
              this.tickTimer++;
 -            if (this.tickTimer >= 10) {
 +            if (this.tickTimer >= this.saturatedRegenRate) { // CraftBukkit

@@ -32,29 +32,29 @@ public final class UlyxConfig {
 
     private static boolean behaviorAllowTeleportationWithPassengers = false;
     private static boolean behaviorDisableInitialWorldSpawn = false;
-    private static boolean behaviorDisableWorldDataSaving = true;
-    private static boolean behaviorDisableChatReporting = true;
+    private static boolean behaviorDisableWorldDataSaving = false;
+    private static boolean behaviorDisableChatReporting = false;
     private static boolean behaviorDisablePortalHandling = false;
-    private static boolean behaviorDisableActivationRange = true;
-    private static boolean behaviorDisableEntityAI = true;
-    private static boolean behaviorDisableTurtleHelmetTicking = true;
+    private static boolean behaviorDisableActivationRange = false;
+    private static boolean behaviorDisableEntityAI = false;
+    private static boolean behaviorDisableTurtleHelmetTicking = false;
     private static boolean behaviorOldDeathItemDropBehavior = false;
     private static boolean behaviorRevertFoodRegeneration = false;
     private static double behaviorCookSpeedMultiplier = 1.0D;
-    private static boolean behaviorOnlyPlayersPushEntities = true;
+    private static boolean behaviorOnlyPlayersPushEntities = false;
     private static boolean behaviorDisableEntitySuffocationCheck = false;
     private static boolean behaviorDisableEntityWorldBorderDamageCheck = false;
     private static boolean behaviorDisableLavaCatchesBlocksOnFire = false;
-    private static boolean behaviorDisableLeafDecay = true;
-    private static boolean behaviorDisableDragonFightTicking = true;
-    private static boolean behaviorDisableWardenSpawnTracking = true;
-    private static boolean behaviorDisableSleepAnnounceStatus = true;
-    private static boolean behaviorDisableEntityBrain = true;
+    private static boolean behaviorDisableLeafDecay = false;
+    private static boolean behaviorDisableDragonFightTicking = false;
+    private static boolean behaviorDisableWardenSpawnTracking = false;
+    private static boolean behaviorDisableSleepAnnounceStatus = false;
+    private static boolean behaviorDisableEntityBrain = false;
     private static boolean behaviorDisablePlayerStats = false;
     private static boolean behaviorDisableEntityCollisions = false;
-    private static boolean behaviorDisableWeatherCycle = true;
-    private static boolean behaviorDisableSkyBrightnessUpdates = true;
-    private static boolean behaviorDisableDolphinTreasureGoal = true;
+    private static boolean behaviorDisableWeatherCycle = false;
+    private static boolean behaviorDisableSkyBrightnessUpdates = false;
+    private static boolean behaviorDisableDolphinTreasureGoal = false;
 
     private UlyxConfig() {
     }
@@ -118,7 +118,7 @@ public final class UlyxConfig {
         behaviorDisableTurtleHelmetTicking = getBoolean("behavior.disableTurtleHelmetTicking", behaviorDisableTurtleHelmetTicking);
         behaviorOldDeathItemDropBehavior = getBoolean("behavior.oldDeathItemDropBehavior", behaviorOldDeathItemDropBehavior);
         behaviorRevertFoodRegeneration = getBoolean("behavior.revertFoodRegeneration", behaviorRevertFoodRegeneration);
-        behaviorCookSpeedMultiplier = Math.max(0.0D, getDouble("behavior.cookSpeedMultiplier", behaviorCookSpeedMultiplier));
+        behaviorCookSpeedMultiplier = Math.max(0.01D, getDouble("behavior.cookSpeedMultiplier", behaviorCookSpeedMultiplier));
         behaviorOnlyPlayersPushEntities = getBoolean("behavior.onlyPlayersPushEntities", behaviorOnlyPlayersPushEntities);
         behaviorDisableEntitySuffocationCheck = getBoolean("behavior.disableEntitySuffocationCheck", behaviorDisableEntitySuffocationCheck);
         behaviorDisableEntityWorldBorderDamageCheck = getBoolean("behavior.disableEntityWorldBorderDamageCheck", behaviorDisableEntityWorldBorderDamageCheck);

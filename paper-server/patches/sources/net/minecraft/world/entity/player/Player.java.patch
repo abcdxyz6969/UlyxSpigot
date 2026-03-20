@@ -56,7 +56,9 @@
  
      private void turtleHelmetTick() {
 -        this.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 200, 0, false, false, true));
-+        this.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 200, 0, false, false, true), org.bukkit.event.entity.EntityPotionEffectEvent.Cause.TURTLE_HELMET); // CraftBukkit
++        if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableTurtleHelmetTicking()) {
++            this.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 200, 0, false, false, true), org.bukkit.event.entity.EntityPotionEffectEvent.Cause.TURTLE_HELMET); // CraftBukkit
++        }
      }
  
      private boolean isEquipped(Item item) {
