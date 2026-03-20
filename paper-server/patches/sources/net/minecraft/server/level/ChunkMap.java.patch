@@ -255,7 +255,7 @@
          }
      }
  
-@@ -1141,9 +_,19 @@
+@@ -1141,9 +_,21 @@
      }
  
      public void addEntity(Entity entity) {
@@ -304,14 +304,9 @@
          public void removePlayer(ServerPlayer player) {
 +            if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isAsyncTrackerEnabled()) org.spigotmc.AsyncCatcher.catchOp("player tracker clear"); // Spigot, UlyxSpigot
              if (this.seenBy.remove(player.connection)) {
-                 if (org.ulyxspigot.ulyxspigot.async.UlyxAsyncTracker.isEnabled() && !org.bukkit.Bukkit.isPrimaryThread()) {
-                     final ServerPlayer removedPlayer = player;
-                     org.ulyxspigot.ulyxspigot.async.UlyxAsyncTracker.executeOnMainThread(() -> this.serverEntity.removePairing(removedPlayer));
-                 } else {
-                     this.serverEntity.removePairing(player);
-                 }
+                 this.serverEntity.removePairing(player);
                  if (this.seenBy.isEmpty()) {
-@@ -1385,23 +_,45 @@
+@@ -1385,23 +_,61 @@
          }
  
          public void updatePlayer(ServerPlayer player) {

@@ -1501,7 +1501,7 @@
                  this.setTicksFrozen(Math.max(0, this.getTicksFrozen() - 2));
              }
  
-@@ -3020,6 +_,20 @@
+@@ -3020,6 +_,23 @@
  
          this.pushEntities();
          profilerFiller.pop();
@@ -1519,7 +1519,8 @@
 +            }
 +        }
 +        // Paper end - Add EntityMoveEvent
-         if (this.level() instanceof ServerLevel serverLevel
+-        if (this.level() instanceof ServerLevel serverLevel && this.isSensitiveToWater() && this.isInWaterOrRain()) {
++        if (this.level() instanceof ServerLevel serverLevel
 +            && (this.isSensitiveToWater()
 +                || org.ulyxspigot.ulyxspigot.UlyxConfig.isWaterSensitiveEntity(net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()).getPath()))
 +            && this.isInWaterOrRain()) {

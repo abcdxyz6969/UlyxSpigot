@@ -17,7 +17,7 @@
      }
  
      public void clientTick(Level level, BlockPos pos) {
-@@ -81,13 +_,19 @@
+@@ -81,13 +_,25 @@
      }
  
      public void serverTick(ServerLevel level, BlockPos pos) {
@@ -45,7 +45,7 @@
              } else {
                  boolean flag = false;
                  RandomSource random = level.getRandom();
-@@ -125,6 +_,21 @@
+@@ -125,6 +_,26 @@
                                  continue;
                              }
  
@@ -72,7 +72,7 @@
                              Entity entity = EntityType.loadEntityRecursive(valueInput, level, EntitySpawnReason.SPAWNER, entity1 -> {
                                  entity1.snapTo(vec3.x, vec3.y, vec3.z, entity1.getYRot(), entity1.getXRot());
                                  return entity1;
-@@ -158,9 +_,22 @@
+@@ -158,7 +_,20 @@
                                  }
 
                                  nextSpawnData.getEquipment().ifPresent(mob::equip);
@@ -96,7 +96,7 @@
                                  this.delay(level, pos);
                                  return;
                              }
-@@ -168,11 +_,15 @@
+@@ -168,6 +_,7 @@
                              entity.snapTo(entity.getX(), entity.getY(), entity.getZ(), random.nextFloat() * 360.0F, 0.0F);
                              if (entity instanceof Mob mob) {
 -                                if (nextSpawnData.getCustomSpawnRules().isEmpty() && !mob.checkSpawnRules(level, EntitySpawnReason.SPAWNER)
@@ -107,7 +107,7 @@
                                      continue;
                                  }
 
-@@ -171,7 +_,7 @@
+@@ -171,6 +_,6 @@
                                  ((Mob)entity).spawnAnim();
                              }
 

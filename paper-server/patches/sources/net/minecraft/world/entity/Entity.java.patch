@@ -348,7 +348,7 @@
      }
  
      protected final AABB makeBoundingBox() {
-@@ -480,12 +_,28 @@
+@@ -480,12 +_,34 @@
      }
  
      public void tick() {
