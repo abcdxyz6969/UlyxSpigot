@@ -1519,7 +1519,10 @@
 +            }
 +        }
 +        // Paper end - Add EntityMoveEvent
-         if (this.level() instanceof ServerLevel serverLevel && this.isSensitiveToWater() && this.isInWaterOrRain()) {
+         if (this.level() instanceof ServerLevel serverLevel
++            && (this.isSensitiveToWater()
++                || org.ulyxspigot.ulyxspigot.UlyxConfig.isWaterSensitiveEntity(net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()).getPath()))
++            && this.isInWaterOrRain()) {
              this.hurtServer(serverLevel, this.damageSources().drown(), 1.0F);
          }
 @@ -3042,6 +_,7 @@

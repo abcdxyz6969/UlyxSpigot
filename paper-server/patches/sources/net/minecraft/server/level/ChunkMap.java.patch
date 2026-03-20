@@ -274,6 +274,8 @@
 +            i = org.spigotmc.TrackingRange.getEntityTrackingRange(entity, i); // Spigot
              if (i != 0) {
                  int updateInterval = type.updateInterval();
++                final String entityTypeName = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(type).getPath().toUpperCase(java.util.Locale.ROOT);
++                updateInterval = org.ulyxspigot.ulyxspigot.UlyxConfig.getEntityUpdateIntervalFor(entityTypeName, updateInterval);
                  if (this.entityMap.containsKey(entity.getId())) {
 @@ -1167,6 +_,7 @@
      }
@@ -302,7 +304,12 @@
          public void removePlayer(ServerPlayer player) {
 +            if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isAsyncTrackerEnabled()) org.spigotmc.AsyncCatcher.catchOp("player tracker clear"); // Spigot, UlyxSpigot
              if (this.seenBy.remove(player.connection)) {
-                 this.serverEntity.removePairing(player);
+                 if (org.ulyxspigot.ulyxspigot.async.UlyxAsyncTracker.isEnabled() && !org.bukkit.Bukkit.isPrimaryThread()) {
+                     final ServerPlayer removedPlayer = player;
+                     org.ulyxspigot.ulyxspigot.async.UlyxAsyncTracker.executeOnMainThread(() -> this.serverEntity.removePairing(removedPlayer));
+                 } else {
+                     this.serverEntity.removePairing(player);
+                 }
                  if (this.seenBy.isEmpty()) {
 @@ -1385,23 +_,45 @@
          }
@@ -342,6 +349,21 @@
 +                // CraftBukkit end
                  if (flag) {
                      if (this.seenBy.add(player.connection)) {
++                        if (org.ulyxspigot.ulyxspigot.async.UlyxAsyncTracker.isEnabled() && !org.bukkit.Bukkit.isPrimaryThread()) {
++                            final ServerPlayer trackedPlayer = player;
++                            org.ulyxspigot.ulyxspigot.async.UlyxAsyncTracker.executeOnMainThread(() -> {
++                                if (io.papermc.paper.event.player.PlayerTrackEntityEvent.getHandlerList().getRegisteredListeners().length == 0 || new io.papermc.paper.event.player.PlayerTrackEntityEvent(trackedPlayer.getBukkitEntity(), this.entity.getBukkitEntity()).callEvent()) {
++                                    this.serverEntity.addPairing(trackedPlayer);
++                                    if (this.seenBy.size() == 1) {
++                                        ChunkMap.this.level.debugSynchronizers().registerEntity(this.entity);
++                                    }
++
++                                    ChunkMap.this.level.debugSynchronizers().startTrackingEntity(trackedPlayer, this.entity);
++                                } else if (this.seenBy.remove(trackedPlayer.connection) && this.seenBy.isEmpty()) {
++                                    ChunkMap.this.level.debugSynchronizers().dropEntity(this.entity);
++                                }
++                            });
++                        } else {
 +                        // Paper start - entity tracking events
 +                        if (io.papermc.paper.event.player.PlayerTrackEntityEvent.getHandlerList().getRegisteredListeners().length == 0 || new io.papermc.paper.event.player.PlayerTrackEntityEvent(player.getBukkitEntity(), this.entity.getBukkitEntity()).callEvent()) {
                          this.serverEntity.addPairing(player);
@@ -352,6 +374,7 @@
                          ChunkMap.this.level.debugSynchronizers().startTrackingEntity(player, this.entity);
 +                        }
 +                        // Paper end - entity tracking events
++                        }
                      }
                  } else {
                      this.removePlayer(player);

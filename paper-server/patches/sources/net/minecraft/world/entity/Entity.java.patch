@@ -374,6 +374,12 @@
          ProfilerFiller profilerFiller = Profiler.get();
          profilerFiller.push("entityBaseTick");
 +        if (firstTick && this instanceof net.minecraft.world.entity.NeutralMob neutralMob) neutralMob.tickInitialPersistentAnger(level); // Paper - Prevent entity loading causing async lookups
++        if (this.level() instanceof ServerLevel serverLevel) {
++            final String ulyxEntityTypeName = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()).getPath();
++            if (org.ulyxspigot.ulyxspigot.UlyxConfig.isLoadChunksEntity(ulyxEntityTypeName)) {
++                serverLevel.getChunkSource().addTicketWithRadius(net.minecraft.server.level.TicketType.UNKNOWN, this.chunkPosition(), 1);
++            }
++        }
          this.computeSpeed();
          this.inBlockState = null;
          if (this.isPassenger() && this.getVehicle().isRemoved()) {

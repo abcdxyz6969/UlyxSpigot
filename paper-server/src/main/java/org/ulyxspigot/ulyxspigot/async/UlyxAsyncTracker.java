@@ -8,6 +8,7 @@ import ca.spottedleaf.moonrise.patches.entity_tracker.EntityTrackerEntity;
 import ca.spottedleaf.moonrise.patches.entity_tracker.EntityTrackerTrackedEntity;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -20,12 +21,15 @@ import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.level.FullChunkStatus;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import org.bukkit.Bukkit;
 
 public final class UlyxAsyncTracker {
     private static final AtomicInteger THREAD_COUNTER = new AtomicInteger();
     private static final int MIN_SLICE_SIZE = 64;
     private static final int QUEUE_CAPACITY = 1024;
+
+    private static final ConcurrentLinkedQueue<Runnable> MAIN_THREAD_TASKS = new ConcurrentLinkedQueue<>();
 
     private static volatile ThreadPoolExecutor executor;
     private static volatile boolean enabled;
@@ -74,10 +78,26 @@ public final class UlyxAsyncTracker {
         return enabled && executor != null;
     }
 
+    public static void executeOnMainThread(Runnable task) {
+        if (task == null) {
+            return;
+        }
+
+        if (Bukkit.isPrimaryThread()) {
+            runMainThreadTask(task);
+            return;
+        }
+
+        MAIN_THREAD_TASKS.offer(task);
+    }
+
     public static void tick(ServerLevel level) {
+        drainMainThreadTasks();
+
         final ThreadPoolExecutor localExecutor = executor;
         if (!enabled || localExecutor == null) {
             tickSync(level);
+            drainMainThreadTasks();
             return;
         }
 
@@ -85,6 +105,7 @@ public final class UlyxAsyncTracker {
         final ReferenceList<Entity> trackerEntities = entityLookup.trackerEntities;
         final int trackerSize = trackerEntities.size();
         if (trackerSize <= 0) {
+            drainMainThreadTasks();
             return;
         }
 
@@ -94,6 +115,8 @@ public final class UlyxAsyncTracker {
 
         if (taskCount <= 1) {
             tickSlice(trackerEntitiesRaw, 0, trackerSize);
+            tickLivingSync(trackerEntitiesRaw, trackerSize);
+            drainMainThreadTasks();
             return;
         }
 
@@ -112,11 +135,28 @@ public final class UlyxAsyncTracker {
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
                 Bukkit.getLogger().log(Level.WARNING, "Interrupted while waiting for async tracker tasks", ex);
+                drainMainThreadTasks();
+                tickSync(level);
+                drainMainThreadTasks();
                 return;
             } catch (ExecutionException ex) {
-                Bukkit.getLogger().log(Level.WARNING, "Async tracker task failed", ex.getCause());
+                final Throwable cause = ex.getCause();
+                if (isSyncOnlyViolation(cause)) {
+                    Bukkit.getLogger().log(Level.WARNING,
+                            "[UlyxSpigot] Async tracker hit sync-only game/plugin code path, disabling async tracker",
+                            cause);
+                    drainMainThreadTasks();
+                    reconfigure(false);
+                    tickSync(level);
+                    drainMainThreadTasks();
+                    return;
+                }
+                Bukkit.getLogger().log(Level.WARNING, "Async tracker task failed", cause);
             }
         }
+
+        tickLivingSync(trackerEntitiesRaw, trackerSize);
+        drainMainThreadTasks();
     }
 
     private static void tickSync(ServerLevel level) {
@@ -125,51 +165,89 @@ public final class UlyxAsyncTracker {
         final Entity[] trackerEntitiesRaw = trackerEntities.getRawDataUnchecked();
 
         for (int i = 0, len = trackerEntities.size(); i < len; ++i) {
-            final Entity entity = trackerEntitiesRaw[i];
-            if (entity == null) {
-                continue;
-            }
-
-            final ChunkMap.TrackedEntity tracker = ((EntityTrackerEntity) entity).moonrise$getTrackedEntity();
-            if (tracker == null) {
-                continue;
-            }
-
-            final ChunkSystemEntity chunkSystemEntity = (ChunkSystemEntity) entity;
-            final ca.spottedleaf.moonrise.patches.chunk_system.level.chunk.ChunkData chunkData = chunkSystemEntity.moonrise$getChunkData();
-            ((EntityTrackerTrackedEntity) tracker).moonrise$tick(chunkData == null ? null : chunkData.nearbyPlayers);
-
-            final FullChunkStatus chunkStatus = chunkSystemEntity.moonrise$getChunkStatus();
-            if (((EntityTrackerTrackedEntity) tracker).moonrise$hasPlayers()
-                    || (chunkStatus != null && chunkStatus.isOrAfter(FullChunkStatus.ENTITY_TICKING))) {
-                tracker.serverEntity.sendChanges();
-            }
+            tickTrackedEntity(trackerEntitiesRaw[i], false);
         }
     }
 
     private static void tickSlice(Entity[] trackerEntitiesRaw, int start, int end) {
         for (int i = start; i < end; ++i) {
             final Entity entity = trackerEntitiesRaw[i];
-            if (entity == null) {
+            if (entity == null || entity instanceof LivingEntity) {
                 continue;
             }
 
-            final ChunkMap.TrackedEntity tracker = ((EntityTrackerEntity) entity).moonrise$getTrackedEntity();
-            if (tracker == null) {
+            tickTrackedEntity(entity, true);
+        }
+    }
+
+    private static void tickLivingSync(Entity[] trackerEntitiesRaw, int size) {
+        for (int i = 0; i < size; ++i) {
+            final Entity entity = trackerEntitiesRaw[i];
+            if (!(entity instanceof LivingEntity)) {
                 continue;
             }
+            tickTrackedEntity(entity, false);
+        }
+    }
 
+    private static void tickTrackedEntity(Entity entity, boolean lockTracker) {
+        if (entity == null) {
+            return;
+        }
+
+        final ChunkMap.TrackedEntity tracker = ((EntityTrackerEntity) entity).moonrise$getTrackedEntity();
+        if (tracker == null) {
+            return;
+        }
+
+        if (lockTracker) {
             synchronized (tracker) {
-                final ChunkSystemEntity chunkSystemEntity = (ChunkSystemEntity) entity;
-                final ca.spottedleaf.moonrise.patches.chunk_system.level.chunk.ChunkData chunkData = chunkSystemEntity.moonrise$getChunkData();
-                ((EntityTrackerTrackedEntity) tracker).moonrise$tick(chunkData == null ? null : chunkData.nearbyPlayers);
-
-                final FullChunkStatus chunkStatus = chunkSystemEntity.moonrise$getChunkStatus();
-                if (((EntityTrackerTrackedEntity) tracker).moonrise$hasPlayers()
-                        || (chunkStatus != null && chunkStatus.isOrAfter(FullChunkStatus.ENTITY_TICKING))) {
-                    tracker.serverEntity.sendChanges();
-                }
+                tickTrackedEntity0(entity, tracker);
             }
+            return;
+        }
+
+        tickTrackedEntity0(entity, tracker);
+    }
+
+    private static void tickTrackedEntity0(Entity entity, ChunkMap.TrackedEntity tracker) {
+        final ChunkSystemEntity chunkSystemEntity = (ChunkSystemEntity) entity;
+        final ca.spottedleaf.moonrise.patches.chunk_system.level.chunk.ChunkData chunkData = chunkSystemEntity.moonrise$getChunkData();
+        ((EntityTrackerTrackedEntity) tracker).moonrise$tick(chunkData == null ? null : chunkData.nearbyPlayers);
+
+        final FullChunkStatus chunkStatus = chunkSystemEntity.moonrise$getChunkStatus();
+        if (((EntityTrackerTrackedEntity) tracker).moonrise$hasPlayers()
+                || (chunkStatus != null && chunkStatus.isOrAfter(FullChunkStatus.ENTITY_TICKING))) {
+            tracker.serverEntity.sendChanges();
+        }
+    }
+
+    private static boolean isSyncOnlyViolation(Throwable throwable) {
+        if (!(throwable instanceof IllegalStateException)) {
+            return false;
+        }
+
+        final String message = throwable.getMessage();
+        if (message == null) {
+            return false;
+        }
+
+        return message.contains("may only be triggered synchronously")
+                || message.startsWith("Asynchronous ");
+    }
+
+    private static void drainMainThreadTasks() {
+        Runnable task;
+        while ((task = MAIN_THREAD_TASKS.poll()) != null) {
+            runMainThreadTask(task);
+        }
+    }
+
+    private static void runMainThreadTask(Runnable task) {
+        try {
+            task.run();
+        } catch (Throwable throwable) {
+            Bukkit.getLogger().log(Level.WARNING, "[UlyxSpigot] Async tracker main-thread task failed", throwable);
         }
     }
 
@@ -187,6 +265,7 @@ public final class UlyxAsyncTracker {
         final ThreadPoolExecutor localExecutor = executor;
         executor = null;
         enabled = false;
+        MAIN_THREAD_TASKS.clear();
 
         if (localExecutor == null) {
             return;

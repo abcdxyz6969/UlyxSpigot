@@ -82,3 +82,109 @@ behavior:
   disableSkyBrightnessUpdates: false
   # Disables dolphin treasure search goals.
   disableDolphinTreasureGoal: false
+
+load-chunks:
+  # Specify which entities should load chunks when moving.
+  entities:
+  - EXAMPLE
+
+water-sensitive:
+  # Specify which entities should take damage from water.
+  entities:
+  - EXAMPLE
+
+# Specify the entity tracking update interval of entities. Supported format: `EntityType:Number`.
+entity-update-interval:
+- PLAYER:2
+
+# Disables grass light checks.
+disableGrassLightChecks: true
+# Disables snow light checks.
+disableSnowLightChecks: true
+# Disables spawner light checks.
+disableSpawnerLightChecks: true
+
+spawner:
+  # Configure the spawner minimum spawn delay.
+  minSpawnDelay: 200
+  # Configure the spawner maximum spawn delay.
+  maxSpawnDelay: 800
+  # Configure the amount of spawner spawn count.
+  spawnCount: 4
+  # Configure the maximum amount of nearby entities before cancelling spawners ticking.
+  maxNearbyEntities: 6
+  # Configure the required player range for spawners to work.
+  requiredPlayerRange: 16
+  # Configure the maximum position range for spawned entities.
+  spawnRange: 4
+  # Disables spawner max nearby entities check.
+  disableMaxNearbyEntitiesCheck: true
+  # Disables spawner checking for nearby players.
+  disableNearbyPlayersCheck: true
+  # Disables spawner obstruction checks.
+  disableObstructionCheck: true
+  # Disables spawner water obstruction checks.
+  disableWaterPreventSpawnCheck: true
+
+alternative-farms:
+  raids:
+    # Reverts raid behaviors to 1.20.
+    old-behavior: false
+    # Decides whether raiders should drop ominous bottles. Only works when old raid behavior is false.
+    drop-ominous-bottles: false
+
+combat:
+  mace:
+    # Limits mace fall distance calculations to mitigate infinite damage.
+    limit-fall-distance: -1.0
+    # Skips mace fall distance calculation to disable damage scaling.
+    ignore-fall-distance: false
+
+  # Uses an alternative hit registration system to make pvp more smooth.
+  alternative-hit-registration: false
+  # Enabling this option makes players always take rising knockback.
+  disableKnockbackScaling: false
+  # Uses the old blast protection logic.
+  legacyBlastProtection: false
+  # Disables shield effectiveness.
+  disableShieldEffectiveness: false
+  # Reverts enchanted golden apple effects to 1.8 version.
+  oldEnchantedGappleEffects: false
+  # Imitates 1.8 sword blocking using shields.
+  imitateSwordBlocking: false
+  # Reverts armor protection to 1.8 version.
+  revertArmorProtection: false
+  # Disables Netherite Armor Knockback Resistance.
+  disableNetheriteKnockbackResistance: false
+  # Reverts sharpness buff to 1.8 version.
+  oldSharpnessDamageBuff: false
+  # Disables criticals if player is sprinting.
+  preventCriticalsIfSprinting: true
+  # Disables 1.9+ hit delay.
+  disableHitDelay: false
+  # Enables 1.8 Bow Boosting.
+  enableBowBoosting: true
+  # This will cause projectiles to have old collision from 1.8.
+  oldCollisionsProjectile: false
+  # Disables the sweeping edge effect of swords.
+  disableSweepingEdge: false
+  # This will make fishing hooks knockback entities when struck.
+  fishingHooksDoKnockback: false
+  # This will make fishing hooks pull entities toward the player when reeling.
+  fishingHooksPullEntities: true
+  # This will make tools (axes, swords, pickaxes...) damage to be what it was in 1.8.
+  oldToolAttackDamage: false
+  # Configures the amount of damage modifier per critical hit.
+  criticalModifier: 1.5
+
+  knockback:
+    # This will make knockback to be what it was in 1.8.
+    oldKnockback: false
+    # Modifier for vertical knockback.
+    vertical: 0.4
+    # Modifier for horizontal knockback.
+    horizontal: 0.4
+    # Modifier for knockback friction.
+    friction: 2.0
+    # Vertical limit of applied knockback.
+    verticalLimit: 0.4000000059604645
