@@ -219,7 +219,8 @@
 @@ -304,7 +_,15 @@
          this.waypointManager = new ServerWaypointManager();
          this.environmentAttributes = EnvironmentAttributeSystem.builder().addDefaultLayers(this).build();
-         if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableSkyBrightnessUpdates()) this.updateSkyBrightness();
+-        this.updateSkyBrightness();
++        if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableSkyBrightnessUpdates()) this.updateSkyBrightness();
 -    }
 +        this.getCraftServer().addWorld(this.getWorld()); // CraftBukkit
 +    }
@@ -270,7 +271,8 @@
  
 -            this.wakeUpAllPlayers();
 +            if (!event.isCancelled()) this.wakeUpAllPlayers(); // Paper - only wake up players if time skip event is not cancelled
-             if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableWeatherCycle() && this.getGameRules().get(GameRules.ADVANCE_WEATHER) && this.isRaining()) {
+-            if (this.getGameRules().get(GameRules.ADVANCE_WEATHER) && this.isRaining()) {
++            if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableWeatherCycle() && this.getGameRules().get(GameRules.ADVANCE_WEATHER) && this.isRaining()) {
                  this.resetWeatherCycle();
              }
 @@ -369,9 +_,9 @@
@@ -391,8 +393,10 @@
                      heightmapPos = heightmapPos.above(2);
                  }
 @@ -740,8 +_,8 @@
-                 this.serverLevelData.setThunderTime(org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableWeatherCycle() ? this.serverLevelData.getThunderTime() : thunderTime);
-                 this.serverLevelData.setRainTime(org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableWeatherCycle() ? this.serverLevelData.getRainTime() : rainTime);
+-                this.serverLevelData.setThunderTime(thunderTime);
++                this.serverLevelData.setThunderTime(org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableWeatherCycle() ? this.serverLevelData.getThunderTime() : thunderTime);
+-                this.serverLevelData.setRainTime(rainTime);
++                this.serverLevelData.setRainTime(org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableWeatherCycle() ? this.serverLevelData.getRainTime() : rainTime);
                  this.serverLevelData.setClearWeatherTime(clearWeatherTime);
 -                this.serverLevelData.setThundering(isThundering);
 -                this.serverLevelData.setRaining(isRaining1);
@@ -524,7 +528,8 @@
 @@ -867,6 +_,7 @@
      public void save(@Nullable ProgressListener progress, boolean flush, boolean skipSave) {
          ServerChunkCache chunkSource = this.getChunkSource();
-         if (!skipSave && !org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableWorldDataSaving()) {
+-        if (!skipSave) {
++        if (!skipSave && !org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableWorldDataSaving()) {
 +            org.bukkit.Bukkit.getPluginManager().callEvent(new org.bukkit.event.world.WorldSaveEvent(this.getWorld())); // CraftBukkit
              if (progress != null) {
                  progress.progressStartNoAbort(Component.translatable("menu.savingLevel"));
