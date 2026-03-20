@@ -41,14 +41,14 @@ index 0036d684e619e373b0e15e0c38788a2231864b52..b11c6d76cb9df1f92a4581646929d0dc
      @Override
      protected void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
          if (this instanceof GrassBlock && level.paperConfig().tickRates.grassSpread != 1 && (level.paperConfig().tickRates.grassSpread < 1 || (net.minecraft.server.MinecraftServer.currentTick + pos.hashCode()) % level.paperConfig().tickRates.grassSpread != 0)) { return; } // Paper - Configurable random tick rates for blocks
--        if (!canBeGrass(state, level, pos)) {
+-        if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isDisableGrassLightChecks() && !canBeGrass(state, level, pos)) {
 +        // Paper start - Perf: optimize dirt and snow spreading
 +        final net.minecraft.world.level.chunk.ChunkAccess cachedBlockChunk = level.getChunkIfLoaded(pos);
 +        if (cachedBlockChunk == null) { // Is this needed?
 +            return;
 +        }
 +
-+        if (!canBeGrass(cachedBlockChunk, state, level, pos)) {
++        if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isDisableGrassLightChecks() && !canBeGrass(cachedBlockChunk, state, level, pos)) {
 +            // Paper end - Perf: optimize dirt and snow spreading
              // CraftBukkit start
              if (org.bukkit.craftbukkit.event.CraftEventFactory.callBlockFadeEvent(level, pos, Blocks.DIRT.defaultBlockState()).isCancelled()) {
@@ -57,7 +57,7 @@ index 0036d684e619e373b0e15e0c38788a2231864b52..b11c6d76cb9df1f92a4581646929d0dc
  
                  for (int i = 0; i < 4; i++) {
                      BlockPos blockPos = pos.offset(random.nextInt(3) - 1, random.nextInt(5) - 3, random.nextInt(3) - 1);
--                    if (level.getBlockState(blockPos).is(Blocks.DIRT) && canPropagate(blockState, level, blockPos)) {
+-                    if (level.getBlockState(blockPos).is(Blocks.DIRT) && (org.ulyxspigot.ulyxspigot.UlyxConfig.isDisableGrassLightChecks() || canPropagate(blockState, level, blockPos))) {
 -                        org.bukkit.craftbukkit.event.CraftEventFactory.handleBlockSpreadEvent(level, pos, blockPos, blockState.setValue(SNOWY, isSnowySetting(level.getBlockState(blockPos.above()))), Block.UPDATE_ALL); // CraftBukkit
 +                    // Paper start - Perf: optimize dirt and snow spreading
 +                    if (pos.getX() == blockPos.getX() && pos.getY() == blockPos.getY() && pos.getZ() == blockPos.getZ()) {
@@ -70,7 +70,7 @@ index 0036d684e619e373b0e15e0c38788a2231864b52..b11c6d76cb9df1f92a4581646929d0dc
 +                    } else {
 +                        access = level.getChunkAt(blockPos);
 +                    }
-+                    if (access.getBlockState(blockPos).is(Blocks.DIRT) && SpreadingSnowyDirtBlock.canPropagate(access, blockState, level, blockPos)) {
++                    if (access.getBlockState(blockPos).is(Blocks.DIRT) && (org.ulyxspigot.ulyxspigot.UlyxConfig.isDisableGrassLightChecks() || SpreadingSnowyDirtBlock.canPropagate(access, blockState, level, blockPos))) {
 +                        org.bukkit.craftbukkit.event.CraftEventFactory.handleBlockSpreadEvent(level, pos, blockPos, blockState.setValue(SNOWY, isSnowySetting(access.getBlockState(blockPos.above()))), Block.UPDATE_ALL); // CraftBukkit
 +                        // Paper end - Perf: optimize dirt and snow spreading
                      }
