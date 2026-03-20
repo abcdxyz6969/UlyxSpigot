@@ -300,7 +300,7 @@
          }
  
          public void removePlayer(ServerPlayer player) {
-+            org.spigotmc.AsyncCatcher.catchOp("player tracker clear"); // Spigot
++            if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isAsyncTrackerEnabled()) org.spigotmc.AsyncCatcher.catchOp("player tracker clear"); // Spigot, UlyxSpigot
              if (this.seenBy.remove(player.connection)) {
                  this.serverEntity.removePairing(player);
                  if (this.seenBy.isEmpty()) {
@@ -308,7 +308,7 @@
          }
  
          public void updatePlayer(ServerPlayer player) {
-+            org.spigotmc.AsyncCatcher.catchOp("player tracker update"); // Spigot
++            if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isAsyncTrackerEnabled()) org.spigotmc.AsyncCatcher.catchOp("player tracker update"); // Spigot, UlyxSpigot
              if (player != this.entity) {
 -                Vec3 vec3 = player.position().subtract(this.entity.position());
 +                // Paper start - remove allocation of Vec3D here
