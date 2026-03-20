@@ -17,17 +17,24 @@
      }
  
      public void clientTick(Level level, BlockPos pos) {
-@@ -81,13 +_,19 @@
+@@ -81,13 +_,25 @@
      }
  
      public void serverTick(ServerLevel level, BlockPos pos) {
++        this.minSpawnDelay = org.ulyxspigot.ulyxspigot.UlyxConfig.getSpawnerMinSpawnDelay();
++        this.maxSpawnDelay = Math.max(this.minSpawnDelay, org.ulyxspigot.ulyxspigot.UlyxConfig.getSpawnerMaxSpawnDelay());
++        this.spawnCount = org.ulyxspigot.ulyxspigot.UlyxConfig.getSpawnerSpawnCount();
++        this.maxNearbyEntities = org.ulyxspigot.ulyxspigot.UlyxConfig.isSpawnerDisableMaxNearbyEntitiesCheck() ? Integer.MAX_VALUE : org.ulyxspigot.ulyxspigot.UlyxConfig.getSpawnerMaxNearbyEntities();
++        this.requiredPlayerRange = org.ulyxspigot.ulyxspigot.UlyxConfig.getSpawnerRequiredPlayerRange();
++        this.spawnRange = org.ulyxspigot.ulyxspigot.UlyxConfig.getSpawnerSpawnRange();
 +        if (spawnCount <= 0 || maxNearbyEntities <= 0) return; // Paper - Ignore impossible spawn tick
 +        // Paper start - Configurable mob spawner tick rate
 +        if (spawnDelay > 0 && --tickDelay > 0) return;
 +        tickDelay = level.paperConfig().tickRates.mobSpawner;
 +        if (tickDelay == -1) { return; } // If disabled
 +        // Paper end - Configurable mob spawner tick rate
-         if (this.isNearPlayer(level, pos) && level.isSpawnerBlockEnabled()) {
+-        if (this.isNearPlayer(level, pos) && level.isSpawnerBlockEnabled()) {
++        if ((org.ulyxspigot.ulyxspigot.UlyxConfig.isSpawnerDisableNearbyPlayersCheck() || this.isNearPlayer(level, pos)) && level.isSpawnerBlockEnabled()) {
 -            if (this.spawnDelay == -1) {
 +            if (this.spawnDelay < -tickDelay) { // Paper - Configurable mob spawner tick rate
                  this.delay(level, pos);

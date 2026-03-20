@@ -3,7 +3,8 @@
 @@ -103,6 +_,11 @@
      @Override
      protected void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-         if (level.getBrightness(LightLayer.BLOCK, pos) > 11) {
+-        if (level.getBrightness(LightLayer.BLOCK, pos) > 11) {
++        if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isDisableSnowLightChecks() && level.getBrightness(LightLayer.BLOCK, pos) > 11) {
 +            // CraftBukkit start
 +            if (org.bukkit.craftbukkit.event.CraftEventFactory.callBlockFadeEvent(level, pos, Blocks.AIR.defaultBlockState()).isCancelled()) {
 +                return;
