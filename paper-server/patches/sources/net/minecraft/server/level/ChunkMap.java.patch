@@ -306,7 +306,7 @@
              if (this.seenBy.remove(player.connection)) {
                  this.serverEntity.removePairing(player);
                  if (this.seenBy.isEmpty()) {
-@@ -1385,23 +_,61 @@
+@@ -1385,23 +_,63 @@
          }
  
          public void updatePlayer(ServerPlayer player) {
@@ -354,6 +354,7 @@
 +                                    }
 +
 +                                    ChunkMap.this.level.debugSynchronizers().startTrackingEntity(trackedPlayer, this.entity);
++                                    this.serverEntity.onPlayerAdd(); // Paper - fix desync when a player is added to the tracker
 +                                } else if (this.seenBy.remove(trackedPlayer.connection) && this.seenBy.isEmpty()) {
 +                                    ChunkMap.this.level.debugSynchronizers().dropEntity(this.entity);
 +                                }
@@ -367,6 +368,7 @@
                          }
  
                          ChunkMap.this.level.debugSynchronizers().startTrackingEntity(player, this.entity);
++                        this.serverEntity.onPlayerAdd(); // Paper - fix desync when a player is added to the tracker
 +                        }
 +                        // Paper end - entity tracking events
 +                        }
