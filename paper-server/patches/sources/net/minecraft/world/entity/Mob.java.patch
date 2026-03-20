@@ -246,7 +246,7 @@
      protected final void serverAiStep() {
          this.noActionTime++;
 +        // Paper start - Allow nerfed mobs to jump and float
-+        if (!this.aware) {
++        if (org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableEntityAI() || org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableEntityBrain() || !this.aware) {
 +            if (this.goalFloat != null) {
 +                if (this.goalFloat.canUse()) this.goalFloat.tick();
 +                this.getJumpControl().tick();
