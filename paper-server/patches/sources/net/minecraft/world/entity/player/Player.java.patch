@@ -249,9 +249,25 @@
                  if (f > 0.0F || f1 > 0.0F) {
                      boolean flag = attackStrengthScale > 0.9F;
                      boolean flag1;
-@@ -967,7 +_,13 @@
+@@ -967,7 +_,29 @@
  
-                     f += weaponItem.getItem().getAttackDamageBonus(target, f, damageSource);
+                    f += weaponItem.getItem().getAttackDamageBonus(target, f, damageSource);
++                    if (org.ulyxspigot.ulyxspigot.UlyxConfig.isCombatOldToolAttackDamage() && !this.isAutoSpinAttack()) {
++                        if (weaponItem.getItem() instanceof net.minecraft.world.item.SwordItem swordItem) {
++                            f = 4.0F + swordItem.getTier().getAttackDamageBonus();
++                        } else if (weaponItem.getItem() instanceof net.minecraft.world.item.AxeItem axeItem) {
++                            f = 3.0F + axeItem.getTier().getAttackDamageBonus();
++                        } else if (weaponItem.getItem() instanceof net.minecraft.world.item.PickaxeItem pickaxeItem) {
++                            f = 2.0F + pickaxeItem.getTier().getAttackDamageBonus();
++                        } else if (weaponItem.getItem() instanceof net.minecraft.world.item.ShovelItem shovelItem) {
++                            f = 1.0F + shovelItem.getTier().getAttackDamageBonus();
++                        } else if (weaponItem.getItem() instanceof net.minecraft.world.item.HoeItem) {
++                            f = 1.0F;
++                        }
++                    }
++                    if (org.ulyxspigot.ulyxspigot.UlyxConfig.isCombatOldSharpnessDamageBuff() && weaponItem.isEnchanted() && f1 > 0.0F) {
++                        f1 *= 2.0F;
++                    }
                      boolean flag2 = flag && this.canCriticalAttack(target);
 +                    flag2 = flag2 && !this.level().paperConfig().entities.behavior.disablePlayerCrits; // Paper - Toggleable player crits
 +                    if (org.ulyxspigot.ulyxspigot.UlyxConfig.isCombatPreventCriticalsIfSprinting() && this.isSprinting()) {

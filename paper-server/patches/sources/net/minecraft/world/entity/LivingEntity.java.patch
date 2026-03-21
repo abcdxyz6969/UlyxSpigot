@@ -976,7 +976,7 @@
      }
  
      protected void dropCustomDeathLoot(ServerLevel level, DamageSource damageSource, boolean recentlyHit) {
-@@ -1606,9 +_,14 @@
+@@ -1606,9 +_,23 @@
      }
  
      public void knockback(double strength, double x, double z) {
@@ -985,7 +985,17 @@
 +    }
 +
 +    public void knockback(double strength, double x, double z, @Nullable Entity attacker, io.papermc.paper.event.entity.EntityKnockbackEvent.Cause eventCause) { // Paper - knockback events
-         strength *= 1.0 - this.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE);
+-        strength *= 1.0 - this.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE);
++        double ulyxKnockbackResistance = this.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE);
++        if (org.ulyxspigot.ulyxspigot.UlyxConfig.isCombatDisableNetheriteKnockbackResistance()) {
++            if (this.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.HEAD).is(net.minecraft.world.item.Items.NETHERITE_HELMET)
++                || this.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.CHEST).is(net.minecraft.world.item.Items.NETHERITE_CHESTPLATE)
++                || this.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.LEGS).is(net.minecraft.world.item.Items.NETHERITE_LEGGINGS)
++                || this.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.FEET).is(net.minecraft.world.item.Items.NETHERITE_BOOTS)) {
++                ulyxKnockbackResistance = 0.0D;
++            }
++        }
++        strength *= 1.0 - ulyxKnockbackResistance;
 -        if (!(strength <= 0.0)) {
 -            this.needsSync = true;
 +        if (true || !(strength <= 0.0)) { // CraftBukkit - Call event even when force is 0
@@ -1037,7 +1047,7 @@
                  int i = (this.getEffect(MobEffects.RESISTANCE).getAmplifier() + 1) * 5;
                  int i1 = 25 - i;
                  float f = damageAmount * i1;
-@@ -1863,24 +_,206 @@
+@@ -1863,24 +_,219 @@
          }
      }
  
@@ -1092,6 +1102,14 @@
 +        amount += blockingModifier;
 +
 +        com.google.common.base.Function<Double, Double> armor = mod -> {
++            if (damagesource.is(net.minecraft.tags.DamageTypeTags.BYPASSES_ARMOR)) {
++                return -0.0;
++            }
++            if (org.ulyxspigot.ulyxspigot.UlyxConfig.isCombatRevertArmorProtection()) {
++                final float ulyxArmor = Math.max(0.0F, Math.min(20.0F, LivingEntity.this.getArmorValue()));
++                final float ulyxReduced = mod.floatValue() * (1.0F - ulyxArmor * 0.04F);
++                return -(mod - Math.max(ulyxReduced, 0.0F));
++            }
 +            return -(mod - LivingEntity.this.getDamageAfterArmorAbsorb(damagesource, mod.floatValue()));
 +        };
 +        float armorModifier = armor.apply((double) amount).floatValue();
@@ -1111,7 +1129,12 @@
 +        amount += resistanceModifier;
 +
 +        com.google.common.base.Function<Double, Double> magic = mod -> {
-+            return -(mod - net.minecraft.world.entity.LivingEntity.this.getDamageAfterMagicAbsorb(damagesource, mod.floatValue()));
++            final float ulyxMagicAbsorbed = net.minecraft.world.entity.LivingEntity.this.getDamageAfterMagicAbsorb(damagesource, mod.floatValue());
++            if (org.ulyxspigot.ulyxspigot.UlyxConfig.isCombatLegacyBlastProtection() && damagesource.is(net.minecraft.tags.DamageTypeTags.IS_EXPLOSION)) {
++                final float ulyxLegacyFloor = mod.floatValue() * 0.2F;
++                return -(mod - Math.max(ulyxMagicAbsorbed, ulyxLegacyFloor));
++            }
++            return -(mod - ulyxMagicAbsorbed);
 +        };
 +        float magicModifier = magic.apply((double) amount).floatValue();
 +        amount += magicModifier;

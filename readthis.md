@@ -91,24 +91,33 @@
   - `paper-server/patches/sources/net/minecraft/world/entity/player/Player.java.patch`
   - `paper-server/patches/sources/net/minecraft/world/entity/projectile/FishingHook.java.patch`
 
+### Combat update tiep theo (batch tiep theo)
+- Da wire code hoat dong cho 8 key:
+  - `combat.enableBowBoosting`
+  - `combat.oldCollisionsProjectile`
+  - `combat.disableNetheriteKnockbackResistance`
+  - `combat.oldSharpnessDamageBuff`
+  - `combat.oldToolAttackDamage`
+  - `combat.oldEnchantedGappleEffects`
+  - `combat.legacyBlastProtection`
+  - `combat.revertArmorProtection`
+- File chinh:
+  - `paper-server/patches/sources/net/minecraft/world/entity/projectile/Projectile.java.patch`
+  - `paper-server/patches/sources/net/minecraft/world/entity/player/Player.java.patch`
+  - `paper-server/patches/sources/net/minecraft/world/entity/LivingEntity.java.patch`
+  - `paper-server/patches/sources/net/minecraft/world/item/component/Consumable.java.patch`
+
 ## 4) Cac key config van chua co code tac dong
 - `behavior.disableInitialWorldSpawn`
 - `combat.alternative-hit-registration`
-- `combat.enableBowBoosting`
-- `combat.oldCollisionsProjectile`
-- `combat.legacyBlastProtection`
-- `combat.oldEnchantedGappleEffects`
 - `combat.imitateSwordBlocking`
-- `combat.revertArmorProtection`
-- `combat.disableNetheriteKnockbackResistance`
-- `combat.oldSharpnessDamageBuff`
-- `combat.oldToolAttackDamage`
 
 ## 5) Trang thai git local (sau turn nay)
 - Dang co modified files:
   - `paper-server/patches/sources/net/minecraft/world/entity/player/Player.java.patch`
+  - `paper-server/patches/sources/net/minecraft/world/entity/LivingEntity.java.patch`
   - `paper-server/patches/sources/net/minecraft/world/entity/projectile/Projectile.java.patch`
-  - `paper-server/patches/sources/net/minecraft/world/entity/projectile/FishingHook.java.patch`
+  - `paper-server/patches/sources/net/minecraft/world/item/component/Consumable.java.patch`
   - `readthis.md`
 
 ## 6) Build/CI
