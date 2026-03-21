@@ -83,20 +83,19 @@
 
 
 ### Combat update tiep theo (batch projectile + fishing + kb-scaling)
-- Da wire code hoat dong cho 5 key:
+- Da wire code hoat dong cho 3 key:
   - `combat.disableKnockbackScaling`
-  - `combat.enableBowBoosting`
-  - `combat.oldCollisionsProjectile`
   - `combat.fishingHooksDoKnockback`
   - `combat.fishingHooksPullEntities`
 - File chinh:
   - `paper-server/patches/sources/net/minecraft/world/entity/player/Player.java.patch`
-  - `paper-server/patches/sources/net/minecraft/world/entity/projectile/Projectile.java.patch`
   - `paper-server/patches/sources/net/minecraft/world/entity/projectile/FishingHook.java.patch`
 
 ## 4) Cac key config van chua co code tac dong
 - `behavior.disableInitialWorldSpawn`
 - `combat.alternative-hit-registration`
+- `combat.enableBowBoosting`
+- `combat.oldCollisionsProjectile`
 - `combat.legacyBlastProtection`
 - `combat.oldEnchantedGappleEffects`
 - `combat.imitateSwordBlocking`
