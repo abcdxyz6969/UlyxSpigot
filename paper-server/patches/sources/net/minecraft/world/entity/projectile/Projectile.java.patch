@@ -137,7 +137,7 @@
  
      public void applyOnProjectileSpawned(ServerLevel level, ItemStack spawnedFrom) {
          EnchantmentHelper.onProjectileSpawned(level, spawnedFrom, this, item -> {});
-@@ -224,6 +_,17 @@
+@@ -224,6 +_,20 @@
          }
      }
  
