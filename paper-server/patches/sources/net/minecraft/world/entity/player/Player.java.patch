@@ -249,7 +249,7 @@
                  if (f > 0.0F || f1 > 0.0F) {
                      boolean flag = attackStrengthScale > 0.9F;
                      boolean flag1;
-@@ -967,7 +_,26 @@
+@@ -967,6 +_,30 @@
  
 -                    f += weaponItem.getItem().getAttackDamageBonus(target, f, damageSource);
 +                    // UlyxSpigot start - mace combat options
@@ -359,7 +359,7 @@
          }
      }
  
-@@ -1145,8 +_,11 @@
+@@ -1145,8 +_,14 @@
                      && !(livingEntity instanceof ArmorStand armorStand && armorStand.isMarker())
                      && this.distanceToSqr(livingEntity) < 9.0) {
 +                    if (org.ulyxspigot.ulyxspigot.UlyxConfig.isCombatDisableSweepingEdge()) {
