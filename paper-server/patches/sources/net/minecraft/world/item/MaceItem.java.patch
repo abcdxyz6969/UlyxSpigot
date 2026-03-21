@@ -10,8 +10,8 @@
 +        if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isCombatMaceIgnoreFallDistance()) {
 +            final double ulyxFallLimit = org.ulyxspigot.ulyxspigot.UlyxConfig.getCombatMaceLimitFallDistance();
 +            if (ulyxFallLimit >= 0.0D && attacker.fallDistance > ulyxFallLimit) {
-+                final float ulyxOriginalFallDistance = attacker.fallDistance;
-+                attacker.fallDistance = (float) ulyxFallLimit;
++                final double ulyxOriginalFallDistance = attacker.fallDistance;
++                attacker.fallDistance = ulyxFallLimit;
 +                canSmashAttack = canSmashAttack(attacker);
 +                attacker.fallDistance = ulyxOriginalFallDistance;
 +            }

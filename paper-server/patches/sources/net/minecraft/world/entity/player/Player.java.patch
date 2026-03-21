@@ -258,10 +258,10 @@
 +                            // Keep smash behavior, but remove fall-based bonus damage.
 +                            f += 0.0F;
 +                        } else {
-+                            final float ulyxOriginalFallDistance = this.fallDistance;
++                            final double ulyxOriginalFallDistance = this.fallDistance;
 +                            final double ulyxFallLimit = org.ulyxspigot.ulyxspigot.UlyxConfig.getCombatMaceLimitFallDistance();
 +                            if (ulyxFallLimit >= 0.0D && this.fallDistance > ulyxFallLimit) {
-+                                this.fallDistance = (float) ulyxFallLimit;
++                                this.fallDistance = ulyxFallLimit;
 +                            }
 +                            f += weaponItem.getItem().getAttackDamageBonus(target, f, damageSource);
 +                            this.fallDistance = ulyxOriginalFallDistance;

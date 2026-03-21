@@ -22,6 +22,8 @@ import net.minecraft.server.level.FullChunkStatus;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.projectile.Projectile;
 import org.bukkit.Bukkit;
 
 public final class UlyxAsyncTracker {
@@ -115,7 +117,7 @@ public final class UlyxAsyncTracker {
 
         if (taskCount <= 1) {
             tickSlice(trackerEntitiesRaw, 0, trackerSize);
-            tickLivingSync(trackerEntitiesRaw, trackerSize);
+            tickMainThreadSync(trackerEntitiesRaw, trackerSize);
             drainMainThreadTasks();
             return;
         }
@@ -155,7 +157,7 @@ public final class UlyxAsyncTracker {
             }
         }
 
-        tickLivingSync(trackerEntitiesRaw, trackerSize);
+        tickMainThreadSync(trackerEntitiesRaw, trackerSize);
         drainMainThreadTasks();
     }
 
@@ -172,7 +174,7 @@ public final class UlyxAsyncTracker {
     private static void tickSlice(Entity[] trackerEntitiesRaw, int start, int end) {
         for (int i = start; i < end; ++i) {
             final Entity entity = trackerEntitiesRaw[i];
-            if (entity == null || entity instanceof LivingEntity) {
+            if (shouldTickOnMainThread(entity)) {
                 continue;
             }
 
@@ -180,14 +182,25 @@ public final class UlyxAsyncTracker {
         }
     }
 
-    private static void tickLivingSync(Entity[] trackerEntitiesRaw, int size) {
+    private static void tickMainThreadSync(Entity[] trackerEntitiesRaw, int size) {
         for (int i = 0; i < size; ++i) {
             final Entity entity = trackerEntitiesRaw[i];
-            if (!(entity instanceof LivingEntity)) {
+            if (!shouldTickOnMainThread(entity)) {
                 continue;
             }
             tickTrackedEntity(entity, false);
         }
+    }
+
+    private static boolean shouldTickOnMainThread(Entity entity) {
+        if (entity == null) {
+            return true;
+        }
+
+        // Item/projectile tracking can rubber-band when updated off-thread.
+        return entity instanceof LivingEntity
+                || entity instanceof ItemEntity
+                || entity instanceof Projectile;
     }
 
     private static void tickTrackedEntity(Entity entity, boolean lockTracker) {

@@ -49,6 +49,16 @@
   - `old-behavior: true` -> remove `BAD_OMEN`
   - `old-behavior: false` -> remove `RAID_OMEN`
 
+### Hotfix tracker (item/wind charge rubber-band)
+- File:
+  - `paper-server/src/main/java/org/ulyxspigot/ulyxspigot/async/UlyxAsyncTracker.java`
+- Nguyen nhan kha nang cao: non-living entity (item/projectile) bi tracker tick off-thread gay packet position dao chieu.
+- Da sua:
+  - ep `ItemEntity` va toan bo `Projectile` tick sync tren main thread
+  - giu async cho nhom non-living con lai
+- Workaround ngay lap tuc (neu chua co ban build moi):
+  - dat `asynchronous.tracker.enabled: false` trong `ulyxspigot.yml`
+
 ## 4) Cac key config van chua co code tac dong
 - `behavior.disableInitialWorldSpawn`
 - `combat.alternative-hit-registration`
@@ -71,13 +81,10 @@
 - `combat.criticalModifier`
 
 ## 5) Trang thai git local (sau turn nay)
-- Dang co modified files (bao gom file user da sua tu truoc va file moi sua):
-  - `paper-server/patches/sources/net/minecraft/world/entity/LivingEntity.java.patch`
+- Dang co modified files:
   - `paper-server/patches/sources/net/minecraft/world/entity/player/Player.java.patch`
-  - `paper-server/patches/sources/net/minecraft/world/entity/raid/Raids.java.patch`
   - `paper-server/patches/sources/net/minecraft/world/item/MaceItem.java.patch`
-  - `paper-server/patches/sources/net/minecraft/world/level/BaseSpawner.java.patch`
-  - `paper-server/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java`
+  - `paper-server/src/main/java/org/ulyxspigot/ulyxspigot/async/UlyxAsyncTracker.java`
   - `readthis.md`
 
 ## 6) Build/CI
