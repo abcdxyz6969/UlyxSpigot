@@ -28,6 +28,7 @@ public final class UlyxConfig {
     private static final Object LOAD_LOCK = new Object();
 
     private static volatile boolean loaded;
+    private static volatile boolean asyncSystemsConfigured;
     private static YamlConfiguration config;
 
     private static String serverBrandNameDisplay = "UlyxSpigot";
@@ -129,14 +130,15 @@ public final class UlyxConfig {
 
     public static void ensureLoaded() {
         if (loaded) {
+            maybeConfigureAsyncSystems();
             return;
         }
         synchronized (LOAD_LOCK) {
-            if (loaded) {
-                return;
+            if (!loaded) {
+                loadConfig();
+                loaded = true;
             }
-            loadConfig();
-            loaded = true;
+            maybeConfigureAsyncSystems();
         }
     }
 
@@ -166,10 +168,34 @@ public final class UlyxConfig {
         return blockedOptions;
     }
 
+    private static void maybeConfigureAsyncSystems() {
+        if (asyncSystemsConfigured || Bukkit.getServer() == null) {
+            return;
+        }
+
+        synchronized (LOAD_LOCK) {
+            if (asyncSystemsConfigured || Bukkit.getServer() == null) {
+                return;
+            }
+
+            UlyxAsyncTracker.reconfigure(asyncTrackerEnabled);
+            UlyxAsyncPathfinding.reconfigure(asyncPathfindingEnabled, asyncPathfindingThreads);
+            UlyxAsyncPacketSending.reconfigure(asyncPacketSendingEnabled);
+            UlyxAsyncDataSaving.reconfigure(asyncDataSavingEnabled);
+            UlyxAsyncInventoryUpdates.reconfigure(asyncInventoryUpdatesEnabled);
+            asyncSystemsConfigured = true;
+        }
+    }
+
+    private static java.util.logging.Logger logger() {
+        final org.bukkit.Server server = Bukkit.getServer();
+        return server != null ? server.getLogger() : java.util.logging.Logger.getLogger("UlyxSpigot");
+    }
+
     private static void loadConfig() {
         final File parent = CONFIG_FILE.getParentFile();
         if (parent != null && !parent.exists() && !parent.mkdirs()) {
-            Bukkit.getLogger().log(Level.WARNING, "Could not create config directory " + parent.getAbsolutePath());
+            logger().log(Level.WARNING, "Could not create config directory " + parent.getAbsolutePath());
         }
 
         config = new YamlConfiguration();
@@ -177,7 +203,7 @@ public final class UlyxConfig {
             config.load(CONFIG_FILE);
         } catch (IOException ignore) {
         } catch (InvalidConfigurationException ex) {
-            Bukkit.getLogger().log(Level.SEVERE, "Could not load ulyxspigot.yml, please correct your syntax errors", ex);
+            logger().log(Level.SEVERE, "Could not load ulyxspigot.yml, please correct your syntax errors", ex);
             throw new RuntimeException(ex);
         }
 
@@ -279,17 +305,13 @@ public final class UlyxConfig {
         combatKnockbackHorizontal = getDouble("combat.knockback.horizontal", combatKnockbackHorizontal);
         combatKnockbackFriction = getDouble("combat.knockback.friction", combatKnockbackFriction);
         combatKnockbackVerticalLimit = getDouble("combat.knockback.verticalLimit", combatKnockbackVerticalLimit);
-
-        UlyxAsyncTracker.reconfigure(asyncTrackerEnabled);
-        UlyxAsyncPathfinding.reconfigure(asyncPathfindingEnabled, asyncPathfindingThreads);
-        UlyxAsyncPacketSending.reconfigure(asyncPacketSendingEnabled);
-        UlyxAsyncDataSaving.reconfigure(asyncDataSavingEnabled);
-        UlyxAsyncInventoryUpdates.reconfigure(asyncInventoryUpdatesEnabled);
+        asyncSystemsConfigured = false;
+        maybeConfigureAsyncSystems();
 
         try {
             config.save(CONFIG_FILE);
         } catch (IOException ex) {
-            Bukkit.getLogger().log(Level.SEVERE, "Could not save " + CONFIG_FILE, ex);
+            logger().log(Level.SEVERE, "Could not save " + CONFIG_FILE, ex);
         }
     }
 
@@ -744,7 +766,7 @@ public final class UlyxConfig {
             }
 
             if (!parsed.add(normalized)) {
-                Bukkit.getLogger().warning("[UlyxSpigot] Duplicate entity type in " + path + ": " + entry);
+                logger().warning("[UlyxSpigot] Duplicate entity type in " + path + ": " + entry);
             }
         }
 
@@ -764,13 +786,13 @@ public final class UlyxConfig {
 
             final String[] split = entry.split(":", 2);
             if (split.length != 2) {
-                Bukkit.getLogger().warning("[UlyxSpigot] Invalid entity-update-interval entry (expected ENTITY:NUMBER): " + entry);
+                logger().warning("[UlyxSpigot] Invalid entity-update-interval entry (expected ENTITY:NUMBER): " + entry);
                 continue;
             }
 
             final String key = split[0].trim().toUpperCase(Locale.ROOT);
             if (key.isEmpty()) {
-                Bukkit.getLogger().warning("[UlyxSpigot] Invalid entity-update-interval entry (empty entity type): " + entry);
+                logger().warning("[UlyxSpigot] Invalid entity-update-interval entry (empty entity type): " + entry);
                 continue;
             }
 
@@ -778,12 +800,12 @@ public final class UlyxConfig {
             try {
                 interval = Integer.parseInt(split[1].trim());
             } catch (NumberFormatException ex) {
-                Bukkit.getLogger().warning("[UlyxSpigot] Invalid entity-update-interval number in entry: " + entry);
+                logger().warning("[UlyxSpigot] Invalid entity-update-interval number in entry: " + entry);
                 continue;
             }
 
             if (interval < 1) {
-                Bukkit.getLogger().warning("[UlyxSpigot] entity-update-interval must be >= 1, got " + interval + " in entry: " + entry);
+                logger().warning("[UlyxSpigot] entity-update-interval must be >= 1, got " + interval + " in entry: " + entry);
                 continue;
             }
 
