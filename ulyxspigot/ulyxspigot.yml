@@ -31,26 +31,6 @@ asynchronous:
     # Recommended value: false
     enabled: false
 
-experimental:
-  # Optimizes player movement by reducing chunk source updates.
-  # Recommended value: true
-  reducePlayerChunkSourceUpdates: true
-  # Reduces chunk mid tick tasks execution.
-  # Recommended value: false
-  reduceChunkMidTickTaskExecution: true
-  # Disables the Paper chunk load version check (This allows, for example, to load chunks from 1.20.2 to 1.20.1).
-  disableChunkNewerVersionLoadCheck: false
-
-developer:
-  # Allows the recalculation of out of bounds region files to allow instantaneous region pasting.
-  recalculateChunksOutOfBounds: false
-  # Skips validation for vanilla enchantment levels.
-  allowInvalidEnchantLevels: false
-  # Disables Spigot AsyncCatcher to allow operations like world loading to happen async.
-  disableAsyncCatcher: false
-  # Skips world session.lock file validation
-  disableSessionLockFile: false
-
 behavior:
   # Allows the Bukkit API to teleport entities with passengers.
   allowTeleportationWithPassengers: false
@@ -208,3 +188,23 @@ combat:
     friction: 2.0
     # Vertical limit of applied knockback.
     verticalLimit: 0.4000000059604645
+
+experimental:
+  # Optimizes player movement by reducing chunk source updates.
+  # Recommended value: true
+  reducePlayerChunkSourceUpdates: true
+  # Reduces chunk mid tick tasks execution.
+  # Recommended value: false
+  reduceChunkMidTickTaskExecution: false
+  # Disables the Paper chunk load version check (This allows, for example, to load chunks from 1.20.2 to 1.20.1).
+  disableChunkNewerVersionLoadCheck: false
+
+developer:
+  # Allows the recalculation of out of bounds region files to allow instantaneous region pasting.
+  recalculateChunksOutOfBounds: false
+  # Skips validation for vanilla enchantment levels.
+  allowInvalidEnchantLevels: false
+  # Disables Spigot AsyncCatcher to allow operations like world loading to happen async.
+  disableAsyncCatcher: false
+  # Skips world session.lock file validation
+  disableSessionLockFile: false

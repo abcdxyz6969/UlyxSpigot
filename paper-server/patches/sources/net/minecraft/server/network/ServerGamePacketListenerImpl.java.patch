@@ -366,7 +366,7 @@
 +                    }
 +                }
 +                // CraftBukkit end
-                 this.player.level().getChunkSource().move(this.player);
+                 if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isExperimentalReducePlayerChunkSourceUpdates() || this.player.getLastSectionPos().asLong() != net.minecraft.core.SectionPos.asLong(this.player.blockPosition())) this.player.level().getChunkSource().move(this.player); // UlyxSpigot - Reduce PlayerChunk Updates
                  Vec3 vec3 = new Vec3(rootVehicle.getX() - x, rootVehicle.getY() - y, rootVehicle.getZ() - z);
                  this.handlePlayerKnownMovement(vec3);
 @@ -519,7 +_,7 @@
@@ -382,7 +382,7 @@
              this.lastGoodZ = this.awaitingPositionFromClient.z;
              this.player.hasChangedDimension();
              this.awaitingPositionFromClient = null;
-+            this.player.level().getChunkSource().move(this.player); // CraftBukkit
++            if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isExperimentalReducePlayerChunkSourceUpdates() || this.player.getLastSectionPos().asLong() != net.minecraft.core.SectionPos.asLong(this.player.blockPosition())) this.player.level().getChunkSource().move(this.player); // UlyxSpigot - Reduce PlayerChunk Updates
          }
      }
  
@@ -719,7 +719,7 @@
 +                        double d2 = clampHorizontal(packet.getZ(this.player.getZ())); final double toZ = d2; // Paper - OBFHELPER
                          if (this.player.isPassenger()) {
                              this.player.absSnapTo(this.player.getX(), this.player.getY(), this.player.getZ(), f, f1);
-                             this.player.level().getChunkSource().move(this.player);
+                             if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isExperimentalReducePlayerChunkSourceUpdates() || this.player.getLastSectionPos().asLong() != net.minecraft.core.SectionPos.asLong(this.player.blockPosition())) this.player.level().getChunkSource().move(this.player); // UlyxSpigot - Reduce PlayerChunk Updates
 +                            this.allowedPlayerTicks = 20; // CraftBukkit
                          } else {
 +                            // CraftBukkit - Make sure the move is valid but then reset it for plugins to modify

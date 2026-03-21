@@ -116,8 +116,9 @@
   - `developer.allowInvalidEnchantLevels`
   - `developer.disableAsyncCatcher`
   - `developer.disableSessionLockFile`
-- Da wire code hoat dong cho 4 key:
+- Da wire code hoat dong cho 5 key:
   - `experimental.disableChunkNewerVersionLoadCheck`
+  - `experimental.reducePlayerChunkSourceUpdates`
   - `developer.allowInvalidEnchantLevels`
   - `developer.disableAsyncCatcher`
   - `developer.disableSessionLockFile`
@@ -129,10 +130,10 @@
   - `paper-server/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaEnchantedBook.java`
   - `paper-server/patches/sources/net/minecraft/world/level/chunk/storage/SerializableChunkData.java.patch`
   - `paper-server/patches/sources/net/minecraft/world/level/storage/LevelStorageSource.java.patch`
+  - `paper-server/patches/sources/net/minecraft/server/network/ServerGamePacketListenerImpl.java.patch`
 
 ## 4) Cac key config van chua co code tac dong
 - `behavior.disableInitialWorldSpawn`
-- `experimental.reducePlayerChunkSourceUpdates`
 - `experimental.reduceChunkMidTickTaskExecution`
 - `developer.recalculateChunksOutOfBounds`
 - `combat.alternative-hit-registration`
@@ -147,6 +148,7 @@
   - `paper-server/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaEnchantedBook.java`
   - `paper-server/patches/sources/net/minecraft/world/level/chunk/storage/SerializableChunkData.java.patch`
   - `paper-server/patches/sources/net/minecraft/world/level/storage/LevelStorageSource.java.patch`
+  - `paper-server/patches/sources/net/minecraft/server/network/ServerGamePacketListenerImpl.java.patch`
   - `readthis.md`
 
 ## 6) Build/CI
