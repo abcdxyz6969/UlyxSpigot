@@ -249,27 +249,9 @@
                  if (f > 0.0F || f1 > 0.0F) {
                      boolean flag = attackStrengthScale > 0.9F;
                      boolean flag1;
-@@ -967,6 +_,30 @@
+@@ -967,7 +_,13 @@
  
--                    f += weaponItem.getItem().getAttackDamageBonus(target, f, damageSource);
-+                    // UlyxSpigot start - mace combat options
-+                    if (weaponItem.getItem() instanceof net.minecraft.world.item.MaceItem) {
-+                        if (org.ulyxspigot.ulyxspigot.UlyxConfig.isCombatMaceIgnoreFallDistance()) {
-+                            // Keep smash behavior, but remove fall-based bonus damage.
-+                            f += 0.0F;
-+                        } else {
-+                            final double ulyxOriginalFallDistance = this.fallDistance;
-+                            final double ulyxFallLimit = org.ulyxspigot.ulyxspigot.UlyxConfig.getCombatMaceLimitFallDistance();
-+                            if (ulyxFallLimit >= 0.0D && this.fallDistance > ulyxFallLimit) {
-+                                this.fallDistance = ulyxFallLimit;
-+                            }
-+                            f += weaponItem.getItem().getAttackDamageBonus(target, f, damageSource);
-+                            this.fallDistance = ulyxOriginalFallDistance;
-+                        }
-+                    } else {
-+                        f += weaponItem.getItem().getAttackDamageBonus(target, f, damageSource);
-+                    }
-+                    // UlyxSpigot end - mace combat options
+                     f += weaponItem.getItem().getAttackDamageBonus(target, f, damageSource);
                      boolean flag2 = flag && this.canCriticalAttack(target);
 +                    flag2 = flag2 && !this.level().paperConfig().entities.behavior.disablePlayerCrits; // Paper - Toggleable player crits
 +                    if (org.ulyxspigot.ulyxspigot.UlyxConfig.isCombatPreventCriticalsIfSprinting() && this.isSprinting()) {
@@ -278,6 +260,7 @@
                      if (flag2) {
 +                        damageSource = damageSource.critical(); // Paper - critical damage API
 +                        final float ulyxCriticalModifier = (float) org.ulyxspigot.ulyxspigot.UlyxConfig.getCombatCriticalModifier();
+-                        f *= 1.5F;
 +                        f *= ulyxCriticalModifier;
                      }
  
