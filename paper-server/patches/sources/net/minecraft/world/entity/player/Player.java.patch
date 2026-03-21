@@ -249,19 +249,57 @@
                  if (f > 0.0F || f1 > 0.0F) {
                      boolean flag = attackStrengthScale > 0.9F;
                      boolean flag1;
-@@ -967,7 +_,29 @@
+@@ -967,7 +_,67 @@
  
                      f += weaponItem.getItem().getAttackDamageBonus(target, f, damageSource);
 +                    if (org.ulyxspigot.ulyxspigot.UlyxConfig.isCombatOldToolAttackDamage() && !this.isAutoSpinAttack()) {
-+                        if (weaponItem.getItem() instanceof net.minecraft.world.item.SwordItem swordItem) {
-+                            f = 4.0F + swordItem.getTier().getAttackDamageBonus();
-+                        } else if (weaponItem.getItem() instanceof net.minecraft.world.item.AxeItem axeItem) {
-+                            f = 3.0F + axeItem.getTier().getAttackDamageBonus();
-+                        } else if (weaponItem.getItem() instanceof net.minecraft.world.item.PickaxeItem pickaxeItem) {
-+                            f = 2.0F + pickaxeItem.getTier().getAttackDamageBonus();
-+                        } else if (weaponItem.getItem() instanceof net.minecraft.world.item.ShovelItem shovelItem) {
-+                            f = 1.0F + shovelItem.getTier().getAttackDamageBonus();
-+                        } else if (weaponItem.getItem() instanceof net.minecraft.world.item.HoeItem) {
++                        final net.minecraft.world.item.Item ulyxItem = weaponItem.getItem();
++                        if (ulyxItem == net.minecraft.world.item.Items.WOODEN_SWORD || ulyxItem == net.minecraft.world.item.Items.GOLDEN_SWORD) {
++                            f = 4.0F;
++                        } else if (ulyxItem == net.minecraft.world.item.Items.STONE_SWORD) {
++                            f = 5.0F;
++                        } else if (ulyxItem == net.minecraft.world.item.Items.IRON_SWORD) {
++                            f = 6.0F;
++                        } else if (ulyxItem == net.minecraft.world.item.Items.DIAMOND_SWORD) {
++                            f = 7.0F;
++                        } else if (ulyxItem == net.minecraft.world.item.Items.NETHERITE_SWORD) {
++                            f = 8.0F;
++                        } else if (ulyxItem == net.minecraft.world.item.Items.WOODEN_AXE || ulyxItem == net.minecraft.world.item.Items.GOLDEN_AXE) {
++                            f = 3.0F;
++                        } else if (ulyxItem == net.minecraft.world.item.Items.STONE_AXE) {
++                            f = 4.0F;
++                        } else if (ulyxItem == net.minecraft.world.item.Items.IRON_AXE) {
++                            f = 5.0F;
++                        } else if (ulyxItem == net.minecraft.world.item.Items.DIAMOND_AXE) {
++                            f = 6.0F;
++                        } else if (ulyxItem == net.minecraft.world.item.Items.NETHERITE_AXE) {
++                            f = 7.0F;
++                        } else if (ulyxItem == net.minecraft.world.item.Items.WOODEN_PICKAXE || ulyxItem == net.minecraft.world.item.Items.GOLDEN_PICKAXE) {
++                            f = 2.0F;
++                        } else if (ulyxItem == net.minecraft.world.item.Items.STONE_PICKAXE) {
++                            f = 3.0F;
++                        } else if (ulyxItem == net.minecraft.world.item.Items.IRON_PICKAXE) {
++                            f = 4.0F;
++                        } else if (ulyxItem == net.minecraft.world.item.Items.DIAMOND_PICKAXE) {
++                            f = 5.0F;
++                        } else if (ulyxItem == net.minecraft.world.item.Items.NETHERITE_PICKAXE) {
++                            f = 6.0F;
++                        } else if (ulyxItem == net.minecraft.world.item.Items.WOODEN_SHOVEL || ulyxItem == net.minecraft.world.item.Items.GOLDEN_SHOVEL) {
++                            f = 1.0F;
++                        } else if (ulyxItem == net.minecraft.world.item.Items.STONE_SHOVEL) {
++                            f = 2.0F;
++                        } else if (ulyxItem == net.minecraft.world.item.Items.IRON_SHOVEL) {
++                            f = 3.0F;
++                        } else if (ulyxItem == net.minecraft.world.item.Items.DIAMOND_SHOVEL) {
++                            f = 4.0F;
++                        } else if (ulyxItem == net.minecraft.world.item.Items.NETHERITE_SHOVEL) {
++                            f = 5.0F;
++                        } else if (ulyxItem == net.minecraft.world.item.Items.WOODEN_HOE
++                            || ulyxItem == net.minecraft.world.item.Items.GOLDEN_HOE
++                            || ulyxItem == net.minecraft.world.item.Items.STONE_HOE
++                            || ulyxItem == net.minecraft.world.item.Items.IRON_HOE
++                            || ulyxItem == net.minecraft.world.item.Items.DIAMOND_HOE
++                            || ulyxItem == net.minecraft.world.item.Items.NETHERITE_HOE) {
 +                            f = 1.0F;
 +                        }
 +                    }

@@ -191,7 +191,7 @@
 +                }
 +            }
 +            // Paper end - Cancel hit for vanished entities
-+            if (org.ulyxspigot.ulyxspigot.UlyxConfig.isCombatEnableBowBoosting() && this instanceof net.minecraft.world.entity.projectile.AbstractArrow && owner == target) {
++            if (org.ulyxspigot.ulyxspigot.UlyxConfig.isCombatEnableBowBoosting() && (this.getType() == net.minecraft.world.entity.EntityType.ARROW || this.getType() == net.minecraft.world.entity.EntityType.SPECTRAL_ARROW) && owner == target) {
 +                return true;
 +            }
 +            if (org.ulyxspigot.ulyxspigot.UlyxConfig.isCombatOldCollisionsProjectile()) {

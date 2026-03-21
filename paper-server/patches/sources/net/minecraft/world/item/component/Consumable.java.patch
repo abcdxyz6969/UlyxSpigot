@@ -19,7 +19,7 @@
 +            if (org.ulyxspigot.ulyxspigot.UlyxConfig.isCombatOldEnchantedGappleEffects() && stack.is(net.minecraft.world.item.Items.ENCHANTED_GOLDEN_APPLE)) {
 +                entity.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.REGENERATION, 400, 1), cause);
 +                entity.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.ABSORPTION, 2400, 3), cause);
-+                entity.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.DAMAGE_RESISTANCE, 6000, 0), cause);
++                entity.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.RESISTANCE, 6000, 0), cause);
 +                entity.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.FIRE_RESISTANCE, 6000, 0), cause);
 +            }
 +            // CraftBukkit end
