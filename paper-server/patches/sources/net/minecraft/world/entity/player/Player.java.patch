@@ -297,12 +297,38 @@
              return true;
          } else {
              return false;
-@@ -1110,21 +_,43 @@
+@@ -1110,21 +_,69 @@
      public void causeExtraKnockback(Entity target, float strength, Vec3 currentMovement) {
          if (strength > 0.0F) {
              if (target instanceof LivingEntity livingEntity) {
 -                livingEntity.knockback(strength, Mth.sin(this.getYRot() * (float) (Math.PI / 180.0)), -Mth.cos(this.getYRot() * (float) (Math.PI / 180.0)));
-+                livingEntity.knockback(strength, Mth.sin(this.getYRot() * (float) (Math.PI / 180.0)), -Mth.cos(this.getYRot() * (float) (Math.PI / 180.0)), this, io.papermc.paper.event.entity.EntityKnockbackEvent.Cause.ENTITY_ATTACK); // Paper - knockback events
++                if (org.ulyxspigot.ulyxspigot.UlyxConfig.isCombatKnockbackOldKnockback()) {
++                    final double ulyxHorizontal = org.ulyxspigot.ulyxspigot.UlyxConfig.getCombatKnockbackHorizontal();
++                    final double ulyxVertical = org.ulyxspigot.ulyxspigot.UlyxConfig.getCombatKnockbackVertical();
++                    final double ulyxFriction = Math.max(1.0D, org.ulyxspigot.ulyxspigot.UlyxConfig.getCombatKnockbackFriction());
++                    final double ulyxVerticalLimit = org.ulyxspigot.ulyxspigot.UlyxConfig.getCombatKnockbackVerticalLimit();
++                    final Vec3 ulyxMotion = livingEntity.getDeltaMovement();
++                    final double ulyxSin = Mth.sin(this.getYRot() * (float) (Math.PI / 180.0));
++                    final double ulyxCos = Mth.cos(this.getYRot() * (float) (Math.PI / 180.0));
++                    livingEntity.setDeltaMovement(
++                        ulyxMotion.x / ulyxFriction - ulyxSin * ulyxHorizontal,
++                        Math.min(ulyxVerticalLimit, ulyxMotion.y / ulyxFriction + ulyxVertical),
++                        ulyxMotion.z / ulyxFriction + ulyxCos * ulyxHorizontal
++                    );
++                    livingEntity.hurtMarked = true;
++                } else if (org.ulyxspigot.ulyxspigot.UlyxConfig.isCombatDisableKnockbackScaling()) {
++                    final Vec3 ulyxMotion = livingEntity.getDeltaMovement();
++                    final double ulyxSin = Mth.sin(this.getYRot() * (float) (Math.PI / 180.0));
++                    final double ulyxCos = Mth.cos(this.getYRot() * (float) (Math.PI / 180.0));
++                    livingEntity.setDeltaMovement(
++                        ulyxMotion.x * 0.5D - ulyxSin * strength,
++                        Math.min(0.4D, ulyxMotion.y * 0.5D + 0.4D),
++                        ulyxMotion.z * 0.5D + ulyxCos * strength
++                    );
++                    livingEntity.hurtMarked = true;
++                } else {
++                    livingEntity.knockback(strength, Mth.sin(this.getYRot() * (float) (Math.PI / 180.0)), -Mth.cos(this.getYRot() * (float) (Math.PI / 180.0)), this, io.papermc.paper.event.entity.EntityKnockbackEvent.Cause.ENTITY_ATTACK); // Paper - knockback events
++                }
              } else {
                  target.push(
                      -Mth.sin(this.getYRot() * (float) (Math.PI / 180.0)) * strength, 0.1, Mth.cos(this.getYRot() * (float) (Math.PI / 180.0)) * strength

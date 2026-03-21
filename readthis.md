@@ -71,26 +71,45 @@
   - `paper-server/patches/sources/net/minecraft/world/entity/player/Player.java.patch`
   - `paper-server/patches/sources/net/minecraft/world/entity/LivingEntity.java.patch`
 
+### Combat update tiep theo (batch knockback)
+- Da wire code hoat dong cho 5 key:
+  - `combat.knockback.oldKnockback`
+  - `combat.knockback.vertical`
+  - `combat.knockback.horizontal`
+  - `combat.knockback.friction`
+  - `combat.knockback.verticalLimit`
+- File chinh:
+  - `paper-server/patches/sources/net/minecraft/world/entity/player/Player.java.patch`
+
+
+### Combat update tiep theo (batch projectile + fishing + kb-scaling)
+- Da wire code hoat dong cho 5 key:
+  - `combat.disableKnockbackScaling`
+  - `combat.enableBowBoosting`
+  - `combat.oldCollisionsProjectile`
+  - `combat.fishingHooksDoKnockback`
+  - `combat.fishingHooksPullEntities`
+- File chinh:
+  - `paper-server/patches/sources/net/minecraft/world/entity/player/Player.java.patch`
+  - `paper-server/patches/sources/net/minecraft/world/entity/projectile/Projectile.java.patch`
+  - `paper-server/patches/sources/net/minecraft/world/entity/projectile/FishingHook.java.patch`
+
 ## 4) Cac key config van chua co code tac dong
 - `behavior.disableInitialWorldSpawn`
 - `combat.alternative-hit-registration`
-- `combat.disableKnockbackScaling`
 - `combat.legacyBlastProtection`
 - `combat.oldEnchantedGappleEffects`
 - `combat.imitateSwordBlocking`
 - `combat.revertArmorProtection`
 - `combat.disableNetheriteKnockbackResistance`
 - `combat.oldSharpnessDamageBuff`
-- `combat.enableBowBoosting`
-- `combat.oldCollisionsProjectile`
-- `combat.fishingHooksDoKnockback`
-- `combat.fishingHooksPullEntities`
 - `combat.oldToolAttackDamage`
 
 ## 5) Trang thai git local (sau turn nay)
 - Dang co modified files:
-  - `paper-server/patches/sources/net/minecraft/world/entity/LivingEntity.java.patch`
   - `paper-server/patches/sources/net/minecraft/world/entity/player/Player.java.patch`
+  - `paper-server/patches/sources/net/minecraft/world/entity/projectile/Projectile.java.patch`
+  - `paper-server/patches/sources/net/minecraft/world/entity/projectile/FishingHook.java.patch`
   - `readthis.md`
 
 ## 6) Build/CI

@@ -155,7 +155,7 @@
  
      public boolean calculateOpenWater(BlockPos pos) {
          FishingHook.OpenWaterType openWaterType = FishingHook.OpenWaterType.INVALID;
-@@ -452,15 +_,31 @@
+@@ -452,15 +_,38 @@
      protected void readAdditionalSaveData(ValueInput input) {
      }
  
@@ -179,7 +179,15 @@
 +                }
 +                if (this.hookedIn != null) { // Paper - re-check to see if there is a hooked entity
 +                // CraftBukkit end
-                 this.pullEntity(this.hookedIn);
+-                this.pullEntity(this.hookedIn);
++                if (org.ulyxspigot.ulyxspigot.UlyxConfig.isCombatFishingHooksPullEntities()) {
++                    this.pullEntity(this.hookedIn);
++                }
++                if (org.ulyxspigot.ulyxspigot.UlyxConfig.isCombatFishingHooksDoKnockback() && this.hookedIn instanceof net.minecraft.world.entity.LivingEntity livingEntity) {
++                    final double ulyxDx = playerOwner.getX() - livingEntity.getX();
++                    final double ulyxDz = playerOwner.getZ() - livingEntity.getZ();
++                    livingEntity.knockback(0.35D, ulyxDx, ulyxDz, playerOwner, io.papermc.paper.event.entity.EntityKnockbackEvent.Cause.ENTITY_ATTACK);
++                }
                  CriteriaTriggers.FISHING_ROD_HOOKED.trigger((ServerPlayer)playerOwner, stack, this, Collections.emptyList());
                  this.level().broadcastEntityEvent(this, EntityEvent.FISHING_ROD_REEL_IN);
                  i = this.hookedIn instanceof ItemEntity ? 3 : 5;
