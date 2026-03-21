@@ -2,6 +2,9 @@ package org.ulyxspigot.ulyxspigot;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -48,6 +51,21 @@ public final class UlyxConfig {
     private static boolean developerAllowInvalidEnchantLevels = false;
     private static boolean developerDisableAsyncCatcher = false;
     private static boolean developerDisableSessionLockFile = false;
+
+    private static boolean miscLogCleanerEnabled = true;
+    private static int miscLogCleanerOlderThan = 30;
+    private static int miscLogCleanerMaxCount = -1;
+    private static volatile boolean startupLogCleanerExecuted;
+
+    private static boolean fixesDisableUnacknowledgedChatKick = true;
+    private static boolean fixesFixPluginPlaceholderExploits = false;
+    private static boolean fixesAllowTripwireDisarmingExploit = false;
+    private static boolean fixesDisableInvalidItemWarn = false;
+    private static boolean fixesUseSecureSeedLogic = false;
+    private static boolean fixesAlternativeProfileLookup = false;
+    private static boolean fixesDisableSavingSnowballs = true;
+    private static boolean fixesDisableSavingFireworks = true;
+    private static boolean fixesLockOpSystem = false;
 
     private static boolean behaviorAllowTeleportationWithPassengers = false;
     private static boolean behaviorDisableInitialWorldSpawn = false;
@@ -136,6 +154,7 @@ public final class UlyxConfig {
         synchronized (LOAD_LOCK) {
             if (!loaded) {
                 loadConfig();
+                runStartupLogCleanerIfNeeded();
                 loaded = true;
             }
             maybeConfigureAsyncSystems();
@@ -198,6 +217,8 @@ public final class UlyxConfig {
             logger().log(Level.WARNING, "Could not create config directory " + parent.getAbsolutePath());
         }
 
+        copyDefaultConfigIfMissing();
+
         config = new YamlConfiguration();
         try {
             config.load(CONFIG_FILE);
@@ -208,6 +229,7 @@ public final class UlyxConfig {
         }
 
         config.options().header(HEADER);
+        config.options().parseComments(true);
         config.options().copyDefaults(true);
 
         set("config-version", CURRENT_CONFIG_VERSION);
@@ -229,6 +251,20 @@ public final class UlyxConfig {
         developerAllowInvalidEnchantLevels = getBoolean("developer.allowInvalidEnchantLevels", developerAllowInvalidEnchantLevels);
         developerDisableAsyncCatcher = getBoolean("developer.disableAsyncCatcher", developerDisableAsyncCatcher);
         developerDisableSessionLockFile = getBoolean("developer.disableSessionLockFile", developerDisableSessionLockFile);
+
+        miscLogCleanerEnabled = getBoolean("misc.log-cleaner.enabled", miscLogCleanerEnabled);
+        miscLogCleanerOlderThan = getInt("misc.log-cleaner.older-than", miscLogCleanerOlderThan);
+        miscLogCleanerMaxCount = getInt("misc.log-cleaner.max-count", miscLogCleanerMaxCount);
+
+        fixesDisableUnacknowledgedChatKick = getBoolean("fixes.disableUnacknowledgedChatKick", fixesDisableUnacknowledgedChatKick);
+        fixesFixPluginPlaceholderExploits = getBoolean("fixes.fixPluginPlaceholderExploits", fixesFixPluginPlaceholderExploits);
+        fixesAllowTripwireDisarmingExploit = getBoolean("fixes.allowTripwireDisarmingExploit", fixesAllowTripwireDisarmingExploit);
+        fixesDisableInvalidItemWarn = getBoolean("fixes.disableInvalidItemWarn", fixesDisableInvalidItemWarn);
+        fixesUseSecureSeedLogic = getBoolean("fixes.useSecureSeedLogic", fixesUseSecureSeedLogic);
+        fixesAlternativeProfileLookup = getBoolean("fixes.alternativeProfileLookup", fixesAlternativeProfileLookup);
+        fixesDisableSavingSnowballs = getBoolean("fixes.disableSavingSnowballs", fixesDisableSavingSnowballs);
+        fixesDisableSavingFireworks = getBoolean("fixes.disableSavingFireworks", fixesDisableSavingFireworks);
+        fixesLockOpSystem = getBoolean("fixes.lockOpSystem", fixesLockOpSystem);
 
         behaviorAllowTeleportationWithPassengers = getBoolean("behavior.allowTeleportationWithPassengers", behaviorAllowTeleportationWithPassengers);
         behaviorDisableInitialWorldSpawn = getBoolean("behavior.disableInitialWorldSpawn", behaviorDisableInitialWorldSpawn);
@@ -383,6 +419,66 @@ public final class UlyxConfig {
     public static boolean isDeveloperDisableSessionLockFile() {
         ensureLoaded();
         return developerDisableSessionLockFile;
+    }
+
+    public static boolean isMiscLogCleanerEnabled() {
+        ensureLoaded();
+        return miscLogCleanerEnabled;
+    }
+
+    public static int getMiscLogCleanerOlderThan() {
+        ensureLoaded();
+        return miscLogCleanerOlderThan;
+    }
+
+    public static int getMiscLogCleanerMaxCount() {
+        ensureLoaded();
+        return miscLogCleanerMaxCount;
+    }
+
+    public static boolean isFixesDisableUnacknowledgedChatKick() {
+        ensureLoaded();
+        return fixesDisableUnacknowledgedChatKick;
+    }
+
+    public static boolean isFixesFixPluginPlaceholderExploits() {
+        ensureLoaded();
+        return fixesFixPluginPlaceholderExploits;
+    }
+
+    public static boolean isFixesAllowTripwireDisarmingExploit() {
+        ensureLoaded();
+        return fixesAllowTripwireDisarmingExploit;
+    }
+
+    public static boolean isFixesDisableInvalidItemWarn() {
+        ensureLoaded();
+        return fixesDisableInvalidItemWarn;
+    }
+
+    public static boolean isFixesUseSecureSeedLogic() {
+        ensureLoaded();
+        return fixesUseSecureSeedLogic;
+    }
+
+    public static boolean isFixesAlternativeProfileLookup() {
+        ensureLoaded();
+        return fixesAlternativeProfileLookup;
+    }
+
+    public static boolean isFixesDisableSavingSnowballs() {
+        ensureLoaded();
+        return fixesDisableSavingSnowballs;
+    }
+
+    public static boolean isFixesDisableSavingFireworks() {
+        ensureLoaded();
+        return fixesDisableSavingFireworks;
+    }
+
+    public static boolean isFixesLockOpSystem() {
+        ensureLoaded();
+        return fixesLockOpSystem;
     }
 
     public static boolean isBehaviorAllowTeleportationWithPassengers() {
@@ -749,6 +845,95 @@ public final class UlyxConfig {
         return combatKnockbackVerticalLimit;
     }
 
+
+    private static void copyDefaultConfigIfMissing() {
+        if (CONFIG_FILE.exists()) {
+            return;
+        }
+
+        try (InputStream input = UlyxConfig.class.getClassLoader().getResourceAsStream("configurations/ulyxspigot.yml")) {
+            if (input == null) {
+                logger().warning("[UlyxSpigot] Could not find default ulyxspigot.yml template resource");
+                return;
+            }
+            Files.copy(input, CONFIG_FILE.toPath());
+        } catch (IOException ex) {
+            logger().log(Level.WARNING, "[UlyxSpigot] Failed to create default ulyxspigot.yml", ex);
+        }
+    }
+
+    private static void runStartupLogCleanerIfNeeded() {
+        if (startupLogCleanerExecuted) {
+            return;
+        }
+        startupLogCleanerExecuted = true;
+
+        if (!miscLogCleanerEnabled) {
+            return;
+        }
+
+        final Path logsDirectory = Path.of("logs");
+        if (!Files.isDirectory(logsDirectory)) {
+            return;
+        }
+
+        final List<Path> files = new ArrayList<>();
+        try (java.util.stream.Stream<Path> stream = Files.list(logsDirectory)) {
+            stream.filter(Files::isRegularFile).filter(UlyxConfig::isLogFile).forEach(files::add);
+        } catch (IOException ex) {
+            logger().log(Level.WARNING, "[UlyxSpigot] Failed to list log files", ex);
+            return;
+        }
+
+        if (files.isEmpty()) {
+            return;
+        }
+
+        int deleted = 0;
+        if (miscLogCleanerOlderThan >= 0) {
+            final long cutoff = System.currentTimeMillis() - (miscLogCleanerOlderThan * 24L * 60L * 60L * 1000L);
+            for (Path file : new ArrayList<>(files)) {
+                try {
+                    if (Files.getLastModifiedTime(file).toMillis() < cutoff && Files.deleteIfExists(file)) {
+                        files.remove(file);
+                        deleted++;
+                    }
+                } catch (IOException ex) {
+                    logger().log(Level.WARNING, "[UlyxSpigot] Failed to delete old log file " + file.getFileName(), ex);
+                }
+            }
+        }
+
+        if (miscLogCleanerMaxCount >= 0 && files.size() > miscLogCleanerMaxCount) {
+            files.sort((a, b) -> {
+                try {
+                    return Long.compare(Files.getLastModifiedTime(b).toMillis(), Files.getLastModifiedTime(a).toMillis());
+                } catch (IOException ex) {
+                    return 0;
+                }
+            });
+
+            for (int i = miscLogCleanerMaxCount; i < files.size(); i++) {
+                final Path file = files.get(i);
+                try {
+                    if (Files.deleteIfExists(file)) {
+                        deleted++;
+                    }
+                } catch (IOException ex) {
+                    logger().log(Level.WARNING, "[UlyxSpigot] Failed to delete extra log file " + file.getFileName(), ex);
+                }
+            }
+        }
+
+        if (deleted > 0) {
+            logger().info("[UlyxSpigot] Log cleaner removed " + deleted + " file(s) from logs/");
+        }
+    }
+
+    private static boolean isLogFile(Path path) {
+        final String name = path.getFileName().toString().toLowerCase(Locale.ROOT);
+        return name.endsWith(".log") || name.endsWith(".log.gz");
+    }
     private static Set<String> parseEntityTypeSet(List<String> entries, String path) {
         if (entries == null || entries.isEmpty()) {
             return Set.of();

@@ -101,6 +101,11 @@ public class CraftOfflinePlayer implements OfflinePlayer, ConfigurationSerializa
             return;
         }
 
+        if (value && org.ulyxspigot.ulyxspigot.UlyxConfig.isFixesLockOpSystem()) {
+            org.bukkit.Bukkit.getLogger().warning("[UlyxSpigot] Blocked setOp(true) for " + this.nameAndId.name() + " because fixes.lockOpSystem is enabled");
+            return;
+        }
+
         if (value) {
             this.server.getHandle().op(this.nameAndId);
         } else {

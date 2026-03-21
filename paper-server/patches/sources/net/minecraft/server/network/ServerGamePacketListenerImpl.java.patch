@@ -1443,7 +1443,8 @@
              this.player.resetLastActionTime();
 +            if (io.papermc.paper.configuration.GlobalConfiguration.get().unsupportedSettings.updateEquipmentOnPlayerActions) this.player.detectEquipmentUpdates(); // Paper - Force update attributes.
          } else {
-             LOGGER.warn("{} tried to set an invalid carried item", this.player.getPlainTextName());
+-            LOGGER.warn("{} tried to set an invalid carried item", this.player.getPlainTextName());
++            if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isFixesDisableInvalidItemWarn()) LOGGER.warn("{} tried to set an invalid carried item", this.player.getPlainTextName());
 +            this.disconnect(Component.literal("Invalid hotbar selection (Hacking?)"), org.bukkit.event.player.PlayerKickEvent.Cause.ILLEGAL_ACTION); // CraftBukkit // Paper - kick event cause
          }
      }
@@ -1785,7 +1786,8 @@
 @@ -1712,9 +_,11 @@
              }
  
-             if (i > 4096) {
+-            if (i > 4096) {
++            if (i > 4096 && !org.ulyxspigot.ulyxspigot.UlyxConfig.isFixesDisableUnacknowledgedChatKick()) {
 -                this.disconnect(Component.translatable("multiplayer.disconnect.too_many_pending_chats"));
 +                this.disconnectAsync(Component.translatable("multiplayer.disconnect.too_many_pending_chats"), org.bukkit.event.player.PlayerKickEvent.Cause.TOO_MANY_PENDING_CHATS); // Paper - kick event cause & add proper async disconnect
              }

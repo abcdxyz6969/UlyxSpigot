@@ -5,6 +5,23 @@
  
          final int page = 0;
 +        boolean hasRequested = false; // Paper - Don't sleep after profile lookups if not needed
++
++        if (org.ulyxspigot.ulyxspigot.UlyxConfig.isFixesAlternativeProfileLookup()) {
++            for (final String requestedName : criteria) {
++                this.findProfileByName(requestedName).ifPresentOrElse(
++                    profile -> callback.onProfileLookupSucceeded(profile),
++                    () -> callback.onProfileLookupFailed(requestedName, new ProfileNotFoundException("Server did not find the requested profile"))
++                );
++
++                try {
++                    Thread.sleep(DELAY_BETWEEN_PAGES);
++                } catch (InterruptedException interruptedException) {
++                    Thread.currentThread().interrupt();
++                    return;
++                }
++            }
++            return;
++        }
  
          for (final List<String> request : Iterables.partition(criteria, ENTRIES_PER_PAGE)) {
              final List<String> normalizedRequest = request.stream().map(YggdrasilGameProfileRepository::normalizeName).toList();

@@ -9,3 +9,12 @@
          }
      }
  }
+@@ -66,4 +_,10 @@
+         }
+     }
++
++    @Override
++    public boolean shouldBeSaved() {
++        return !org.ulyxspigot.ulyxspigot.UlyxConfig.isFixesDisableSavingSnowballs() && super.shouldBeSaved();
++    }
+ }

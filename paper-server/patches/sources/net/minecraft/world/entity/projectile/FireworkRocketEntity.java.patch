@@ -80,3 +80,13 @@
      }
  
      private List<FireworkExplosion> getExplosions() {
+@@ -350,4 +_,11 @@
+         double d1 = entity.position().z - this.position().z;
+         return DoubleDoubleImmutablePair.of(d, d1);
+     }
++
++    @Override
++    public boolean shouldBeSaved() {
++        return !org.ulyxspigot.ulyxspigot.UlyxConfig.isFixesDisableSavingFireworks() && super.shouldBeSaved();
++    }
+ }

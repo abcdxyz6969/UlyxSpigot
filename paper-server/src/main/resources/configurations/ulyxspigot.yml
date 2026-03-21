@@ -221,6 +221,7 @@ misc:
     # Recommended value: -1 (disabled)
     max-count: -1
 
+
 fixes:
   # Prevents tracking unacknowledged chat messages to avoid player kicks.
   disableUnacknowledgedChatKick: true

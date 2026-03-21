@@ -296,6 +296,11 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
     public void setOp(boolean value) {
         if (value == this.isOp()) return;
 
+        if (value && org.ulyxspigot.ulyxspigot.UlyxConfig.isFixesLockOpSystem()) {
+            org.bukkit.Bukkit.getLogger().warning("[UlyxSpigot] Blocked setOp(true) for " + this.getName() + " because fixes.lockOpSystem is enabled");
+            return;
+        }
+
         if (value) {
             this.server.getHandle().op(this.getHandle().nameAndId());
         } else {

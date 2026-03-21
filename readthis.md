@@ -193,3 +193,21 @@
 1. Chay lai plugin can thiep Wind Charge tren ban code moi.
 2. Test case plugin cancel `ProjectileHitEvent` voi Wind Charge: dam bao khong con hien tuong item/projectile "quay lai" bat thuong.
 3. Neu van loi, bat debug trong plugin de theo doi event cancel/respawn/velocity sau moi hit (hien tai projectile dang o trang thai goc cua Ulyx theo yeu cau).
+
+### Misc log-cleaner + config comments fix (turn nay)
+- Da them key moi:
+  - `misc.log-cleaner.enabled`
+  - `misc.log-cleaner.older-than`
+  - `misc.log-cleaner.max-count`
+- Vi tri trong config: dat ngay duoi `developer`.
+- Da them code hoat dong:
+  - Log cleaner chay 1 lan khi startup (khong chay khi `/ulyx reload`).
+  - Xoa log cu hon `older-than` ngay.
+  - Neu `max-count >= 0`, giu lai `max-count` file moi nhat, xoa phan con lai.
+- Da fix tao config moi co comment `#`:
+  - Neu thieu `ulyxspigot/ulyxspigot.yml`, server se copy tu resource template co comment.
+  - Bat `parseComments(true)` de giu comment khi doc/ghi config.
+- File chinh:
+  - `paper-server/src/main/java/org/ulyxspigot/ulyxspigot/UlyxConfig.java`
+  - `ulyxspigot/ulyxspigot.yml`
+  - `paper-server/src/main/resources/configurations/ulyxspigot.yml`
