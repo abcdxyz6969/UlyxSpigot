@@ -96,25 +96,6 @@
                                  this.delay(level, pos);
                                  return;
                              }
-@@ -168,9 +_,13 @@
-                             entity.snapTo(entity.getX(), entity.getY(), entity.getZ(), random.nextFloat() * 360.0F, 0.0F);
-                             if (entity instanceof Mob mob) {
--                                if (nextSpawnData.getCustomSpawnRules().isEmpty() && !mob.checkSpawnRules(level, EntitySpawnReason.SPAWNER)
--                                    || !mob.checkSpawnObstruction(level)) {
-+                                final boolean ulyxMobSpecificRulesFailed = !org.ulyxspigot.ulyxspigot.UlyxConfig.isDisableSpawnerLightChecks()
-+                                    && nextSpawnData.getCustomSpawnRules().isEmpty()
-+                                    && !mob.checkSpawnRules(level, EntitySpawnReason.SPAWNER);
-+                                final boolean ulyxObstructionFailed = !org.ulyxspigot.ulyxspigot.UlyxConfig.isSpawnerDisableObstructionCheck()
-+                                    && !mob.checkSpawnObstruction(level);
-+                                if (ulyxMobSpecificRulesFailed || ulyxObstructionFailed) {
-                                     continue;
-                                 }
-
-                                 ((Mob)entity).spawnAnim();
-                             }
-
--                            flag = true;
-+                            //flag = true; // Paper - moved up above cancellable event
 @@ -198,12 +_,14 @@
      }
  
