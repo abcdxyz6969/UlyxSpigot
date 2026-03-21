@@ -197,6 +197,7 @@ experimental:
   # Recommended value: false
   reduceChunkMidTickTaskExecution: false
   # Disables the Paper chunk load version check (This allows, for example, to load chunks from 1.20.2 to 1.20.1).
+  # Requires restart while enabled; /ulyx reload is blocked until this is false.
   disableChunkNewerVersionLoadCheck: false
 
 developer:
@@ -207,4 +208,5 @@ developer:
   # Disables Spigot AsyncCatcher to allow operations like world loading to happen async.
   disableAsyncCatcher: false
   # Skips world session.lock file validation
+  # Requires restart while enabled; /ulyx reload is blocked until this is false.
   disableSessionLockFile: false

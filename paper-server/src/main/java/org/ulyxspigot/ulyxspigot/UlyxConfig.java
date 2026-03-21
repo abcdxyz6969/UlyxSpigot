@@ -147,6 +147,25 @@ public final class UlyxConfig {
         }
     }
 
+    public static List<String> getReloadBlockedOptionsFromFile() {
+        final YamlConfiguration preview = new YamlConfiguration();
+        try {
+            preview.load(CONFIG_FILE);
+        } catch (IOException ignore) {
+        } catch (InvalidConfigurationException ex) {
+            throw new RuntimeException(ex);
+        }
+
+        final List<String> blockedOptions = new ArrayList<>(2);
+        if (preview.getBoolean("experimental.disableChunkNewerVersionLoadCheck", false)) {
+            blockedOptions.add("experimental.disableChunkNewerVersionLoadCheck");
+        }
+        if (preview.getBoolean("developer.disableSessionLockFile", false)) {
+            blockedOptions.add("developer.disableSessionLockFile");
+        }
+        return blockedOptions;
+    }
+
     private static void loadConfig() {
         final File parent = CONFIG_FILE.getParentFile();
         if (parent != null && !parent.exists() && !parent.mkdirs()) {

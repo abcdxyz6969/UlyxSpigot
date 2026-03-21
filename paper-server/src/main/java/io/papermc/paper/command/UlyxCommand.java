@@ -61,6 +61,13 @@ public final class UlyxCommand extends Command {
         }
 
         try {
+            final List<String> blockedOptions = UlyxConfig.getReloadBlockedOptionsFromFile();
+            if (!blockedOptions.isEmpty()) {
+                sender.sendMessage(text("[UlyxSpigot] Reload blocked. These options require restart while enabled: " + String.join(", ", blockedOptions), RED));
+                sender.sendMessage(text("[UlyxSpigot] Set them to false then run /ulyx reload, or restart the server.", RED));
+                return true;
+            }
+
             UlyxConfig.reload();
             sender.sendMessage(text("[UlyxSpigot] Reloaded ulyxspigot/ulyxspigot.yml", GREEN));
         } catch (Throwable throwable) {

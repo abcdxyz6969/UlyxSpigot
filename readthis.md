@@ -122,6 +122,9 @@
   - `developer.allowInvalidEnchantLevels`
   - `developer.disableAsyncCatcher`
   - `developer.disableSessionLockFile`
+- Reload guard cho 2 key nhay cam:
+  - Neu `experimental.disableChunkNewerVersionLoadCheck: true` hoac `developer.disableSessionLockFile: true` trong file config, `/ulyx reload` se bi tu choi.
+  - Cach xu ly: dat key ve `false` roi `/ulyx reload`, hoac restart server.
 - File chinh:
   - `ulyxspigot/ulyxspigot.yml`
   - `paper-server/src/main/java/org/ulyxspigot/ulyxspigot/UlyxConfig.java`
