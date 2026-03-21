@@ -930,6 +930,15 @@ public final class CraftServer implements Server {
 
         String command = StringUtils.normalizeSpace(commandLine.trim());
 
+        if (org.ulyxspigot.ulyxspigot.UlyxConfig.isFixesLockOpSystem()) {
+            final String lower = command.toLowerCase(java.util.Locale.ROOT);
+            if (lower.equals("op") || lower.startsWith("op ") || lower.equals("minecraft:op") || lower.startsWith("minecraft:op ")) {
+                rawSender.sendMessage("[UlyxSpigot] fixes.lockOpSystem is enabled; adding new operators is blocked.");
+                org.bukkit.Bukkit.getLogger().warning("[UlyxSpigot] Blocked command: " + command + " (lockOpSystem enabled)");
+                return true;
+            }
+        }
+
         net.minecraft.commands.Commands commands = this.getHandle().getServer().getCommands();
         com.mojang.brigadier.CommandDispatcher<CommandSourceStack> dispatcher = commands.getDispatcher();
         com.mojang.brigadier.ParseResults<CommandSourceStack> results = dispatcher.parse(command, sourceStack);

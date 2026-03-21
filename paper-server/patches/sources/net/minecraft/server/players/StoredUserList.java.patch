@@ -9,16 +9,6 @@
      protected final NotificationService notificationService;
  
      public StoredUserList(File file, NotificationService notificationService) {
-@@ -45,6 +_,12 @@
-     public void add(V entry) {
-+        if (this instanceof ServerOpList && org.ulyxspigot.ulyxspigot.UlyxConfig.isFixesLockOpSystem()) {
-+            LOGGER.warn("Blocked adding operator {} because fixes.lockOpSystem is enabled", entry.getUser());
-+            return;
-+        }
-+
-         this.map.put(this.getKeyForUser(entry.getUser()), entry);
- 
-         try {
 @@ -59,8 +_,11 @@
      }
  
@@ -33,7 +23,6 @@
      }
  
      public boolean remove(K user) {
- 
 @@ -105,21 +_,12 @@
      }
  
