@@ -278,6 +278,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.ulyxspigot.ulyxspigot.UlyxConfig;
 
 public class CraftEventFactory {
 
@@ -975,8 +976,46 @@ public class CraftEventFactory {
         return new Entity.DefaultDrop(CraftItemType.bukkitToMinecraft(stack.getType()), stack, null);
     };
 
+    private static void applyUlyxRaidBehaviorConfig(net.minecraft.world.entity.LivingEntity victim, DamageSource damageSource, List<Entity.DefaultDrop> drops) {
+        if (!(victim instanceof net.minecraft.world.entity.raid.Raider raider)) {
+            return;
+        }
+
+        final boolean oldRaidBehavior = UlyxConfig.isAlternativeFarmsRaidsOldBehavior();
+        final boolean allowOminousBottleDrops = !oldRaidBehavior && UlyxConfig.isAlternativeFarmsRaidsDropOminousBottles();
+
+        if (!allowOminousBottleDrops) {
+            drops.removeIf(defaultDrop -> {
+                if (defaultDrop == null) {
+                    return false;
+                }
+
+                final org.bukkit.inventory.ItemStack stack = defaultDrop.stack();
+                return stack != null && stack.getType() == Material.OMINOUS_BOTTLE;
+            });
+        }
+
+        if (!oldRaidBehavior || !raider.isPatrolLeader() || raider.hasActiveRaid()) {
+            return;
+        }
+
+        if (!(damageSource.getEntity() instanceof ServerPlayer killer)) {
+            return;
+        }
+
+        final MobEffectInstance currentBadOmen = killer.getEffect(net.minecraft.world.effect.MobEffects.BAD_OMEN);
+        final int amplifier = Math.min(4, currentBadOmen == null ? 0 : currentBadOmen.getAmplifier() + 1);
+
+        killer.addEffect(
+            new MobEffectInstance(net.minecraft.world.effect.MobEffects.BAD_OMEN, 120000, amplifier, false, false, true),
+            raider,
+            EntityPotionEffectEvent.Cause.UNKNOWN
+        );
+    }
+
     public static EntityDeathEvent callEntityDeathEvent(net.minecraft.world.entity.LivingEntity victim, DamageSource damageSource, List<Entity.DefaultDrop> drops, Runnable lootCheck) { // Paper - Restore vanilla drops behavior
         // Paper end
+        applyUlyxRaidBehaviorConfig(victim, damageSource, drops); // UlyxSpigot - raid old behavior and ominous bottle drop control
         CraftLivingEntity entity = (CraftLivingEntity) victim.getBukkitEntity();
         CraftDamageSource bukkitDamageSource = new CraftDamageSource(damageSource);
         CraftWorld world = (CraftWorld) entity.getWorld();

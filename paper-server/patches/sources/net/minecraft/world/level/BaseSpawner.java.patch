@@ -46,7 +46,7 @@
              } else {
                  boolean flag = false;
                  RandomSource random = level.getRandom();
-@@ -125,6 +_,21 @@
+@@ -125,6 +_,25 @@
                                  continue;
                              }
  
@@ -64,6 +64,10 @@
 +                                continue;
 +                            }
 +                            // Paper end - PreCreatureSpawnEvent
++                            if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isSpawnerDisableWaterPreventSpawnCheck()
++                                && level.getBlockState(BlockPos.containing(vec3)).getFluidState().is(net.minecraft.tags.FluidTags.WATER)) {
++                                continue;
++                            }
 +
                              Entity entity = EntityType.loadEntityRecursive(valueInput, level, EntitySpawnReason.SPAWNER, entity1 -> {
                                  entity1.snapTo(vec3.x, vec3.y, vec3.z, entity1.getYRot(), entity1.getXRot());
@@ -92,15 +96,25 @@
                                  this.delay(level, pos);
                                  return;
                              }
-@@ -171,7 +_,7 @@
+@@ -168,9 +_,13 @@
+                             entity.snapTo(entity.getX(), entity.getY(), entity.getZ(), random.nextFloat() * 360.0F, 0.0F);
+                             if (entity instanceof Mob mob) {
+-                                if (nextSpawnData.getCustomSpawnRules().isEmpty() && !mob.checkSpawnRules(level, EntitySpawnReason.SPAWNER)
+-                                    || !mob.checkSpawnObstruction(level)) {
++                                final boolean ulyxMobSpecificRulesFailed = !org.ulyxspigot.ulyxspigot.UlyxConfig.isDisableSpawnerLightChecks()
++                                    && nextSpawnData.getCustomSpawnRules().isEmpty()
++                                    && !mob.checkSpawnRules(level, EntitySpawnReason.SPAWNER);
++                                final boolean ulyxObstructionFailed = !org.ulyxspigot.ulyxspigot.UlyxConfig.isSpawnerDisableObstructionCheck()
++                                    && !mob.checkSpawnObstruction(level);
++                                if (ulyxMobSpecificRulesFailed || ulyxObstructionFailed) {
+                                     continue;
+                                 }
+
                                  ((Mob)entity).spawnAnim();
                              }
- 
+
 -                            flag = true;
 +                            //flag = true; // Paper - moved up above cancellable event
-                         }
-                     }
-                 }
 @@ -198,12 +_,14 @@
      }
  

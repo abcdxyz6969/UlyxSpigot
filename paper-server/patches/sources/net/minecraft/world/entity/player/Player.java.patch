@@ -249,9 +249,27 @@
                  if (f > 0.0F || f1 > 0.0F) {
                      boolean flag = attackStrengthScale > 0.9F;
                      boolean flag1;
-@@ -967,7 +_,9 @@
+@@ -967,7 +_,26 @@
  
-                     f += weaponItem.getItem().getAttackDamageBonus(target, f, damageSource);
+-                    f += weaponItem.getItem().getAttackDamageBonus(target, f, damageSource);
++                    // UlyxSpigot start - mace combat options
++                    if (weaponItem.getItem() instanceof net.minecraft.world.item.MaceItem) {
++                        if (org.ulyxspigot.ulyxspigot.UlyxConfig.isCombatMaceIgnoreFallDistance()) {
++                            // Keep smash behavior, but remove fall-based bonus damage.
++                            f += 0.0F;
++                        } else {
++                            final float ulyxOriginalFallDistance = this.fallDistance;
++                            final double ulyxFallLimit = org.ulyxspigot.ulyxspigot.UlyxConfig.getCombatMaceLimitFallDistance();
++                            if (ulyxFallLimit >= 0.0D && this.fallDistance > ulyxFallLimit) {
++                                this.fallDistance = (float) ulyxFallLimit;
++                            }
++                            f += weaponItem.getItem().getAttackDamageBonus(target, f, damageSource);
++                            this.fallDistance = ulyxOriginalFallDistance;
++                        }
++                    } else {
++                        f += weaponItem.getItem().getAttackDamageBonus(target, f, damageSource);
++                    }
++                    // UlyxSpigot end - mace combat options
                      boolean flag2 = flag && this.canCriticalAttack(target);
 +                    flag2 = flag2 && !this.level().paperConfig().entities.behavior.disablePlayerCrits; // Paper - Toggleable player crits
                      if (flag2) {

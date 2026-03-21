@@ -1,12 +1,21 @@
 --- a/net/minecraft/world/item/MaceItem.java
 +++ b/net/minecraft/world/item/MaceItem.java
-@@ -54,7 +_,13 @@
+@@ -54,7 +_,22 @@
  
      @Override
      public void hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
 -        if (canSmashAttack(attacker)) {
 +        // Paper start - Add EntityAttemptSmashAttackEvent
-+        final boolean canSmashAttack = canSmashAttack(attacker);
++        boolean canSmashAttack = canSmashAttack(attacker);
++        if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isCombatMaceIgnoreFallDistance()) {
++            final double ulyxFallLimit = org.ulyxspigot.ulyxspigot.UlyxConfig.getCombatMaceLimitFallDistance();
++            if (ulyxFallLimit >= 0.0D && attacker.fallDistance > ulyxFallLimit) {
++                final float ulyxOriginalFallDistance = attacker.fallDistance;
++                attacker.fallDistance = (float) ulyxFallLimit;
++                canSmashAttack = canSmashAttack(attacker);
++                attacker.fallDistance = ulyxOriginalFallDistance;
++            }
++        }
 +        io.papermc.paper.event.entity.EntityAttemptSmashAttackEvent event = new io.papermc.paper.event.entity.EntityAttemptSmashAttackEvent(attacker.getBukkitLivingEntity(), target.getBukkitLivingEntity(), stack.asBukkitCopy(), canSmashAttack);
 +        event.callEvent();
 +        final org.bukkit.event.Event.Result result = event.getResult();

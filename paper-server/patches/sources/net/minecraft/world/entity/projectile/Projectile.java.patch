@@ -148,6 +148,9 @@
 +        if (hitResult.getType() == HitResult.Type.BLOCK || !this.hitCancelled) {
 +            return this.hitTargetOrDeflectSelf(hitResult);
 +        }
++        if (this instanceof net.minecraft.world.entity.projectile.hurtingprojectile.windcharge.AbstractWindCharge) {
++            this.discard(org.bukkit.event.entity.EntityRemoveEvent.Cause.HIT); // UlyxSpigot - avoid stuck wind charge entities when hit is cancelled
++        }
 +        return ProjectileDeflection.NONE;
 +    }
 +    // CraftBukkit end

@@ -993,17 +993,27 @@
              Vec3 deltaMovement = this.getDeltaMovement();
  
              while (x * x + z * z < 1.0E-5F) {
-@@ -1617,11 +_,22 @@
+@@ -1617,10 +_,28 @@
              }
  
-             Vec3 vec3 = new Vec3(x, 0.0, z).normalize().scale(strength);
+-            Vec3 vec3 = new Vec3(x, 0.0, z).normalize().scale(strength);
++            final boolean ulyxOldKnockback = org.ulyxspigot.ulyxspigot.UlyxConfig.isCombatKnockbackOldKnockback();
++            final double ulyxStrengthScale = strength <= 0.0D ? 0.0D : (strength / 0.4D);
++            final double ulyxFriction = ulyxOldKnockback ? Math.max(0.1D, org.ulyxspigot.ulyxspigot.UlyxConfig.getCombatKnockbackFriction()) : 2.0D;
++            final double ulyxHorizontal = ulyxOldKnockback ? org.ulyxspigot.ulyxspigot.UlyxConfig.getCombatKnockbackHorizontal() * ulyxStrengthScale : strength;
++            final double ulyxVertical = ulyxOldKnockback ? org.ulyxspigot.ulyxspigot.UlyxConfig.getCombatKnockbackVertical() * ulyxStrengthScale : strength;
++            final double ulyxVerticalLimit = ulyxOldKnockback ? Math.max(0.0D, org.ulyxspigot.ulyxspigot.UlyxConfig.getCombatKnockbackVerticalLimit()) : 0.4D;
++            Vec3 vec3 = new Vec3(x, 0.0, z).normalize().scale(ulyxHorizontal);
 -            this.setDeltaMovement(
 +            // Paper start - knockback events
 +            Vec3 finalVelocity = new Vec3(
-                 deltaMovement.x / 2.0 - vec3.x,
-                 this.onGround() ? Math.min(0.4, deltaMovement.y / 2.0 + strength) : deltaMovement.y,
-                 deltaMovement.z / 2.0 - vec3.z
-             );
+-                deltaMovement.x / 2.0 - vec3.x,
+-                this.onGround() ? Math.min(0.4, deltaMovement.y / 2.0 + strength) : deltaMovement.y,
+-                deltaMovement.z / 2.0 - vec3.z
++                deltaMovement.x / ulyxFriction - vec3.x,
++                this.onGround() ? Math.min(ulyxVerticalLimit, deltaMovement.y / ulyxFriction + ulyxVertical) : deltaMovement.y,
++                deltaMovement.z / ulyxFriction - vec3.z
++            );
 +            Vec3 diff = finalVelocity.subtract(deltaMovement);
 +            io.papermc.paper.event.entity.EntityKnockbackEvent event = CraftEventFactory.callEntityKnockbackEvent((org.bukkit.craftbukkit.entity.CraftLivingEntity) this.getBukkitEntity(), attacker, attacker, eventCause, strength, diff);
 +            // Paper end - knockback events
