@@ -1255,7 +1255,7 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
             this.enchantments = new EnchantmentMap();
         }
 
-        if (ignoreRestrictions || level >= enchant.getStartLevel() && level <= enchant.getMaxLevel()) {
+        if (ignoreRestrictions || (org.ulyxspigot.ulyxspigot.UlyxConfig.isDeveloperAllowInvalidEnchantLevels() && "minecraft".equals(enchant.getKey().getNamespace())) || level >= enchant.getStartLevel() && level <= enchant.getMaxLevel()) {
             Integer old = this.enchantments.put(enchant, level);
             return old == null || old != level;
         }

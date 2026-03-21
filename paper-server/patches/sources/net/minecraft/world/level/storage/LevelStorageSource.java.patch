@@ -67,7 +67,7 @@
              this.levelId = levelId;
              this.levelDirectory = new LevelStorageSource.LevelDirectory(levelDir);
              this.lock = DirectoryLock.create(levelDir);
-@@ -449,7 +_,7 @@
+@@ -449,7 +_,10 @@
          }
  
          public Path getDimensionPath(ResourceKey<Level> dimensionPath) {
@@ -76,3 +76,6 @@
          }
  
          private void checkLock() {
++            if (org.ulyxspigot.ulyxspigot.UlyxConfig.isDeveloperDisableSessionLockFile()) {
++                return;
++            }

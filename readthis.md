@@ -107,17 +107,46 @@
   - `paper-server/patches/sources/net/minecraft/world/entity/LivingEntity.java.patch`
   - `paper-server/patches/sources/net/minecraft/world/item/component/Consumable.java.patch`
 
+### Developer/Experimental update (turn nay)
+- Da them vao config + UlyxConfig cho nhom key moi:
+  - `experimental.reducePlayerChunkSourceUpdates`
+  - `experimental.reduceChunkMidTickTaskExecution`
+  - `experimental.disableChunkNewerVersionLoadCheck`
+  - `developer.recalculateChunksOutOfBounds`
+  - `developer.allowInvalidEnchantLevels`
+  - `developer.disableAsyncCatcher`
+  - `developer.disableSessionLockFile`
+- Da wire code hoat dong cho 4 key:
+  - `experimental.disableChunkNewerVersionLoadCheck`
+  - `developer.allowInvalidEnchantLevels`
+  - `developer.disableAsyncCatcher`
+  - `developer.disableSessionLockFile`
+- File chinh:
+  - `ulyxspigot/ulyxspigot.yml`
+  - `paper-server/src/main/java/org/ulyxspigot/ulyxspigot/UlyxConfig.java`
+  - `paper-server/src/main/java/org/spigotmc/AsyncCatcher.java`
+  - `paper-server/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java`
+  - `paper-server/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaEnchantedBook.java`
+  - `paper-server/patches/sources/net/minecraft/world/level/chunk/storage/SerializableChunkData.java.patch`
+  - `paper-server/patches/sources/net/minecraft/world/level/storage/LevelStorageSource.java.patch`
+
 ## 4) Cac key config van chua co code tac dong
 - `behavior.disableInitialWorldSpawn`
+- `experimental.reducePlayerChunkSourceUpdates`
+- `experimental.reduceChunkMidTickTaskExecution`
+- `developer.recalculateChunksOutOfBounds`
 - `combat.alternative-hit-registration`
 - `combat.imitateSwordBlocking`
 
 ## 5) Trang thai git local (sau turn nay)
 - Dang co modified files:
-  - `paper-server/patches/sources/net/minecraft/world/entity/player/Player.java.patch`
-  - `paper-server/patches/sources/net/minecraft/world/entity/LivingEntity.java.patch`
-  - `paper-server/patches/sources/net/minecraft/world/entity/projectile/Projectile.java.patch`
-  - `paper-server/patches/sources/net/minecraft/world/item/component/Consumable.java.patch`
+  - `ulyxspigot/ulyxspigot.yml`
+  - `paper-server/src/main/java/org/ulyxspigot/ulyxspigot/UlyxConfig.java`
+  - `paper-server/src/main/java/org/spigotmc/AsyncCatcher.java`
+  - `paper-server/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java`
+  - `paper-server/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaEnchantedBook.java`
+  - `paper-server/patches/sources/net/minecraft/world/level/chunk/storage/SerializableChunkData.java.patch`
+  - `paper-server/patches/sources/net/minecraft/world/level/storage/LevelStorageSource.java.patch`
   - `readthis.md`
 
 ## 6) Build/CI

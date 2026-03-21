@@ -39,6 +39,15 @@ public final class UlyxConfig {
     private static boolean asyncInventoryUpdatesEnabled = false;
     private static boolean asyncPacketSendingEnabled = false;
 
+    private static boolean experimentalReducePlayerChunkSourceUpdates = true;
+    private static boolean experimentalReduceChunkMidTickTaskExecution = true;
+    private static boolean experimentalDisableChunkNewerVersionLoadCheck = false;
+
+    private static boolean developerRecalculateChunksOutOfBounds = false;
+    private static boolean developerAllowInvalidEnchantLevels = false;
+    private static boolean developerDisableAsyncCatcher = false;
+    private static boolean developerDisableSessionLockFile = false;
+
     private static boolean behaviorAllowTeleportationWithPassengers = false;
     private static boolean behaviorDisableInitialWorldSpawn = false;
     private static boolean behaviorDisableWorldDataSaving = false;
@@ -167,6 +176,15 @@ public final class UlyxConfig {
         asyncInventoryUpdatesEnabled = getBoolean("asynchronous.inventory-updates.enabled", asyncInventoryUpdatesEnabled);
         asyncPacketSendingEnabled = getBoolean("asynchronous.packet-sending.enabled", asyncPacketSendingEnabled);
 
+        experimentalReducePlayerChunkSourceUpdates = getBoolean("experimental.reducePlayerChunkSourceUpdates", experimentalReducePlayerChunkSourceUpdates);
+        experimentalReduceChunkMidTickTaskExecution = getBoolean("experimental.reduceChunkMidTickTaskExecution", experimentalReduceChunkMidTickTaskExecution);
+        experimentalDisableChunkNewerVersionLoadCheck = getBoolean("experimental.disableChunkNewerVersionLoadCheck", experimentalDisableChunkNewerVersionLoadCheck);
+
+        developerRecalculateChunksOutOfBounds = getBoolean("developer.recalculateChunksOutOfBounds", developerRecalculateChunksOutOfBounds);
+        developerAllowInvalidEnchantLevels = getBoolean("developer.allowInvalidEnchantLevels", developerAllowInvalidEnchantLevels);
+        developerDisableAsyncCatcher = getBoolean("developer.disableAsyncCatcher", developerDisableAsyncCatcher);
+        developerDisableSessionLockFile = getBoolean("developer.disableSessionLockFile", developerDisableSessionLockFile);
+
         behaviorAllowTeleportationWithPassengers = getBoolean("behavior.allowTeleportationWithPassengers", behaviorAllowTeleportationWithPassengers);
         behaviorDisableInitialWorldSpawn = getBoolean("behavior.disableInitialWorldSpawn", behaviorDisableInitialWorldSpawn);
         behaviorDisableWorldDataSaving = getBoolean("behavior.disableWorldDataSaving", behaviorDisableWorldDataSaving);
@@ -289,6 +307,41 @@ public final class UlyxConfig {
     public static boolean isAsyncPacketSendingEnabled() {
         ensureLoaded();
         return asyncPacketSendingEnabled;
+    }
+
+    public static boolean isExperimentalReducePlayerChunkSourceUpdates() {
+        ensureLoaded();
+        return experimentalReducePlayerChunkSourceUpdates;
+    }
+
+    public static boolean isExperimentalReduceChunkMidTickTaskExecution() {
+        ensureLoaded();
+        return experimentalReduceChunkMidTickTaskExecution;
+    }
+
+    public static boolean isExperimentalDisableChunkNewerVersionLoadCheck() {
+        ensureLoaded();
+        return experimentalDisableChunkNewerVersionLoadCheck;
+    }
+
+    public static boolean isDeveloperRecalculateChunksOutOfBounds() {
+        ensureLoaded();
+        return developerRecalculateChunksOutOfBounds;
+    }
+
+    public static boolean isDeveloperAllowInvalidEnchantLevels() {
+        ensureLoaded();
+        return developerAllowInvalidEnchantLevels;
+    }
+
+    public static boolean isDeveloperDisableAsyncCatcher() {
+        ensureLoaded();
+        return developerDisableAsyncCatcher;
+    }
+
+    public static boolean isDeveloperDisableSessionLockFile() {
+        ensureLoaded();
+        return developerDisableSessionLockFile;
     }
 
     public static boolean isBehaviorAllowTeleportationWithPassengers() {

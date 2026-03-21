@@ -37,7 +37,7 @@
 -            ChunkPos chunkPos = new ChunkPos(tag.getIntOr("xPos", 0), tag.getIntOr("zPos", 0));
 +            // Paper start - Do not let the server load chunks from newer versions
 +            tag.getInt("DataVersion").ifPresent(dataVersion -> {
-+                if (!JUST_CORRUPT_IT && dataVersion > CURRENT_DATA_VERSION) {
++                if (!JUST_CORRUPT_IT && !org.ulyxspigot.ulyxspigot.UlyxConfig.isExperimentalDisableChunkNewerVersionLoadCheck() && dataVersion > CURRENT_DATA_VERSION) {
 +                    new RuntimeException("Server attempted to load chunk saved with newer version of minecraft! " + dataVersion + " > " + CURRENT_DATA_VERSION).printStackTrace();
 +                    System.exit(1);
 +                }

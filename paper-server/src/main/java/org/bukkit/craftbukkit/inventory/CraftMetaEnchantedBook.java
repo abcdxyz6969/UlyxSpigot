@@ -132,7 +132,7 @@ class CraftMetaEnchantedBook extends CraftMetaItem implements EnchantmentStorage
             this.enchantments = new LinkedHashMap<>(4);
         }
 
-        if (ignoreRestrictions || level >= enchant.getStartLevel() && level <= enchant.getMaxLevel()) {
+        if (ignoreRestrictions || (org.ulyxspigot.ulyxspigot.UlyxConfig.isDeveloperAllowInvalidEnchantLevels() && "minecraft".equals(enchant.getKey().getNamespace())) || level >= enchant.getStartLevel() && level <= enchant.getMaxLevel()) {
             Integer old = this.enchantments.put(enchant, level);
             return old == null || old != level;
         }
