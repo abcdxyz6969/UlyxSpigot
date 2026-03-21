@@ -251,7 +251,7 @@
                      boolean flag1;
 @@ -967,7 +_,29 @@
  
-                    f += weaponItem.getItem().getAttackDamageBonus(target, f, damageSource);
+                     f += weaponItem.getItem().getAttackDamageBonus(target, f, damageSource);
 +                    if (org.ulyxspigot.ulyxspigot.UlyxConfig.isCombatOldToolAttackDamage() && !this.isAutoSpinAttack()) {
 +                        if (weaponItem.getItem() instanceof net.minecraft.world.item.SwordItem swordItem) {
 +                            f = 4.0F + swordItem.getTier().getAttackDamageBonus();
