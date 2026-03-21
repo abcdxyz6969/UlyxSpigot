@@ -59,32 +59,38 @@
 - Workaround ngay lap tuc (neu chua co ban build moi):
   - dat `asynchronous.tracker.enabled: false` trong `ulyxspigot.yml`
 
+
+### Combat update moi (turn nay)
+- Da wire code hoat dong cho 5 key:
+  - `combat.preventCriticalsIfSprinting`
+  - `combat.criticalModifier`
+  - `combat.disableSweepingEdge`
+  - `combat.disableShieldEffectiveness`
+  - `combat.disableHitDelay`
+- File chinh:
+  - `paper-server/patches/sources/net/minecraft/world/entity/player/Player.java.patch`
+  - `paper-server/patches/sources/net/minecraft/world/entity/LivingEntity.java.patch`
+
 ## 4) Cac key config van chua co code tac dong
 - `behavior.disableInitialWorldSpawn`
 - `combat.alternative-hit-registration`
 - `combat.disableKnockbackScaling`
 - `combat.legacyBlastProtection`
-- `combat.disableShieldEffectiveness`
 - `combat.oldEnchantedGappleEffects`
 - `combat.imitateSwordBlocking`
 - `combat.revertArmorProtection`
 - `combat.disableNetheriteKnockbackResistance`
 - `combat.oldSharpnessDamageBuff`
-- `combat.preventCriticalsIfSprinting`
-- `combat.disableHitDelay`
 - `combat.enableBowBoosting`
 - `combat.oldCollisionsProjectile`
-- `combat.disableSweepingEdge`
 - `combat.fishingHooksDoKnockback`
 - `combat.fishingHooksPullEntities`
 - `combat.oldToolAttackDamage`
-- `combat.criticalModifier`
 
 ## 5) Trang thai git local (sau turn nay)
 - Dang co modified files:
+  - `paper-server/patches/sources/net/minecraft/world/entity/LivingEntity.java.patch`
   - `paper-server/patches/sources/net/minecraft/world/entity/player/Player.java.patch`
-  - `paper-server/patches/sources/net/minecraft/world/item/MaceItem.java.patch`
-  - `paper-server/src/main/java/org/ulyxspigot/ulyxspigot/async/UlyxAsyncTracker.java`
   - `readthis.md`
 
 ## 6) Build/CI
@@ -116,14 +122,13 @@
   - uu tien sua code + cap nhat patch/readthis
   - build de GitHub Actions xu ly
 
-## 9) Hotfix moi: wind charge bi dung im thanh entity
-- Trieu chung: trong mot so case plugin cancel hit/interact, `WindCharge` co the bi dung im (khong no, khong discard) cho toi khi bi kill tay.
-- Nguyen nhan xu ly: nhanh `ProjectileHitEvent` bi cancel voi hit `ENTITY` tra ve som, rieng `WindCharge` co the bi ket o trang thai treo.
-- Da fix tai:
-  - `paper-server/patches/sources/net/minecraft/world/entity/projectile/Projectile.java.patch`
-- Logic fix:
-  - neu hit bi cancel va projectile la `AbstractWindCharge` -> `discard(...Cause.HIT)` ngay de tranh entity bi ket.
-- Muc tieu:
-  - giu hanh vi plugin block
-  - khong de lai wind charge "treo" trong world
+## 9) Dieu tra tuong thich Leaf vs plugin Wind Charge
+- Doi chieu truc tiep trong thu muc `leaf-forcode`: khong tim thay patch rieng cho `Projectile.java`/`AbstractWindCharge` o nhanh Leaf hien co.
+- Suy ra: Leaf dang giu hanh vi Paper goc o nhanh `ProjectileHitEvent` bi cancel (khong ep `discard` rieng cho `AbstractWindCharge`).
+- Khac biet cua Ulyx truoc do: co them nhanh custom ep `discard(...Cause.HIT)` khi plugin cancel hit cua Wind Charge.
+- Trang thai hien tai: theo yeu cau da restore lai nhanh `discard(...Cause.HIT)` trong `Projectile.java.patch` (projectile ve nhu cu).
 
+## 10) Ghi chu test tiep theo
+1. Chay lai plugin can thiep Wind Charge tren ban code moi.
+2. Test case plugin cancel `ProjectileHitEvent` voi Wind Charge: dam bao khong con hien tuong item/projectile "quay lai" bat thuong.
+3. Neu van loi, bat debug trong plugin de theo doi event cancel/respawn/velocity sau moi hit (hien tai projectile dang o trang thai goc cua Ulyx theo yeu cau).

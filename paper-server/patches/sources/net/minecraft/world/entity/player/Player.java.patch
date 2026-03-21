@@ -272,9 +272,13 @@
 +                    // UlyxSpigot end - mace combat options
                      boolean flag2 = flag && this.canCriticalAttack(target);
 +                    flag2 = flag2 && !this.level().paperConfig().entities.behavior.disablePlayerCrits; // Paper - Toggleable player crits
++                    if (org.ulyxspigot.ulyxspigot.UlyxConfig.isCombatPreventCriticalsIfSprinting() && this.isSprinting()) {
++                        flag2 = false;
++                    }
                      if (flag2) {
 +                        damageSource = damageSource.critical(); // Paper - critical damage API
-                         f *= 1.5F;
++                        final float ulyxCriticalModifier = (float) org.ulyxspigot.ulyxspigot.UlyxConfig.getCombatCriticalModifier();
++                        f *= ulyxCriticalModifier;
                      }
  
 @@ -990,7 +_,7 @@
@@ -358,6 +362,9 @@
 @@ -1145,8 +_,11 @@
                      && !(livingEntity instanceof ArmorStand armorStand && armorStand.isMarker())
                      && this.distanceToSqr(livingEntity) < 9.0) {
++                    if (org.ulyxspigot.ulyxspigot.UlyxConfig.isCombatDisableSweepingEdge()) {
++                        continue;
++                    }
                      float f1 = this.getEnchantedDamage(livingEntity, var12, damageSource) * strengthScale;
 -                    if (livingEntity.hurtServer(serverLevel, damageSource, f1)) {
 -                        livingEntity.knockback(0.4F, Mth.sin(this.getYRot() * (float) (Math.PI / 180.0)), -Mth.cos(this.getYRot() * (float) (Math.PI / 180.0)));
