@@ -64,14 +64,34 @@ public final class UlyxPacketFilters {
     }
 
     public static boolean shouldBlockFirePackets(final ServerLevel level, final Packet<?> packet, final boolean ignoreInvisible) {
-        if (!Bukkit.isPrimaryThread()) {
-            return false;
-        }
-
         if (!"ClientboundSetEntityDataPacket".equals(packet.getClass().getSimpleName())) {
             return false;
         }
 
+        if (Bukkit.isPrimaryThread()) {
+            return shouldBlockFirePacketsSync(level, packet, ignoreInvisible);
+        }
+
+        final java.util.concurrent.CompletableFuture<Boolean> result = new java.util.concurrent.CompletableFuture<>();
+        level.getServer().scheduleOnMain(() -> {
+            try {
+                result.complete(shouldBlockFirePacketsSync(level, packet, ignoreInvisible));
+            } catch (Throwable throwable) {
+                result.complete(false);
+            }
+        });
+
+        try {
+            return result.get(25L, java.util.concurrent.TimeUnit.MILLISECONDS);
+        } catch (java.lang.InterruptedException exception) {
+            Thread.currentThread().interrupt();
+            return false;
+        } catch (java.util.concurrent.ExecutionException | java.util.concurrent.TimeoutException exception) {
+            return false;
+        }
+    }
+
+    private static boolean shouldBlockFirePacketsSync(final ServerLevel level, final Packet<?> packet, final boolean ignoreInvisible) {
         final Integer entityId = readInt(packet, "id", "getId", "entityId", "getEntityId");
         if (entityId == null) {
             return false;
