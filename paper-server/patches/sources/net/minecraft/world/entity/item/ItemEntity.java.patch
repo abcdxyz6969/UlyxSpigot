@@ -180,10 +180,14 @@
          }
      }
  
-@@ -322,10 +_,73 @@
+@@ -322,10 +_,77 @@
              ItemStack item = this.getItem();
              Item item1 = item.getItem();
              int count = item.getCount();
++            if (org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceOptimisePlayerPickup() && this.pickupDelay == 0) {
++                this.pickupDelay = 2;
++                return;
++            }
 +            // CraftBukkit start - fire PlayerPickupItemEvent
 +            int canHold = entity.getInventory().canHold(item);
 +            int remaining = count - canHold;

@@ -191,6 +191,7 @@ public final class CraftBlockStates {
 
     public static BlockState getBlockState(Block block, boolean useSnapshot) {
         Preconditions.checkNotNull(block, "block is null");
+        useSnapshot = useSnapshot && !org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceDisableBlockSnapshotCreation();
         CraftBlock craftBlock = (CraftBlock) block;
         CraftWorld world = (CraftWorld) block.getWorld();
         BlockPos pos = craftBlock.getPosition();

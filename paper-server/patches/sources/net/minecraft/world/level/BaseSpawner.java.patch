@@ -21,6 +21,10 @@
      }
  
      public void serverTick(ServerLevel level, BlockPos pos) {
++        if (org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceDisableSpawnerChunkTickIteration()) {
++            return;
++        }
++
 +        this.minSpawnDelay = org.ulyxspigot.ulyxspigot.UlyxConfig.getSpawnerMinSpawnDelay();
 +        this.maxSpawnDelay = Math.max(this.minSpawnDelay, org.ulyxspigot.ulyxspigot.UlyxConfig.getSpawnerMaxSpawnDelay());
 +        this.spawnCount = org.ulyxspigot.ulyxspigot.UlyxConfig.getSpawnerSpawnCount();

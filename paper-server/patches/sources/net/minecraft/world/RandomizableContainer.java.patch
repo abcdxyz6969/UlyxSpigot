@@ -20,7 +20,7 @@
      }
  
      default boolean trySaveLootTable(ValueOutput output) {
-@@ -58,26 +_,42 @@
+@@ -58,26 +_,45 @@
              return false;
          } else {
              output.store("LootTable", LootTable.KEY_CODEC, lootTable);
@@ -44,6 +44,9 @@
          Level level = this.getLevel();
          BlockPos blockPos = this.getBlockPos();
          ResourceKey<LootTable> lootTable = this.getLootTable();
++        if (org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceOnlyPlayersUnpackLootTable() && !(player instanceof ServerPlayer)) {
++            return;
++        }
 -        if (lootTable != null && level != null && level.getServer() != null) {
 +        // Paper start - LootTable API
 +        lootReplenish: if (lootTable != null && level != null && level.getServer() != null) {

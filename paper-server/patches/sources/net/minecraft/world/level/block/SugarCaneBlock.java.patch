@@ -18,3 +18,11 @@
                      level.setBlock(pos, state.setValue(AGE, ageValue + 1), Block.UPDATE_NONE);
                  }
              }
+@@ -44,6 +_,6 @@
+     @Override
+     protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+-        if (!state.canSurvive(level, pos)) {
++        if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceAlwaysMoistSugarcane() && !state.canSurvive(level, pos)) {
+             level.destroyBlock(pos, true);
+         }
+     }

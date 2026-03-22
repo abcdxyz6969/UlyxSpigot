@@ -443,6 +443,11 @@
 -        Iterator<TickingBlockEntity> iterator = this.blockEntityTickers.iterator();
 +        // Spigot start
          boolean runsNormally = this.tickRateManager().runsNormally();
++        if (org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceDisableBlockEntityTicking()) {
++            this.tickingBlockEntities = false;
++            this.spigotConfig.currentPrimedTnt = 0;
++            return;
++        }
  
 -        while (iterator.hasNext()) {
 -            TickingBlockEntity tickingBlockEntity = iterator.next();

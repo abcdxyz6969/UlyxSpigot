@@ -98,6 +98,20 @@ public final class UlyxConfig {
     private static boolean soundsDisableFootStepSounds = false;
     private static boolean soundsDisableNewCombatSounds = false;
 
+    private static boolean performancePacketReducerEnabled = true;
+    private static boolean performancePacketReducerReduceHandSwingUpdates = true;
+    private static boolean performanceAlwaysMoistFarmland = false;
+    private static boolean performanceAlwaysMoistSugarcane = false;
+    private static boolean performanceCheckIfCactusCanSurviveBeforeGrowth = false;
+    private static boolean performanceOnlyPlayersUnpackLootTable = true;
+    private static boolean performanceOptimisePlayerPickup = true;
+    private static boolean performanceDisableCriterionTrigger = true;
+    private static boolean performanceDisableBlockEntityTicking = true;
+    private static boolean performanceDisableTileSnapshotCreation = false;
+    private static boolean performanceDisableBlockSnapshotCreation = false;
+    private static boolean performanceDisableSpawnerChunkTickIteration = true;
+    private static boolean performanceDisableBukkitVanishAPI = false;
+
     private static boolean behaviorAllowTeleportationWithPassengers = false;
     private static boolean behaviorDisableInitialWorldSpawn = false;
     private static boolean behaviorDisableWorldDataSaving = false;
@@ -326,6 +340,20 @@ public final class UlyxConfig {
         soundsDisableShoulderEntityAmbientSound = getBoolean("sounds.disableShoulderEntityAmbientSound", soundsDisableShoulderEntityAmbientSound);
         soundsDisableFootStepSounds = getBoolean("sounds.disableFootStepSounds", soundsDisableFootStepSounds);
         soundsDisableNewCombatSounds = getBoolean("sounds.disableNewCombatSounds", soundsDisableNewCombatSounds);
+
+        performancePacketReducerEnabled = getBoolean("performance.packet-reducer.enabled", performancePacketReducerEnabled);
+        performancePacketReducerReduceHandSwingUpdates = getBoolean("performance.packet-reducer.reduceHandSwingUpdates", performancePacketReducerReduceHandSwingUpdates);
+        performanceAlwaysMoistFarmland = getBoolean("performance.alwaysMoistFarmland", performanceAlwaysMoistFarmland);
+        performanceAlwaysMoistSugarcane = getBoolean("performance.alwaysMoistSugarcane", performanceAlwaysMoistSugarcane);
+        performanceCheckIfCactusCanSurviveBeforeGrowth = getBoolean("performance.checkIfCactusCanSurviveBeforeGrowth", performanceCheckIfCactusCanSurviveBeforeGrowth);
+        performanceOnlyPlayersUnpackLootTable = getBoolean("performance.onlyPlayersUnpackLootTable", performanceOnlyPlayersUnpackLootTable);
+        performanceOptimisePlayerPickup = getBoolean("performance.optimisePlayerPickup", performanceOptimisePlayerPickup);
+        performanceDisableCriterionTrigger = getBoolean("performance.disableCriterionTrigger", performanceDisableCriterionTrigger);
+        performanceDisableBlockEntityTicking = getBoolean("performance.disableBlockEntityTicking", performanceDisableBlockEntityTicking);
+        performanceDisableTileSnapshotCreation = getBoolean("performance.disableTileSnapshotCreation", performanceDisableTileSnapshotCreation);
+        performanceDisableBlockSnapshotCreation = getBoolean("performance.disableBlockSnapshotCreation", performanceDisableBlockSnapshotCreation);
+        performanceDisableSpawnerChunkTickIteration = getBoolean("performance.disableSpawnerChunkTickIteration", performanceDisableSpawnerChunkTickIteration);
+        performanceDisableBukkitVanishAPI = getBoolean("performance.disableBukkitVanishAPI", performanceDisableBukkitVanishAPI);
 
         behaviorAllowTeleportationWithPassengers = getBoolean("behavior.allowTeleportationWithPassengers", behaviorAllowTeleportationWithPassengers);
         behaviorDisableInitialWorldSpawn = getBoolean("behavior.disableInitialWorldSpawn", behaviorDisableInitialWorldSpawn);
@@ -681,6 +709,71 @@ public final class UlyxConfig {
     public static boolean isSoundsDisableNewCombatSounds() {
         ensureLoaded();
         return soundsDisableNewCombatSounds;
+    }
+
+    public static boolean isPerformancePacketReducerEnabled() {
+        ensureLoaded();
+        return performancePacketReducerEnabled;
+    }
+
+    public static boolean isPerformancePacketReducerReduceHandSwingUpdates() {
+        ensureLoaded();
+        return performancePacketReducerReduceHandSwingUpdates;
+    }
+
+    public static boolean isPerformanceAlwaysMoistFarmland() {
+        ensureLoaded();
+        return performanceAlwaysMoistFarmland;
+    }
+
+    public static boolean isPerformanceAlwaysMoistSugarcane() {
+        ensureLoaded();
+        return performanceAlwaysMoistSugarcane;
+    }
+
+    public static boolean isPerformanceCheckIfCactusCanSurviveBeforeGrowth() {
+        ensureLoaded();
+        return performanceCheckIfCactusCanSurviveBeforeGrowth;
+    }
+
+    public static boolean isPerformanceOnlyPlayersUnpackLootTable() {
+        ensureLoaded();
+        return performanceOnlyPlayersUnpackLootTable;
+    }
+
+    public static boolean isPerformanceOptimisePlayerPickup() {
+        ensureLoaded();
+        return performanceOptimisePlayerPickup;
+    }
+
+    public static boolean isPerformanceDisableCriterionTrigger() {
+        ensureLoaded();
+        return performanceDisableCriterionTrigger;
+    }
+
+    public static boolean isPerformanceDisableBlockEntityTicking() {
+        ensureLoaded();
+        return performanceDisableBlockEntityTicking;
+    }
+
+    public static boolean isPerformanceDisableTileSnapshotCreation() {
+        ensureLoaded();
+        return performanceDisableTileSnapshotCreation;
+    }
+
+    public static boolean isPerformanceDisableBlockSnapshotCreation() {
+        ensureLoaded();
+        return performanceDisableBlockSnapshotCreation;
+    }
+
+    public static boolean isPerformanceDisableSpawnerChunkTickIteration() {
+        ensureLoaded();
+        return performanceDisableSpawnerChunkTickIteration;
+    }
+
+    public static boolean isPerformanceDisableBukkitVanishAPI() {
+        ensureLoaded();
+        return performanceDisableBukkitVanishAPI;
     }
 
     public static boolean isBehaviorAllowTeleportationWithPassengers() {

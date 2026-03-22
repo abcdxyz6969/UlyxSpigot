@@ -305,3 +305,136 @@ sounds:
   disableFootStepSounds: false
   # Disables new combat sounds.
   disableNewCombatSounds: false
+
+
+performance:
+  packet-reducer:
+    # Enables the packet reducer logic.
+    enabled: true
+    # Reduces hand swinging updates to reduce overall packet sending count.
+    reduceHandSwingUpdates: true
+    fire-packets:
+      # Prevents sending fire packets if entity has fire resistance.
+      # Recommended value: true
+      enabled: true
+      # Exempts invisible entities from fire packet reducing.
+      ignore-invisible: true
+  # Disables the criterion trigger for achievements which can be heavier sometimes (Advancements will not work!).
+  # Recommended value: true (causes lazy recipe suggestion updates)
+  disableCriterionTrigger: true
+  # Optimises block entities operations.
+  # Recommended value: true
+  optimiseBlockEntities: true
+  # Optimises the chunk writing I/O operation.
+  optimiseChunkWriting: true
+  virtual-threads:
+    # Enables the use of Java 21+ Virtual Threads.
+    enabled: true
+    # Uses virtual threads for the Bukkit scheduler.
+    bukkit-scheduler: true
+    # Uses virtual threads for the Chat scheduler.
+    chat-scheduler: true
+    # Uses virtual threads for the Authenticator scheduler.
+    authenticator-scheduler: true
+    # Uses virtual threads for logging commands.
+    command-logging: false
+    # Uses virtual threads for tab completing.
+    tab-completing: true
+    # Uses virtual threads for sending commands.
+    command-sending: true
+    # Uses virtual threads for chat text filtering.
+    chat-text-filtering: true
+  # Disables block entity ticking such as hoppers, campfires, furnaces...
+  disableBlockEntityTicking: true
+  # Disables moist checks for farmlands. This setting will cause farmland to never dry out
+  alwaysMoistFarmland: false
+  # Disables moist checks for sugarcane. This setting will cause sugarcane to never dry out
+  alwaysMoistSugarcane: false
+  # Check if cactus can survive before growing
+  checkIfCactusCanSurviveBeforeGrowth: false
+  hoppers:
+    # Optimises hoppers by using faster logic.
+    enabled: true
+    # Throttles the hopper for the specified amount of ticks if target container is full
+    # Recommended value: 8
+    throttleFullTargetContainer: -1
+  # Prevents tile snapshots from being created when using InventoryHolder API (Might cause issues due to breaking original API behavior).
+  disableTileSnapshotCreation: false
+  # Prevents block snapshots from being created when using BlockState API. Might cause plugin issues (Might cause issues due to breaking original API behavior).
+  disableBlockSnapshotCreation: false
+  # Disables spawner chunk tick iteration to drastically improve performance in case this feature is not needed.
+  disableSpawnerChunkTickIteration: true
+  # Only runs unpack loot table for players.
+  # Recommended value: true
+  onlyPlayersUnpackLootTable: true
+  # Optimises player movement by skipping heavy operations.
+  # Recommended value: true
+  optimisePlayerMovement: true
+  # Optimises player pickup (adds pickup delay).
+  # Recommended value: false
+  optimisePlayerPickup: true
+  # Optimises rails logic to improve minecart performance.
+  # Recommended value: true
+  optimiseRails: false
+  # Disables Bukkit Vanish API.
+  disableBukkitVanishAPI: false
+  ticking:
+    # Enables an efficient tick limiter that acts when the server performance is compromised.
+    # Recommended value: true
+    enableEfficientTickLimiter: true
+    entity:
+      # Configure the amount of ticks should pass before executing entity collisions.
+      # Recommended value: 5
+      ticksBetweenCollisions: 5
+      # Configure the amount of ticks should pass before updating entity line of sight.
+      # Recommended value: 10
+      ticksBetweenLineOfSightUpdate: 10
+      # Configure the amount of ticks should pass before checking for entities in water.
+      # Recommended value: 4-5
+      ticksBetweenWaterChecks: 5
+      # Configure the amount of ticks should pass before checking for entity equipment changes.
+      # Recommended value: 4
+      ticksBetweenEquipmentUpdate: 4
+      # Configure the amount of ticks should pass before updating fluids on entity eyes.
+      # Recommended value: 2
+      ticksBetweenFluidOnEyes: 2
+      # Configure the amount of ticks should pass before checking for entities suffocation.
+      # Recommended value: 1
+      ticksBetweenSuffocation: 1
+      # Configure the amount of ticks should pass before creating entity paths.
+      # Recommended value: 4
+      ticksBetweenGeneralPathCreation: 4
+      # Configure the amount of ticks should pass before activating entities.
+      # Recommended value: 3
+      ticksBetweenActivationRangeDelay: 3
+    world:
+      # Configure the amount of ticks should pass before ticking fluids.
+      # Recommended value: 1
+      ticksBetweenFluidTicking: 1
+      # Configure the amount of ticks should pass before ticking blocks.
+      # Recommended value: 1
+      ticksBetweenBlockTicking: 1
+      # configure the amount of ticks should pass before running block events.
+      # Recommended value: 1
+      ticksBetweenBlockEvents: 1
+      # Configure the amount of ticks should pass before ticking raids.
+      # Recommended value: 1
+      ticksBetweenRaidTicking: 1
+      # Configure the amount of ticks ticks should pass before updating player statistics.
+      # Recommended value: 20
+      ticksBetweenStatisticUpdate: 20
+      # Configure the amount of ticks should pass before searching moving items to merge (2 = vanilla).
+      # Recommended value: 2
+      ticksBetweenMovingItemMergeSearch: 2
+      # Configure the amount of ticks should pass before searching static items to merge (40 = vanilla).
+      # Recommended value: 40
+      ticksBetweenStaticItemMergeSearch: 40
+      # Configure the amount of ticks should pass before handling item movement stuck.
+      # Recommended value: 2
+      ticksBetweenItemStuck: 1
+      # Configure the amount of ticks should pass before updating chunk precipitation.
+      # Recommended value: 2-5
+      ticksBetweenPrecipitationUpdates: 5
+      # Configure the amount of ticks should pass before updating chunks.
+      # Recommended value: 1
+      ticksBetweenChunkUpdate: 1

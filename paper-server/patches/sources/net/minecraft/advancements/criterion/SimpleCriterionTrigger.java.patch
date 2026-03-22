@@ -33,6 +33,10 @@
      }
  
      protected void trigger(ServerPlayer player, Predicate<T> testTrigger) {
++        if (org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceDisableCriterionTrigger()) {
++            return;
++        }
++
          PlayerAdvancements advancements = player.getAdvancements();
 -        Set<CriterionTrigger.Listener<T>> set = this.players.get(advancements);
 +        Set<CriterionTrigger.Listener<T>> set = (Set) advancements.criterionData.get(this); // Paper - fix PlayerAdvancements leak

@@ -1,9 +1,15 @@
 --- a/net/minecraft/world/level/block/FarmBlock.java
 +++ b/net/minecraft/world/level/block/FarmBlock.java
-@@ -95,31 +_,59 @@
+@@ -95,31 +_,65 @@
      @Override
      protected void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
          int moistureValue = state.getValue(MOISTURE);
++        if (org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceAlwaysMoistFarmland()) {
++            if (moistureValue < 7) {
++                org.bukkit.craftbukkit.event.CraftEventFactory.handleMoistureChangeEvent(level, pos, state.setValue(MOISTURE, 7), Block.UPDATE_CLIENTS);
++            }
++            return;
++        }
 +        if (moistureValue > 0 && level.paperConfig().tickRates.wetFarmland != 1 && (level.paperConfig().tickRates.wetFarmland < 1 || (net.minecraft.server.MinecraftServer.currentTick + pos.hashCode()) % level.paperConfig().tickRates.wetFarmland != 0)) { return; } // Paper - Configurable random tick rates for blocks
 +        if (moistureValue == 0 && level.paperConfig().tickRates.dryFarmland != 1 && (level.paperConfig().tickRates.dryFarmland < 1 || (net.minecraft.server.MinecraftServer.currentTick + pos.hashCode()) % level.paperConfig().tickRates.dryFarmland != 0)) { return; } // Paper - Configurable random tick rates for blocks
          if (!isNearWater(level, pos) && !level.isRainingAt(pos.above())) {

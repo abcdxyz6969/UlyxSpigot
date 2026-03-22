@@ -49,7 +49,7 @@
      private double firstGoodX;
      private double firstGoodY;
      private double firstGoodZ;
-@@ -258,7 +_,23 @@
+@@ -258,7 +_,24 @@
      private int receivedMovePacketCount;
      private int knownMovePacketCount;
      private boolean receivedMovementThisTick;
@@ -67,6 +67,7 @@
 +    private float lastPitch = Float.MAX_VALUE;
 +    private float lastYaw = Float.MAX_VALUE;
 +    private boolean justTeleported = false;
++    private int ulyxLastSentSwingTick = Integer.MIN_VALUE;
 +    // CraftBukkit end
      private @Nullable RemoteChatSession chatSession;
 +    private boolean hasLoggedExpiry = false; // Paper - Prevent causing expired keys from impacting new joins
@@ -1705,7 +1706,7 @@
              }
          }
      }
-@@ -1638,7 +_,40 @@
+@@ -1638,7 +_,46 @@
      @Override
      public void handleAnimate(ServerboundSwingPacket packet) {
          PacketUtils.ensureRunningOnSameThread(packet, this, this.player.level());
@@ -1743,6 +1744,12 @@
 +
 +        if (event.isCancelled()) return;
 +        // CraftBukkit end
++        if (org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformancePacketReducerEnabled()
++            && org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformancePacketReducerReduceHandSwingUpdates()
++            && this.ulyxLastSentSwingTick == net.minecraft.server.MinecraftServer.currentTick) {
++            return;
++        }
++        this.ulyxLastSentSwingTick = net.minecraft.server.MinecraftServer.currentTick;
          this.player.swing(packet.getHand());
      }
  
