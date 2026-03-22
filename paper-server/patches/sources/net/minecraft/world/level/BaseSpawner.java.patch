@@ -17,7 +17,7 @@
      }
  
      public void clientTick(Level level, BlockPos pos) {
-@@ -81,13 +_,25 @@
+@@ -81,13 +_,29 @@
      }
  
      public void serverTick(ServerLevel level, BlockPos pos) {

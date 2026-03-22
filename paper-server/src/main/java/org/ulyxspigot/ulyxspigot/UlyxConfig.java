@@ -110,6 +110,7 @@ public final class UlyxConfig {
     private static boolean performanceDisableTileSnapshotCreation = false;
     private static boolean performanceDisableBlockSnapshotCreation = false;
     private static boolean performanceDisableSpawnerChunkTickIteration = true;
+    private static int performanceTickingWorldTicksBetweenRaidTicking = 1;
     private static boolean performanceDisableBukkitVanishAPI = false;
 
     private static boolean behaviorAllowTeleportationWithPassengers = false;
@@ -353,6 +354,7 @@ public final class UlyxConfig {
         performanceDisableTileSnapshotCreation = getBoolean("performance.disableTileSnapshotCreation", performanceDisableTileSnapshotCreation);
         performanceDisableBlockSnapshotCreation = getBoolean("performance.disableBlockSnapshotCreation", performanceDisableBlockSnapshotCreation);
         performanceDisableSpawnerChunkTickIteration = getBoolean("performance.disableSpawnerChunkTickIteration", performanceDisableSpawnerChunkTickIteration);
+        performanceTickingWorldTicksBetweenRaidTicking = Math.max(1, getInt("performance.ticking.world.ticksBetweenRaidTicking", performanceTickingWorldTicksBetweenRaidTicking));
         performanceDisableBukkitVanishAPI = getBoolean("performance.disableBukkitVanishAPI", performanceDisableBukkitVanishAPI);
 
         behaviorAllowTeleportationWithPassengers = getBoolean("behavior.allowTeleportationWithPassengers", behaviorAllowTeleportationWithPassengers);
@@ -769,6 +771,11 @@ public final class UlyxConfig {
     public static boolean isPerformanceDisableSpawnerChunkTickIteration() {
         ensureLoaded();
         return performanceDisableSpawnerChunkTickIteration;
+    }
+
+    public static int getPerformanceTickingWorldTicksBetweenRaidTicking() {
+        ensureLoaded();
+        return performanceTickingWorldTicksBetweenRaidTicking;
     }
 
     public static boolean isPerformanceDisableBukkitVanishAPI() {

@@ -59,7 +59,12 @@
      public float getTotalHealth() {
          return this.totalHealth;
      }
-@@ -267,6 +_,7 @@
+@@ -267,6 +_,12 @@
++                int ulyxRaidTickInterval = org.ulyxspigot.ulyxspigot.UlyxConfig.getPerformanceTickingWorldTicksBetweenRaidTicking();
++                if (ulyxRaidTickInterval > 1 && level.getGameTime() % ulyxRaidTickInterval != 0L) {
++                    return;
++                }
++
                  boolean flag = this.active;
                  this.active = level.hasChunkAt(this.center);
                  if (level.getDifficulty() == Difficulty.PEACEFUL) {
