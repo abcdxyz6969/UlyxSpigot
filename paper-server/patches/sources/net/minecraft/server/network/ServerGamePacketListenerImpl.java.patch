@@ -1526,7 +1526,7 @@
          ParseResults<CommandSourceStack> parseResults = this.parseCommand(command);
          if (this.server.enforceSecureProfile() && SignableCommand.hasSignableArguments(parseResults)) {
              LOGGER.error(
-@@ -1482,28 +_,62 @@
+@@ -1482,28 +_,63 @@
          Optional<LastSeenMessages> optional = this.unpackAndApplyLastSeen(packet.lastSeenMessages());
          if (!optional.isEmpty()) {
              this.tryHandleChat(packet.command(), true, () -> {
@@ -1547,11 +1547,12 @@
 +        // CraftBukkit start
 +        String command = "/" + packet.command();
 +        if (org.spigotmc.SpigotConfig.logCommands) { // Paper - Add missing SpigotConfig logCommands check
++            final String commandForLogging = command;
 +            if (org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceVirtualThreadsEnabled()
 +                && org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceVirtualThreadsCommandLogging()) {
-+                Thread.ofVirtual().name("Ulyx-CommandLog-", 0).start(() -> LOGGER.info("{} issued server command: {}", this.player.getScoreboardName(), command));
++                Thread.ofVirtual().name("Ulyx-CommandLog-", 0).start(() -> LOGGER.info("{} issued server command: {}", this.player.getScoreboardName(), commandForLogging));
 +            } else {
-+                LOGGER.info("{} issued server command: {}", this.player.getScoreboardName(), command);
++                LOGGER.info("{} issued server command: {}", this.player.getScoreboardName(), commandForLogging);
 +            }
 +        } // Paper - Add missing SpigotConfig logCommands check
 +

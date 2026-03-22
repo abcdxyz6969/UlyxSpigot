@@ -12,6 +12,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Blocks;
 
 public final class UlyxPacketFilters {
@@ -79,7 +80,9 @@ public final class UlyxPacketFilters {
             return false;
         }
 
-        if (!entity.hasEffect(MobEffects.FIRE_RESISTANCE) || entity.getRemainingFireTicks() <= 0) {
+        if (!(entity instanceof LivingEntity living)
+            || !living.hasEffect(MobEffects.FIRE_RESISTANCE)
+            || entity.getRemainingFireTicks() <= 0) {
             return false;
         }
 
