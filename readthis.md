@@ -312,3 +312,14 @@
 - File bo sung:
   - `paper-server/src/main/java/org/ulyxspigot/ulyxspigot/network/UlyxPacketFilters.java`
   - `paper-server/patches/sources/net/minecraft/server/network/ServerCommonPacketListenerImpl.java.patch`
+
+
+### Async pathfinding update (turn nay)
+- Da wire hoat dong cho `asynchronous.pathfinding.enabled` va `asynchronous.pathfinding.threads`.
+- Diem hook: `PathFinder#findPath(...)`.
+- Cach hoat dong:
+  - Luc tinh path A* se duoc boc qua `UlyxAsyncPathfinding.supply(...)`.
+  - Neu config tat: chay sync nhu cu.
+  - Neu config bat: pathfinding chay tren worker pool theo so thread da config.
+- File:
+  - `paper-server/patches/sources/net/minecraft/world/level/pathfinder/PathFinder.java.patch`
