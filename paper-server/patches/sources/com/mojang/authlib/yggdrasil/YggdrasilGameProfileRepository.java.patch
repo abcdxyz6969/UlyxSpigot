@@ -9,7 +9,7 @@
 +        if (org.ulyxspigot.ulyxspigot.UlyxConfig.isFixesAlternativeProfileLookup()) {
 +            for (final String requestedName : criteria) {
 +                this.findProfileByName(requestedName).ifPresentOrElse(
-+                    profile -> callback.onProfileLookupSucceeded(profile),
++                    profile -> callback.onProfileLookupSucceeded(profile.name(), profile.id()),
 +                    () -> callback.onProfileLookupFailed(requestedName, new ProfileNotFoundException("Server did not find the requested profile"))
 +                );
 +
