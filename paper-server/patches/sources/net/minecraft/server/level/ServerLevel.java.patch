@@ -464,7 +464,7 @@
      }
  
      public void resetEmptyTime() {
-@@ -813,18 +_,46 @@
+@@ -813,18 +_,52 @@
          }
      }
  
@@ -517,7 +517,7 @@
      }
  
      private void tickPassenger(Entity ridingEntity, Entity passengerEntity) {
-@@ -833,10 +_,12 @@
+@@ -833,10 +_,18 @@
          } else if (passengerEntity instanceof Player || this.entityTickList.contains(passengerEntity)) {
 +            if (!(passengerEntity instanceof Player)) {
 +                final net.minecraft.resources.Identifier ulyxPassengerTypeKey = BuiltInRegistries.ENTITY_TYPE.getKey(passengerEntity.getType());
@@ -880,7 +880,7 @@
      }
  
      private Explosion.BlockInteraction getDestroyType(GameRule<Boolean> decayGameRule) {
-@@ -1287,19 +_,58 @@
+@@ -1287,19 +_,72 @@
      public <T extends ParticleOptions> int sendParticles(
          T options, double x, double y, double z, int count, double xDist, double yDist, double zDist, double speed
      ) {

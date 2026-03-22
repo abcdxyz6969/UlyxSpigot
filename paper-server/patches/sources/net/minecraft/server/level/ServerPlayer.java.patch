@@ -318,7 +318,7 @@
                  }
  
                  float saturationLevel = this.foodData.getSaturationLevel();
-@@ -757,6 +_,9 @@
+@@ -757,6 +_,7 @@
 -        this.playShoulderEntityAmbientSound(this.getShoulderEntityLeft());
 -        this.playShoulderEntityAmbientSound(this.getShoulderEntityRight());
 +        if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isSoundsDisableShoulderEntityAmbientSound()) this.playShoulderEntityAmbientSound(this.getShoulderEntityLeft());
