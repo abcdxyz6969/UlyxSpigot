@@ -73,9 +73,9 @@
 @@ -556,7 +_,7 @@
          this.deathTime++;
          if (this.deathTime >= 20 && !this.level().isClientSide() && !this.isRemoved()) {
-             if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isParticlesDisableDeathParticles()) this.level().broadcastEntityEvent(this, EntityEvent.POOF);
--            this.remove(Entity.RemovalReason.KILLED);
-+            this.remove(Entity.RemovalReason.KILLED, org.bukkit.event.entity.EntityRemoveEvent.Cause.DEATH); // CraftBukkit - add Bukkit remove cause
+-            this.level().broadcastEntityEvent(this, EntityEvent.POOF);
++            if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isParticlesDisableDeathParticles()) this.level().broadcastEntityEvent(this, EntityEvent.POOF);
+             this.remove(Entity.RemovalReason.KILLED);
          }
      }
  

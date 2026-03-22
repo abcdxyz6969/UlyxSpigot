@@ -1,10 +1,6 @@
 --- a/net/minecraft/world/level/pathfinder/PathFinder.java
 +++ b/net/minecraft/world/level/pathfinder/PathFinder.java
-@@ -52,7 +_,7 @@
-             for (BlockPos pos : targets) {
-                 map.add(new java.util.AbstractMap.SimpleEntry<>(this.nodeEvaluator.getTarget(pos.getX(), pos.getY(), pos.getZ()), pos));
-             }
-             // Paper end - Perf: remove streams and optimize collection
+@@ -56,7 +_,7 @@
 -            Path path = this.findPath(start, map, maxRange, reachRange, maxVisitedNodesMultiplier);
 +            Path path = org.ulyxspigot.ulyxspigot.async.UlyxAsyncPathfinding.supply(() -> this.findPath(start, map, maxRange, reachRange, maxVisitedNodesMultiplier));
              this.nodeEvaluator.done();
