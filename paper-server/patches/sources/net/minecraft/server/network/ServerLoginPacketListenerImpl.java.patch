@@ -35,21 +35,12 @@
  
      public ServerLoginPacketListenerImpl(MinecraftServer server, Connection connection, boolean transferred) {
          this.server = server;
-@@ -67,11 +_,29 @@
+@@ -67,10 +_,20 @@
          this.serverActivityMonitor = this.server.getServerActivityMonitor();
          this.challenge = Ints.toByteArray(RandomSource.create().nextInt());
          this.transferred = transferred;
 +        this.paperLoginConnection  = new io.papermc.paper.connection.PaperPlayerLoginConnection(this); // Paper
      }
- 
-+    private void runAuthenticatorTask(Runnable task) {
-+        if (org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceVirtualThreadsEnabled()
-+            && org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceVirtualThreadsAuthenticatorScheduler()) {
-+            Thread.ofVirtual().start(task);
-+            return;
-+        }
-+        authenticatorPool.execute(task);
-+    }
  
      @Override
      public void tick() {
@@ -113,7 +104,7 @@
          this.requestedUsername = packet.name();
          GameProfile singleplayerProfile = this.server.getSingleplayerProfile();
          if (singleplayerProfile != null && this.requestedUsername.equalsIgnoreCase(singleplayerProfile.name())) {
-@@ -127,7 +_,32 @@
+@@ -127,7 +_,38 @@
                  this.state = ServerLoginPacketListenerImpl.State.KEY;
                  this.connection.send(new ClientboundHelloPacket("", this.server.getKeyPair().getPublic().getEncoded(), this.challenge, true));
              } else {
@@ -130,7 +121,7 @@
 +                // Paper end - Add Velocity IP Forwarding Support
 +                // CraftBukkit start
 +                // Paper start - Cache authenticator threads
-+                this.runAuthenticatorTask(() -> {
++                Runnable authTask = () -> {
 +                    try {
 +                        GameProfile gameprofile = ServerLoginPacketListenerImpl.this.createOfflineProfile(ServerLoginPacketListenerImpl.this.requestedUsername); // Spigot
 +
@@ -141,7 +132,13 @@
 +                        ServerLoginPacketListenerImpl.this.disconnect("Failed to verify username!");
 +                        ServerLoginPacketListenerImpl.this.server.server.getLogger().log(java.util.logging.Level.WARNING, "Exception verifying " + ServerLoginPacketListenerImpl.this.requestedUsername, ex);
 +                    }
-+                });
++                };
++                if (org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceVirtualThreadsEnabled()
++                    && org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceVirtualThreadsAuthenticatorScheduler()) {
++                    Thread.ofVirtual().start(authTask);
++                } else {
++                    authenticatorPool.execute(authTask);
++                }
 +                // Paper end - Cache authenticator threads
 +                // CraftBukkit end
              }
@@ -179,7 +176,7 @@
  
 -        Thread thread = new Thread("User Authenticator #" + UNIQUE_THREAD_ID.incrementAndGet()) {
 +        // Paper start - Cache authenticator threads
-+        this.runAuthenticatorTask(new Runnable() {
++        Runnable authTask = new Runnable() {
              @Override
              public void run() {
                  String string1 = Objects.requireNonNull(ServerLoginPacketListenerImpl.this.requestedUsername, "Player name not initialized");
@@ -222,7 +219,7 @@
                  }
              }
  
-@@ -225,18 +_,123 @@
+@@ -225,18 +_,135 @@
                      ? ((InetSocketAddress)remoteAddress).getAddress()
                      : null;
              }
@@ -230,7 +227,13 @@
 -        thread.setUncaughtExceptionHandler(new DefaultUncaughtExceptionHandler(LOGGER));
 -        thread.start();
 -    }
-+        });
++        };
++        if (org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceVirtualThreadsEnabled()
++            && org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceVirtualThreadsAuthenticatorScheduler()) {
++            Thread.ofVirtual().start(authTask);
++        } else {
++            authenticatorPool.execute(authTask);
++        }
 +        // Paper end - Cache authenticator threads
 +    }
 +
@@ -328,7 +331,7 @@
 +            //TODO Update handling for lazy sessions, might not even have to do anything?
 +
 +            // Proceed with login
-+            this.runAuthenticatorTask(() -> {
++            Runnable authTask = () -> {
 +                try {
 +                    final GameProfile gameprofile = this.callPlayerPreLoginEvents(this.authenticatedProfile);
 +                    ServerLoginPacketListenerImpl.LOGGER.info("UUID of player {} is {}", gameprofile.name(), gameprofile.id());
@@ -337,7 +340,13 @@
 +                    disconnect("Failed to verify username!");
 +                    server.server.getLogger().log(java.util.logging.Level.WARNING, "Exception verifying " + this.authenticatedProfile.name(), ex);
 +                }
-+            });
++            };
++            if (org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceVirtualThreadsEnabled()
++                && org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceVirtualThreadsAuthenticatorScheduler()) {
++                Thread.ofVirtual().start(authTask);
++            } else {
++                authenticatorPool.execute(authTask);
++            }
 +            return;
 +        }
 +        // Paper end - Add Velocity IP Forwarding Support
