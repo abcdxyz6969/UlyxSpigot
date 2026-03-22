@@ -674,7 +674,7 @@
  
                          return f;
                      }
-@@ -1316,6 +_,59 @@
+@@ -1316,6 +_,91 @@
          }
      }
  
@@ -682,26 +682,50 @@
 +    public boolean canBlockAttack(DamageSource damageSource, float damageAmount) {
 +        if (damageAmount <= 0.0F) {
 +            return false;
-+        } else {
-+            ItemStack itemBlockingWith = this.getItemBlockingWith();
-+            if (itemBlockingWith == null) {
-+                return false;
-+            } else {
-+                BlocksAttacks blocksAttacks = itemBlockingWith.get(DataComponents.BLOCKS_ATTACKS);
-+                if (blocksAttacks != null && !blocksAttacks.bypassedBy().map(damageSource::is).orElse(false)) {
-+                    if (damageSource.getDirectEntity() instanceof AbstractArrow abstractArrow && abstractArrow.getPierceLevel() > 0) {
-+                        return false;
-+                    } else {
-+                        return true;
-+                    }
-+                } else {
-+                    return false;
-+                }
-+            }
 +        }
++
++        if (this.isLegacySwordBlocking()) {
++            return true;
++        }
++
++        ItemStack itemBlockingWith = this.getItemBlockingWith();
++        if (itemBlockingWith == null) {
++            return false;
++        }
++
++        BlocksAttacks blocksAttacks = itemBlockingWith.get(DataComponents.BLOCKS_ATTACKS);
++        if (blocksAttacks == null || blocksAttacks.bypassedBy().map(damageSource::is).orElse(false)) {
++            return false;
++        }
++
++        return !(damageSource.getDirectEntity() instanceof AbstractArrow abstractArrow) || abstractArrow.getPierceLevel() <= 0;
++    }
++
++    private boolean isLegacySwordBlocking() {
++        if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isCombatImitateSwordBlocking()) {
++            return false;
++        }
++
++        ItemStack candidate = ItemStack.EMPTY;
++        if (this.isUsingItem()) {
++            candidate = this.getUseItem();
++        } else if (this instanceof net.minecraft.world.entity.player.Player player && player.isShiftKeyDown()) {
++            candidate = this.getMainHandItem();
++        }
++
++        if (candidate.isEmpty()) {
++            return false;
++        }
++
++        final String itemKey = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(candidate.getItem()).getPath();
++        return itemKey.endsWith("_sword");
 +    }
 +
 +    public float resolveBlockedDamage(DamageSource damageSource, float damageAmount) {
++        if (this.isLegacySwordBlocking()) {
++            return damageAmount * 0.5F;
++        }
++
 +        Vec3 sourcePosition = damageSource.getSourcePosition();
 +        double acos;
 +        if (sourcePosition != null) {
@@ -713,11 +737,19 @@
 +            acos = (float) Math.PI;
 +        }
 +
-+        BlocksAttacks blocksAttacks = this.getItemBlockingWith().get(DataComponents.BLOCKS_ATTACKS);
-+        return blocksAttacks.resolveBlockedDamage(damageSource, damageAmount, acos);
++        ItemStack itemBlockingWith = this.getItemBlockingWith();
++        if (itemBlockingWith == null) {
++            return 0.0F;
++        }
++        BlocksAttacks blocksAttacks = itemBlockingWith.get(DataComponents.BLOCKS_ATTACKS);
++        return blocksAttacks == null ? 0.0F : blocksAttacks.resolveBlockedDamage(damageSource, damageAmount, acos);
 +    }
 +
 +    public void blockingItemEffects(ServerLevel level, DamageSource damageSource, float f) {
++        if (this.isLegacySwordBlocking()) {
++            return;
++        }
++
 +        ItemStack itemBlockingWith = this.getItemBlockingWith();
 +        if (itemBlockingWith == null) return;
 +

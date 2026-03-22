@@ -247,23 +247,23 @@ fixes:
 limiters:
   redstone:
     # Enables Redstone Limiter.
-    enabled: true
+    enabled: false
     # Max redstone updates per tick.
-    maxRedstonePerTick: 100
+    maxRedstonePerTick: 2000
     # Max piston updates per tick.
-    maxPistonPerTick: 100
+    maxPistonPerTick: 2000
     # Max hopper updates per tick.
-    maxHopperPerTick: 100
+    maxHopperPerTick: 2000
     # Max dispenser updates per tick.
-    maxDispenserPerTick: 100
+    maxDispenserPerTick: 2000
     # Max dropper updates per tick.
-    maxDropperPerTick: 100
+    maxDropperPerTick: 2000
     # Max observer updates per tick.
-    maxObserverPerTick: 100
+    maxObserverPerTick: 2000
     # Max blocks piston can push
     maxPistonPush: 12
     block-threshold:
-      OBSERVER: 3
+      OBSERVER: 2000
   remove-excess:
     # Removes excess minecarts vehicles on collision.
     removeExcessMinecarts: true
@@ -279,28 +279,28 @@ limiters:
 
 particles:
   # Disables entity sprinting particles.
-  disableSprintParticles: true
+  disableSprintParticles: false
   # Disables entity fall particles.
-  disableFallParticles: true
+  disableFallParticles: false
   # Disables entity death particles.
-  disableDeathParticles: true
+  disableDeathParticles: false
   # Disables player block break particles.
-  disableBlockBreakParticles: true
+  disableBlockBreakParticles: false
   # Disables effect particles.
   disableEffectParticles: false
   # Disables entity water splash particles.
-  disableWaterSplashParticles: true
+  disableWaterSplashParticles: false
   # Disables bubble columns particles.
-  disableBubbleColumnParticles: true
+  disableBubbleColumnParticles: false
   # Disables mob spawner particles.
-  disableSpawnerParticles: true
+  disableSpawnerParticles: false
   # Disables new combat particles.
   disableNewCombatParticles: false
 
 sounds:
   # Disables shoulder entity ambient sound.
-  disableShoulderEntityAmbientSound: true
+  disableShoulderEntityAmbientSound: false
   # Disables entity footstep particle.
-  disableFootStepSounds: true
+  disableFootStepSounds: false
   # Disables new combat sounds.
   disableNewCombatSounds: false

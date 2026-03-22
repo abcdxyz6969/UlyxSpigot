@@ -68,15 +68,15 @@ public final class UlyxConfig {
     private static boolean fixesDisableSavingFireworks = true;
     private static boolean fixesLockOpSystem = false;
 
-    private static boolean limitersRedstoneEnabled = true;
-    private static int limitersRedstoneMaxRedstonePerTick = 100;
-    private static int limitersRedstoneMaxPistonPerTick = 100;
-    private static int limitersRedstoneMaxHopperPerTick = 100;
-    private static int limitersRedstoneMaxDispenserPerTick = 100;
-    private static int limitersRedstoneMaxDropperPerTick = 100;
-    private static int limitersRedstoneMaxObserverPerTick = 100;
+    private static boolean limitersRedstoneEnabled = false;
+    private static int limitersRedstoneMaxRedstonePerTick = 2000;
+    private static int limitersRedstoneMaxPistonPerTick = 2000;
+    private static int limitersRedstoneMaxHopperPerTick = 2000;
+    private static int limitersRedstoneMaxDispenserPerTick = 2000;
+    private static int limitersRedstoneMaxDropperPerTick = 2000;
+    private static int limitersRedstoneMaxObserverPerTick = 2000;
     private static int limitersRedstoneMaxPistonPush = 12;
-    private static Map<String, Integer> limitersRedstoneBlockThreshold = Map.of("OBSERVER", 3);
+    private static Map<String, Integer> limitersRedstoneBlockThreshold = Map.of("OBSERVER", 2000);
     private static boolean limitersRemoveExcessMinecarts = true;
     private static boolean limitersRemoveExcessBoats = true;
     private static int limitersExcessMinecartsLimit = 5;
@@ -84,18 +84,18 @@ public final class UlyxConfig {
     private static List<String> limitersNonTickableEntities = List.of("EXAMPLE");
     private static Set<String> limitersNonTickableEntitiesSet = Set.of();
 
-    private static boolean particlesDisableSprintParticles = true;
-    private static boolean particlesDisableFallParticles = true;
-    private static boolean particlesDisableDeathParticles = true;
-    private static boolean particlesDisableBlockBreakParticles = true;
+    private static boolean particlesDisableSprintParticles = false;
+    private static boolean particlesDisableFallParticles = false;
+    private static boolean particlesDisableDeathParticles = false;
+    private static boolean particlesDisableBlockBreakParticles = false;
     private static boolean particlesDisableEffectParticles = false;
-    private static boolean particlesDisableWaterSplashParticles = true;
-    private static boolean particlesDisableBubbleColumnParticles = true;
-    private static boolean particlesDisableSpawnerParticles = true;
+    private static boolean particlesDisableWaterSplashParticles = false;
+    private static boolean particlesDisableBubbleColumnParticles = false;
+    private static boolean particlesDisableSpawnerParticles = false;
     private static boolean particlesDisableNewCombatParticles = false;
 
-    private static boolean soundsDisableShoulderEntityAmbientSound = true;
-    private static boolean soundsDisableFootStepSounds = true;
+    private static boolean soundsDisableShoulderEntityAmbientSound = false;
+    private static boolean soundsDisableFootStepSounds = false;
     private static boolean soundsDisableNewCombatSounds = false;
 
     private static boolean behaviorAllowTeleportationWithPassengers = false;

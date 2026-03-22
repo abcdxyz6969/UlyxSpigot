@@ -1832,12 +1832,17 @@
              this.player.resetLastActionTime();
              this.player.setShiftKeyDown(packet.isUsingSecondaryAction());
              if (target != null) {
-@@ -1751,16 +_,63 @@
+@@ -1751,16 +_,68 @@
                  }
  
                  AABB boundingBox = target.getBoundingBox();
++                double ulyxInteractionRange = io.papermc.paper.configuration.GlobalConfiguration.get().misc.clientInteractionLeniencyDistance.or(3.0);
++                if (org.ulyxspigot.ulyxspigot.UlyxConfig.isCombatAlternativeHitRegistration()) {
++                    ulyxInteractionRange = Math.max(ulyxInteractionRange, 4.0D);
++                    boundingBox = boundingBox.inflate(0.1D);
++                }
 -                if (packet.isWithinRange(this.player, boundingBox, 3.0)) {
-+                if (packet.isWithinRange(this.player, boundingBox, io.papermc.paper.configuration.GlobalConfiguration.get().misc.clientInteractionLeniencyDistance.or(3.0))) { // Paper - configurable lenience value for interact range
++                if (packet.isWithinRange(this.player, boundingBox, ulyxInteractionRange)) {
                      packet.dispatch(
                          new ServerboundInteractPacket.Handler() {
 -                            private void performInteraction(InteractionHand hand, ServerGamePacketListenerImpl.EntityInteraction entityInteraction) {

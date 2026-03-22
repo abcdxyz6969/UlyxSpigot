@@ -139,8 +139,14 @@
 - `behavior.disableInitialWorldSpawn`
 - `experimental.reduceChunkMidTickTaskExecution`
 - `developer.recalculateChunksOutOfBounds`
-- `combat.alternative-hit-registration`
-- `combat.imitateSwordBlocking`
+
+### Update moi (turn nay)
+- Da wire `combat.alternative-hit-registration`:
+  - Leniency hitbox/range trong `handleInteract` khi attack packet den tre/lech nhe.
+  - File: `paper-server/patches/sources/net/minecraft/server/network/ServerGamePacketListenerImpl.java.patch`
+- Da wire `combat.imitateSwordBlocking`:
+  - Cho phep block damage bang sword (fallback theo trang thai su dung item; co duong fallback crouch + mainhand sword).
+  - File: `paper-server/patches/sources/net/minecraft/world/entity/LivingEntity.java.patch`
 
 ## 5) Trang thai git local (sau turn nay)
 - Dang co modified files:
