@@ -22,12 +22,16 @@
          try {
              FileUtil.createDirectoriesSafe(this.file.getParent());
  
-@@ -91,6 +_,8 @@
+@@ -91,6 +_,12 @@
  
      @Override
      public void setValue(Player player, Stat<?> stat, int value) {
 +        if (org.spigotmc.SpigotConfig.disableStatSaving || org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisablePlayerStats()) return; // Spigot, UlyxSpigot
 +        if (stat.getType() == Stats.CUSTOM && stat.getValue() instanceof final net.minecraft.resources.Identifier key && org.spigotmc.SpigotConfig.forcedStats.get(key) != null) return; // Paper - disable saving forced stats
          super.setValue(player, stat, value);
++        final int ulyxStatsUpdateInterval = org.ulyxspigot.ulyxspigot.UlyxConfig.getPerformanceTickingWorldTicksBetweenStatisticUpdate();
++        if (ulyxStatsUpdateInterval > 1 && player.level().getGameTime() % ulyxStatsUpdateInterval != 0L) {
++            return;
++        }
          this.dirty.add(stat);
      }

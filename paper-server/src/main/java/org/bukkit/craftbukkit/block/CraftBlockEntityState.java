@@ -41,7 +41,7 @@ public abstract class CraftBlockEntityState<T extends BlockEntity> extends Craft
 
         try { // Paper - Show blockstate location if we failed to read it
         // Paper start
-        this.snapshotDisabled = DISABLE_SNAPSHOT || org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceDisableTileSnapshotCreation();
+        this.snapshotDisabled = DISABLE_SNAPSHOT || org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceDisableTileSnapshotCreation() || org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceOptimiseBlockEntities();
         if (this.snapshotDisabled) {
             this.snapshot = this.blockEntity;
         } else {

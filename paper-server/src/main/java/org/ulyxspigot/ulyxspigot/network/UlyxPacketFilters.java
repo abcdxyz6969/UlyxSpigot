@@ -10,6 +10,8 @@ import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.Blocks;
 
 public final class UlyxPacketFilters {
@@ -58,6 +60,46 @@ public final class UlyxPacketFilters {
             || isSpawnerAt(level, pos.west());
     }
 
+    public static boolean shouldBlockFirePackets(final ServerLevel level, final Packet<?> packet, final boolean ignoreInvisible) {
+        if (!"ClientboundSetEntityDataPacket".equals(packet.getClass().getSimpleName())) {
+            return false;
+        }
+
+        final Integer entityId = readInt(packet, "id", "getId", "entityId", "getEntityId");
+        if (entityId == null) {
+            return false;
+        }
+
+        final Entity entity = level.getEntity(entityId);
+        if (entity == null) {
+            return false;
+        }
+
+        if (ignoreInvisible && entity.isInvisible()) {
+            return false;
+        }
+
+        if (!entity.hasEffect(MobEffects.FIRE_RESISTANCE) || entity.getRemainingFireTicks() <= 0) {
+            return false;
+        }
+
+        final Object packedItems = invokeNoArg(packet, "packedItems", "trackedValues", "getUnpackedData");
+        if (!(packedItems instanceof Iterable<?> iterable)) {
+            return false;
+        }
+
+        boolean hasAny = false;
+        for (Object item : iterable) {
+            final Integer dataId = readInt(item, "id", "getId", "accessorId", "getAccessorId");
+            if (dataId == null || dataId != 0) {
+                return false;
+            }
+            hasAny = true;
+        }
+
+        return hasAny;
+    }
+
     private static boolean isSpawnerAt(final ServerLevel level, final BlockPos pos) {
         return level.getBlockState(pos).is(Blocks.SPAWNER);
     }
@@ -83,6 +125,15 @@ public final class UlyxPacketFilters {
         }
 
         return BuiltInRegistries.PARTICLE_TYPE.getKey(particleOptions.getType());
+    }
+
+    private static Integer readInt(final Object target, final String... methodNames) {
+        final Object value = invokeNoArg(target, methodNames);
+        if (value instanceof Number number) {
+            return number.intValue();
+        }
+
+        return null;
     }
 
     private static Double readDouble(final Object target, final String... methodNames) {

@@ -35,12 +35,21 @@
  
      public ServerLoginPacketListenerImpl(MinecraftServer server, Connection connection, boolean transferred) {
          this.server = server;
-@@ -67,10 +_,20 @@
+@@ -67,11 +_,29 @@
          this.serverActivityMonitor = this.server.getServerActivityMonitor();
          this.challenge = Ints.toByteArray(RandomSource.create().nextInt());
          this.transferred = transferred;
 +        this.paperLoginConnection  = new io.papermc.paper.connection.PaperPlayerLoginConnection(this); // Paper
      }
+ 
++    private void runAuthenticatorTask(Runnable task) {
++        if (org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceVirtualThreadsEnabled()
++            && org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceVirtualThreadsAuthenticatorScheduler()) {
++            Thread.ofVirtual().start(task);
++            return;
++        }
++        authenticatorPool.execute(task);
++    }
  
      @Override
      public void tick() {
@@ -121,7 +130,7 @@
 +                // Paper end - Add Velocity IP Forwarding Support
 +                // CraftBukkit start
 +                // Paper start - Cache authenticator threads
-+                authenticatorPool.execute(() -> {
++                this.runAuthenticatorTask(() -> {
 +                    try {
 +                        GameProfile gameprofile = ServerLoginPacketListenerImpl.this.createOfflineProfile(ServerLoginPacketListenerImpl.this.requestedUsername); // Spigot
 +
@@ -170,7 +179,7 @@
  
 -        Thread thread = new Thread("User Authenticator #" + UNIQUE_THREAD_ID.incrementAndGet()) {
 +        // Paper start - Cache authenticator threads
-+        authenticatorPool.execute(new Runnable() {
++        this.runAuthenticatorTask(new Runnable() {
              @Override
              public void run() {
                  String string1 = Objects.requireNonNull(ServerLoginPacketListenerImpl.this.requestedUsername, "Player name not initialized");
@@ -319,7 +328,7 @@
 +            //TODO Update handling for lazy sessions, might not even have to do anything?
 +
 +            // Proceed with login
-+            authenticatorPool.execute(() -> {
++            this.runAuthenticatorTask(() -> {
 +                try {
 +                    final GameProfile gameprofile = this.callPlayerPreLoginEvents(this.authenticatedProfile);
 +                    ServerLoginPacketListenerImpl.LOGGER.info("UUID of player {} is {}", gameprofile.name(), gameprofile.id());

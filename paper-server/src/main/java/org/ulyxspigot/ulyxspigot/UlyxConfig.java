@@ -100,6 +100,13 @@ public final class UlyxConfig {
 
     private static boolean performancePacketReducerEnabled = true;
     private static boolean performancePacketReducerReduceHandSwingUpdates = true;
+    private static boolean performancePacketReducerFirePacketsEnabled = true;
+    private static boolean performancePacketReducerFirePacketsIgnoreInvisible = true;
+    private static boolean performanceOptimiseBlockEntities = true;
+    private static boolean performanceVirtualThreadsEnabled = true;
+    private static boolean performanceVirtualThreadsCommandLogging = false;
+    private static boolean performanceVirtualThreadsChatTextFiltering = true;
+    private static boolean performanceVirtualThreadsAuthenticatorScheduler = true;
     private static boolean performanceAlwaysMoistFarmland = false;
     private static boolean performanceAlwaysMoistSugarcane = false;
     private static boolean performanceCheckIfCactusCanSurviveBeforeGrowth = false;
@@ -111,6 +118,7 @@ public final class UlyxConfig {
     private static boolean performanceDisableBlockSnapshotCreation = false;
     private static boolean performanceDisableSpawnerChunkTickIteration = true;
     private static int performanceTickingWorldTicksBetweenRaidTicking = 1;
+    private static int performanceTickingWorldTicksBetweenStatisticUpdate = 20;
     private static boolean performanceDisableBukkitVanishAPI = false;
 
     private static boolean behaviorAllowTeleportationWithPassengers = false;
@@ -344,6 +352,13 @@ public final class UlyxConfig {
 
         performancePacketReducerEnabled = getBoolean("performance.packet-reducer.enabled", performancePacketReducerEnabled);
         performancePacketReducerReduceHandSwingUpdates = getBoolean("performance.packet-reducer.reduceHandSwingUpdates", performancePacketReducerReduceHandSwingUpdates);
+        performancePacketReducerFirePacketsEnabled = getBoolean("performance.packet-reducer.fire-packets.enabled", performancePacketReducerFirePacketsEnabled);
+        performancePacketReducerFirePacketsIgnoreInvisible = getBoolean("performance.packet-reducer.fire-packets.ignore-invisible", performancePacketReducerFirePacketsIgnoreInvisible);
+        performanceOptimiseBlockEntities = getBoolean("performance.optimiseBlockEntities", performanceOptimiseBlockEntities);
+        performanceVirtualThreadsEnabled = getBoolean("performance.virtual-threads.enabled", performanceVirtualThreadsEnabled);
+        performanceVirtualThreadsCommandLogging = getBoolean("performance.virtual-threads.command-logging", performanceVirtualThreadsCommandLogging);
+        performanceVirtualThreadsChatTextFiltering = getBoolean("performance.virtual-threads.chat-text-filtering", performanceVirtualThreadsChatTextFiltering);
+        performanceVirtualThreadsAuthenticatorScheduler = getBoolean("performance.virtual-threads.authenticator-scheduler", performanceVirtualThreadsAuthenticatorScheduler);
         performanceAlwaysMoistFarmland = getBoolean("performance.alwaysMoistFarmland", performanceAlwaysMoistFarmland);
         performanceAlwaysMoistSugarcane = getBoolean("performance.alwaysMoistSugarcane", performanceAlwaysMoistSugarcane);
         performanceCheckIfCactusCanSurviveBeforeGrowth = getBoolean("performance.checkIfCactusCanSurviveBeforeGrowth", performanceCheckIfCactusCanSurviveBeforeGrowth);
@@ -355,6 +370,7 @@ public final class UlyxConfig {
         performanceDisableBlockSnapshotCreation = getBoolean("performance.disableBlockSnapshotCreation", performanceDisableBlockSnapshotCreation);
         performanceDisableSpawnerChunkTickIteration = getBoolean("performance.disableSpawnerChunkTickIteration", performanceDisableSpawnerChunkTickIteration);
         performanceTickingWorldTicksBetweenRaidTicking = Math.max(1, getInt("performance.ticking.world.ticksBetweenRaidTicking", performanceTickingWorldTicksBetweenRaidTicking));
+        performanceTickingWorldTicksBetweenStatisticUpdate = Math.max(1, getInt("performance.ticking.world.ticksBetweenStatisticUpdate", performanceTickingWorldTicksBetweenStatisticUpdate));
         performanceDisableBukkitVanishAPI = getBoolean("performance.disableBukkitVanishAPI", performanceDisableBukkitVanishAPI);
 
         behaviorAllowTeleportationWithPassengers = getBoolean("behavior.allowTeleportationWithPassengers", behaviorAllowTeleportationWithPassengers);
@@ -723,6 +739,41 @@ public final class UlyxConfig {
         return performancePacketReducerReduceHandSwingUpdates;
     }
 
+    public static boolean isPerformancePacketReducerFirePacketsEnabled() {
+        ensureLoaded();
+        return performancePacketReducerFirePacketsEnabled;
+    }
+
+    public static boolean isPerformancePacketReducerFirePacketsIgnoreInvisible() {
+        ensureLoaded();
+        return performancePacketReducerFirePacketsIgnoreInvisible;
+    }
+
+    public static boolean isPerformanceOptimiseBlockEntities() {
+        ensureLoaded();
+        return performanceOptimiseBlockEntities;
+    }
+
+    public static boolean isPerformanceVirtualThreadsEnabled() {
+        ensureLoaded();
+        return performanceVirtualThreadsEnabled;
+    }
+
+    public static boolean isPerformanceVirtualThreadsCommandLogging() {
+        ensureLoaded();
+        return performanceVirtualThreadsCommandLogging;
+    }
+
+    public static boolean isPerformanceVirtualThreadsChatTextFiltering() {
+        ensureLoaded();
+        return performanceVirtualThreadsChatTextFiltering;
+    }
+
+    public static boolean isPerformanceVirtualThreadsAuthenticatorScheduler() {
+        ensureLoaded();
+        return performanceVirtualThreadsAuthenticatorScheduler;
+    }
+
     public static boolean isPerformanceAlwaysMoistFarmland() {
         ensureLoaded();
         return performanceAlwaysMoistFarmland;
@@ -776,6 +827,11 @@ public final class UlyxConfig {
     public static int getPerformanceTickingWorldTicksBetweenRaidTicking() {
         ensureLoaded();
         return performanceTickingWorldTicksBetweenRaidTicking;
+    }
+
+    public static int getPerformanceTickingWorldTicksBetweenStatisticUpdate() {
+        ensureLoaded();
+        return performanceTickingWorldTicksBetweenStatisticUpdate;
     }
 
     public static boolean isPerformanceDisableBukkitVanishAPI() {

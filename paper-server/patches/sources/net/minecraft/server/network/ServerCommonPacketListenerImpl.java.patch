@@ -205,7 +205,7 @@
              }
  
              return false;
-@@ -158,6 +_,21 @@
+@@ -158,6 +_,30 @@
      }
  
      public void send(Packet<?> packet, @Nullable ChannelFutureListener sendListener) {
@@ -221,6 +221,15 @@
 +                return;
 +            }
 +            if (org.ulyxspigot.ulyxspigot.UlyxConfig.isParticlesDisableSpawnerParticles() && org.ulyxspigot.ulyxspigot.network.UlyxPacketFilters.shouldBlockSpawnerParticles(serverGamePacketListener.player.level(), packet)) {
++                return;
++            }
++            if (org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformancePacketReducerEnabled()
++                && org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformancePacketReducerFirePacketsEnabled()
++                && org.ulyxspigot.ulyxspigot.network.UlyxPacketFilters.shouldBlockFirePackets(
++                    serverGamePacketListener.player.level(),
++                    packet,
++                    org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformancePacketReducerFirePacketsIgnoreInvisible()
++                )) {
 +                return;
 +            }
 +        }
