@@ -1,5 +1,7 @@
 package org.ulyxspigot.ulyxspigot.network;
 
+import org.bukkit.Bukkit;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleOptions;
@@ -62,6 +64,10 @@ public final class UlyxPacketFilters {
     }
 
     public static boolean shouldBlockFirePackets(final ServerLevel level, final Packet<?> packet, final boolean ignoreInvisible) {
+        if (!Bukkit.isPrimaryThread()) {
+            return false;
+        }
+
         if (!"ClientboundSetEntityDataPacket".equals(packet.getClass().getSimpleName())) {
             return false;
         }
