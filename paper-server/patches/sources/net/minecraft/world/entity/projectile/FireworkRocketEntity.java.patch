@@ -80,7 +80,7 @@
      }
  
      private List<FireworkExplosion> getExplosions() {
-@@ -350,4 +_,11 @@
+@@ -350,4 +_,9 @@
          double d1 = entity.position().z - this.position().z;
          return DoubleDoubleImmutablePair.of(d, d1);
      }

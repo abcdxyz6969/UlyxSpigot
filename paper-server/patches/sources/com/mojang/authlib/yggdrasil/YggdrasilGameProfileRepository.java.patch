@@ -1,6 +1,6 @@
 --- a/com/mojang/authlib/yggdrasil/YggdrasilGameProfileRepository.java
 +++ b/com/mojang/authlib/yggdrasil/YggdrasilGameProfileRepository.java
-@@ -48,6 +_,7 @@
+@@ -48,6 +_,24 @@
              .collect(Collectors.toSet());
  
          final int page = 0;

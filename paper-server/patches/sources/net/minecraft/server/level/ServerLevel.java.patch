@@ -868,7 +868,7 @@
      }
  
      private Explosion.BlockInteraction getDestroyType(GameRule<Boolean> decayGameRule) {
-@@ -1287,19 +_,55 @@
+@@ -1287,19 +_,58 @@
      public <T extends ParticleOptions> int sendParticles(
          T options, double x, double y, double z, int count, double xDist, double yDist, double zDist, double speed
      ) {

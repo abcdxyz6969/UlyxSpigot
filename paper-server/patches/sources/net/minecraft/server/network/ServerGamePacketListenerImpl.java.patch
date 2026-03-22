@@ -311,7 +311,7 @@
                      flag1 = true;
                      LOGGER.warn("{} (vehicle of {}) moved wrongly! {}", rootVehicle.getPlainTextName(), this.player.getPlainTextName(), Math.sqrt(d7));
                  }
-@@ -489,6 +_,57 @@
+@@ -489,6 +_,59 @@
                  }
  
                  rootVehicle.absSnapTo(d, d1, d2, f, f1);
@@ -691,7 +691,7 @@
          }
      }
  
-@@ -1022,27 +_,35 @@
+@@ -1022,27 +_,37 @@
      public void handleMovePlayer(ServerboundMovePlayerPacket packet) {
          PacketUtils.ensureRunningOnSameThread(packet, this, this.player.level());
          if (containsInvalidValues(packet.getX(0.0), packet.getY(0.0), packet.getZ(0.0), packet.getYRot(0.0F), packet.getXRot(0.0F))) {

@@ -1,6 +1,6 @@
 --- /dev/null
 +++ b/ca/spottedleaf/moonrise/paper/PaperHooks.java
-@@ -1,0 +_,265 @@
+@@ -1,0 +_,266 @@
 +package ca.spottedleaf.moonrise.paper;
 +
 +import ca.spottedleaf.moonrise.common.PlatformHooks;
