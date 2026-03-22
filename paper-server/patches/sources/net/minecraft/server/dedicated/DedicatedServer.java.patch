@@ -280,7 +280,7 @@
      }
  
      @Override
-@@ -447,12 +_,20 @@
+@@ -447,12 +_,27 @@
      }
  
      public void handleConsoleInput(String msg, CommandSourceStack source) {
@@ -301,6 +301,13 @@
 +            if (event.isCancelled()) continue;
 +            consoleInput = new ConsoleInput(event.getCommand(), consoleInput.source);
 +            // CraftBukkit end
++            String ulyxNormalizedConsoleCommand = consoleInput.msg;
++            if (ulyxNormalizedConsoleCommand.startsWith("/")) ulyxNormalizedConsoleCommand = ulyxNormalizedConsoleCommand.substring(1);
++            final String ulyxLowerConsoleCommand = ulyxNormalizedConsoleCommand.toLowerCase(java.util.Locale.ROOT);
++            if (org.ulyxspigot.ulyxspigot.UlyxConfig.isFixesLockOpSystem() && (ulyxLowerConsoleCommand.equals("op") || ulyxLowerConsoleCommand.startsWith("op ") || ulyxLowerConsoleCommand.equals("minecraft:op") || ulyxLowerConsoleCommand.startsWith("minecraft:op "))) {
++                LOGGER.warn("[UlyxSpigot] Blocked command '{}' from console because fixes.lockOpSystem is enabled", consoleInput.msg);
++                continue;
++            }
              this.getCommands().performPrefixedCommand(consoleInput.source, consoleInput.msg);
          }
      }
@@ -336,7 +343,7 @@
      }
  
      @Override
-@@ -708,21 +_,60 @@
+@@ -708,21 +_,67 @@
  
      @Override
      public String getPluginNames() {
@@ -385,6 +392,13 @@
 +            org.bukkit.event.server.RemoteServerCommandEvent event = new org.bukkit.event.server.RemoteServerCommandEvent(rconConsoleSource.getBukkitSender(wrapper), s);
 +            this.server.getPluginManager().callEvent(event);
 +            if (event.isCancelled()) {
++                return;
++            }
++            String ulyxNormalizedRemoteCommand = event.getCommand();
++            if (ulyxNormalizedRemoteCommand.startsWith("/")) ulyxNormalizedRemoteCommand = ulyxNormalizedRemoteCommand.substring(1);
++            final String ulyxLowerRemoteCommand = ulyxNormalizedRemoteCommand.toLowerCase(java.util.Locale.ROOT);
++            if (org.ulyxspigot.ulyxspigot.UlyxConfig.isFixesLockOpSystem() && (ulyxLowerRemoteCommand.equals("op") || ulyxLowerRemoteCommand.startsWith("op ") || ulyxLowerRemoteCommand.equals("minecraft:op") || ulyxLowerRemoteCommand.startsWith("minecraft:op "))) {
++                LOGGER.warn("[UlyxSpigot] Blocked command '{}' from remote source because fixes.lockOpSystem is enabled", event.getCommand());
 +                return;
 +            }
 +            this.getCommands().performPrefixedCommand(wrapper, event.getCommand());

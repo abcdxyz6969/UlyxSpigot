@@ -10,6 +10,7 @@ import java.util.BitSet;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.IllegalFormatException;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -356,7 +357,63 @@ public final class ChatProcessor {
     }
 
     static String legacyFormat(final String format, Player player, String message) {
-        return String.format(format, legacyDisplayName((CraftPlayer) player), message);
+        final String playerDisplayName = legacyDisplayName((CraftPlayer) player);
+        final String targetFormat = org.ulyxspigot.ulyxspigot.UlyxConfig.isFixesFixPluginPlaceholderExploits()
+            ? sanitizeLegacyChatFormat(format)
+            : format;
+        try {
+            return String.format(targetFormat, playerDisplayName, message);
+        } catch (final IllegalFormatException ex) {
+            if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isFixesFixPluginPlaceholderExploits()) {
+                throw ex;
+            }
+            // Fallback for malformed plugin formats to avoid breaking chat pipeline.
+            return String.format(sanitizeLegacyChatFormat(format), playerDisplayName, message);
+        }
+    }
+
+    private static String sanitizeLegacyChatFormat(final String format) {
+        final StringBuilder sanitized = new StringBuilder(format.length() + 8);
+        for (int i = 0; i < format.length(); i++) {
+            final char c = format.charAt(i);
+            if (c != '%') {
+                sanitized.append(c);
+                continue;
+            }
+
+            if (i + 1 >= format.length()) {
+                sanitized.append("%%");
+                continue;
+            }
+
+            final char next = format.charAt(i + 1);
+            if (next == '%') {
+                sanitized.append("%%");
+                i++;
+                continue;
+            }
+
+            int j = i + 1;
+            while (j < format.length() && Character.isDigit(format.charAt(j))) {
+                j++;
+            }
+
+            if (j > i + 1 && j < format.length() && format.charAt(j) == '$') {
+                j++;
+            } else if (j > i + 1) {
+                sanitized.append("%%");
+                continue;
+            }
+
+            if (j < format.length() && format.charAt(j) == 's') {
+                sanitized.append(format, i, j + 1);
+                i = j;
+                continue;
+            }
+
+            sanitized.append("%%");
+        }
+        return sanitized.toString();
     }
 
     private void queueIfAsyncOrRunImmediately(final Waitable<Void> waitable) {

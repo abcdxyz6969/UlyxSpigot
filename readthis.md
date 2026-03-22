@@ -211,3 +211,14 @@
   - `paper-server/src/main/java/org/ulyxspigot/ulyxspigot/UlyxConfig.java`
   - `ulyxspigot/ulyxspigot.yml`
   - `paper-server/src/main/resources/configurations/ulyxspigot.yml`
+
+### Fixes update (turn nay)
+- Da wire code hoat dong cho:
+  - `fixes.fixPluginPlaceholderExploits`
+- Diem hook:
+  - `paper-server/src/main/java/io/papermc/paper/adventure/ChatProcessor.java`
+- Hanh vi khi bat config:
+  - Sanitizes `%` token khong hop le trong legacy chat format truoc `String.format`.
+  - Giam rui ro format token ngoai y muon (`%placeholder%`, `%x`, `%...`) gay parse sai/exception.
+  - Van giu `%s`, `%1$s`, `%2$s`, `%%` nhu binh thuong.
+
