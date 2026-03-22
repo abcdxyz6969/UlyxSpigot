@@ -1,8 +1,0 @@
---- a/net/minecraft/world/level/pathfinder/PathFinder.java
-+++ b/net/minecraft/world/level/pathfinder/PathFinder.java
-@@ -56,4 +_,4 @@
--            Path path = this.findPath(start, map, maxRange, reachRange, maxVisitedNodesMultiplier);
-+            Path path = org.ulyxspigot.ulyxspigot.async.UlyxAsyncPathfinding.supply(() -> this.findPath(start, map, maxRange, reachRange, maxVisitedNodesMultiplier));
-             this.nodeEvaluator.done();
-             return path;
-         }
