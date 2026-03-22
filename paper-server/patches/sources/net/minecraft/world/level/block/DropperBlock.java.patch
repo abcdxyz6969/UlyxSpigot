@@ -1,6 +1,9 @@
 --- a/net/minecraft/world/level/block/DropperBlock.java
 +++ b/net/minecraft/world/level/block/DropperBlock.java
-@@ -53,6 +_,7 @@
+@@ -53,6 +_,10 @@
++            if (!org.ulyxspigot.ulyxspigot.limiters.UlyxRedstoneLimiter.tryAcquireDropper(level)) {
++                return;
++            }
              BlockSource blockSource = new BlockSource(level, pos, state, dispenserBlockEntity);
              int randomSlot = dispenserBlockEntity.getRandomSlot(level.random);
              if (randomSlot < 0) {

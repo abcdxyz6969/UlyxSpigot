@@ -10,7 +10,10 @@
              player.awardStat(dispenserBlockEntity instanceof DropperBlockEntity ? Stats.INSPECT_DROPPER : Stats.INSPECT_DISPENSER);
          }
  
-@@ -87,17 +_,26 @@
+@@ -87,17 +_,29 @@
++            if (!org.ulyxspigot.ulyxspigot.limiters.UlyxRedstoneLimiter.tryAcquireDispenser(level)) {
++                return;
++            }
              BlockSource blockSource = new BlockSource(level, pos, state, dispenserBlockEntity);
              int randomSlot = dispenserBlockEntity.getRandomSlot(level.random);
              if (randomSlot < 0) {

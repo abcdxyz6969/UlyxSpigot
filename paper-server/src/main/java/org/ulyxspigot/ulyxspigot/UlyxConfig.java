@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.ulyxspigot.ulyxspigot.async.UlyxAsyncDataSaving;
@@ -66,6 +67,36 @@ public final class UlyxConfig {
     private static boolean fixesDisableSavingSnowballs = true;
     private static boolean fixesDisableSavingFireworks = true;
     private static boolean fixesLockOpSystem = false;
+
+    private static boolean limitersRedstoneEnabled = true;
+    private static int limitersRedstoneMaxRedstonePerTick = 100;
+    private static int limitersRedstoneMaxPistonPerTick = 100;
+    private static int limitersRedstoneMaxHopperPerTick = 100;
+    private static int limitersRedstoneMaxDispenserPerTick = 100;
+    private static int limitersRedstoneMaxDropperPerTick = 100;
+    private static int limitersRedstoneMaxObserverPerTick = 100;
+    private static int limitersRedstoneMaxPistonPush = 12;
+    private static Map<String, Integer> limitersRedstoneBlockThreshold = Map.of("OBSERVER", 3);
+    private static boolean limitersRemoveExcessMinecarts = true;
+    private static boolean limitersRemoveExcessBoats = true;
+    private static int limitersExcessMinecartsLimit = 5;
+    private static int limitersExcessBoatsLimit = 5;
+    private static List<String> limitersNonTickableEntities = List.of("EXAMPLE");
+    private static Set<String> limitersNonTickableEntitiesSet = Set.of();
+
+    private static boolean particlesDisableSprintParticles = true;
+    private static boolean particlesDisableFallParticles = true;
+    private static boolean particlesDisableDeathParticles = true;
+    private static boolean particlesDisableBlockBreakParticles = true;
+    private static boolean particlesDisableEffectParticles = false;
+    private static boolean particlesDisableWaterSplashParticles = true;
+    private static boolean particlesDisableBubbleColumnParticles = true;
+    private static boolean particlesDisableSpawnerParticles = true;
+    private static boolean particlesDisableNewCombatParticles = false;
+
+    private static boolean soundsDisableShoulderEntityAmbientSound = true;
+    private static boolean soundsDisableFootStepSounds = true;
+    private static boolean soundsDisableNewCombatSounds = false;
 
     private static boolean behaviorAllowTeleportationWithPassengers = false;
     private static boolean behaviorDisableInitialWorldSpawn = false;
@@ -265,6 +296,36 @@ public final class UlyxConfig {
         fixesDisableSavingSnowballs = getBoolean("fixes.disableSavingSnowballs", fixesDisableSavingSnowballs);
         fixesDisableSavingFireworks = getBoolean("fixes.disableSavingFireworks", fixesDisableSavingFireworks);
         fixesLockOpSystem = getBoolean("fixes.lockOpSystem", fixesLockOpSystem);
+
+        limitersRedstoneEnabled = getBoolean("limiters.redstone.enabled", limitersRedstoneEnabled);
+        limitersRedstoneMaxRedstonePerTick = Math.max(0, getInt("limiters.redstone.maxRedstonePerTick", limitersRedstoneMaxRedstonePerTick));
+        limitersRedstoneMaxPistonPerTick = Math.max(0, getInt("limiters.redstone.maxPistonPerTick", limitersRedstoneMaxPistonPerTick));
+        limitersRedstoneMaxHopperPerTick = Math.max(0, getInt("limiters.redstone.maxHopperPerTick", limitersRedstoneMaxHopperPerTick));
+        limitersRedstoneMaxDispenserPerTick = Math.max(0, getInt("limiters.redstone.maxDispenserPerTick", limitersRedstoneMaxDispenserPerTick));
+        limitersRedstoneMaxDropperPerTick = Math.max(0, getInt("limiters.redstone.maxDropperPerTick", limitersRedstoneMaxDropperPerTick));
+        limitersRedstoneMaxObserverPerTick = Math.max(0, getInt("limiters.redstone.maxObserverPerTick", limitersRedstoneMaxObserverPerTick));
+        limitersRedstoneMaxPistonPush = Math.max(0, getInt("limiters.redstone.maxPistonPush", limitersRedstoneMaxPistonPush));
+        limitersRedstoneBlockThreshold = parseKeyIntSection("limiters.redstone.block-threshold", limitersRedstoneBlockThreshold);
+        limitersRemoveExcessMinecarts = getBoolean("limiters.remove-excess.removeExcessMinecarts", limitersRemoveExcessMinecarts);
+        limitersRemoveExcessBoats = getBoolean("limiters.remove-excess.removeExcessBoats", limitersRemoveExcessBoats);
+        limitersExcessMinecartsLimit = Math.max(0, getInt("limiters.remove-excess.excessMinecartsLimit", limitersExcessMinecartsLimit));
+        limitersExcessBoatsLimit = Math.max(0, getInt("limiters.remove-excess.excessBoatsLimit", limitersExcessBoatsLimit));
+        limitersNonTickableEntities = getStringList("limiters.non-tickable-entities", limitersNonTickableEntities);
+        limitersNonTickableEntitiesSet = parseEntityTypeSet(limitersNonTickableEntities, "limiters.non-tickable-entities");
+
+        particlesDisableSprintParticles = getBoolean("particles.disableSprintParticles", particlesDisableSprintParticles);
+        particlesDisableFallParticles = getBoolean("particles.disableFallParticles", particlesDisableFallParticles);
+        particlesDisableDeathParticles = getBoolean("particles.disableDeathParticles", particlesDisableDeathParticles);
+        particlesDisableBlockBreakParticles = getBoolean("particles.disableBlockBreakParticles", particlesDisableBlockBreakParticles);
+        particlesDisableEffectParticles = getBoolean("particles.disableEffectParticles", particlesDisableEffectParticles);
+        particlesDisableWaterSplashParticles = getBoolean("particles.disableWaterSplashParticles", particlesDisableWaterSplashParticles);
+        particlesDisableBubbleColumnParticles = getBoolean("particles.disableBubbleColumnParticles", particlesDisableBubbleColumnParticles);
+        particlesDisableSpawnerParticles = getBoolean("particles.disableSpawnerParticles", particlesDisableSpawnerParticles);
+        particlesDisableNewCombatParticles = getBoolean("particles.disableNewCombatParticles", particlesDisableNewCombatParticles);
+
+        soundsDisableShoulderEntityAmbientSound = getBoolean("sounds.disableShoulderEntityAmbientSound", soundsDisableShoulderEntityAmbientSound);
+        soundsDisableFootStepSounds = getBoolean("sounds.disableFootStepSounds", soundsDisableFootStepSounds);
+        soundsDisableNewCombatSounds = getBoolean("sounds.disableNewCombatSounds", soundsDisableNewCombatSounds);
 
         behaviorAllowTeleportationWithPassengers = getBoolean("behavior.allowTeleportationWithPassengers", behaviorAllowTeleportationWithPassengers);
         behaviorDisableInitialWorldSpawn = getBoolean("behavior.disableInitialWorldSpawn", behaviorDisableInitialWorldSpawn);
@@ -479,6 +540,147 @@ public final class UlyxConfig {
     public static boolean isFixesLockOpSystem() {
         ensureLoaded();
         return fixesLockOpSystem;
+    }
+
+    public static boolean isLimitersRedstoneEnabled() {
+        ensureLoaded();
+        return limitersRedstoneEnabled;
+    }
+
+    public static int getLimitersRedstoneMaxRedstonePerTick() {
+        ensureLoaded();
+        return limitersRedstoneMaxRedstonePerTick;
+    }
+
+    public static int getLimitersRedstoneMaxPistonPerTick() {
+        ensureLoaded();
+        return limitersRedstoneMaxPistonPerTick;
+    }
+
+    public static int getLimitersRedstoneMaxHopperPerTick() {
+        ensureLoaded();
+        return limitersRedstoneMaxHopperPerTick;
+    }
+
+    public static int getLimitersRedstoneMaxDispenserPerTick() {
+        ensureLoaded();
+        return limitersRedstoneMaxDispenserPerTick;
+    }
+
+    public static int getLimitersRedstoneMaxDropperPerTick() {
+        ensureLoaded();
+        return limitersRedstoneMaxDropperPerTick;
+    }
+
+    public static int getLimitersRedstoneMaxObserverPerTick() {
+        ensureLoaded();
+        return limitersRedstoneMaxObserverPerTick;
+    }
+
+    public static int getLimitersRedstoneMaxPistonPush() {
+        ensureLoaded();
+        return limitersRedstoneMaxPistonPush;
+    }
+
+    public static int getLimitersRedstoneBlockThreshold(String key) {
+        ensureLoaded();
+        if (key == null) {
+            return -1;
+        }
+        return limitersRedstoneBlockThreshold.getOrDefault(key.trim().toUpperCase(Locale.ROOT), -1);
+    }
+
+    public static boolean isLimitersRemoveExcessMinecarts() {
+        ensureLoaded();
+        return limitersRemoveExcessMinecarts;
+    }
+
+    public static boolean isLimitersRemoveExcessBoats() {
+        ensureLoaded();
+        return limitersRemoveExcessBoats;
+    }
+
+    public static int getLimitersExcessMinecartsLimit() {
+        ensureLoaded();
+        return limitersExcessMinecartsLimit;
+    }
+
+    public static int getLimitersExcessBoatsLimit() {
+        ensureLoaded();
+        return limitersExcessBoatsLimit;
+    }
+
+    public static List<String> getLimitersNonTickableEntities() {
+        ensureLoaded();
+        return limitersNonTickableEntities;
+    }
+
+    public static boolean isLimitersNonTickableEntity(String entityTypeName) {
+        ensureLoaded();
+        if (entityTypeName == null) {
+            return false;
+        }
+        return limitersNonTickableEntitiesSet.contains(entityTypeName.trim().toUpperCase(Locale.ROOT));
+    }
+
+    public static boolean isParticlesDisableSprintParticles() {
+        ensureLoaded();
+        return particlesDisableSprintParticles;
+    }
+
+    public static boolean isParticlesDisableFallParticles() {
+        ensureLoaded();
+        return particlesDisableFallParticles;
+    }
+
+    public static boolean isParticlesDisableDeathParticles() {
+        ensureLoaded();
+        return particlesDisableDeathParticles;
+    }
+
+    public static boolean isParticlesDisableBlockBreakParticles() {
+        ensureLoaded();
+        return particlesDisableBlockBreakParticles;
+    }
+
+    public static boolean isParticlesDisableEffectParticles() {
+        ensureLoaded();
+        return particlesDisableEffectParticles;
+    }
+
+    public static boolean isParticlesDisableWaterSplashParticles() {
+        ensureLoaded();
+        return particlesDisableWaterSplashParticles;
+    }
+
+    public static boolean isParticlesDisableBubbleColumnParticles() {
+        ensureLoaded();
+        return particlesDisableBubbleColumnParticles;
+    }
+
+    public static boolean isParticlesDisableSpawnerParticles() {
+        ensureLoaded();
+        return particlesDisableSpawnerParticles;
+    }
+
+    public static boolean isParticlesDisableNewCombatParticles() {
+        ensureLoaded();
+        return particlesDisableNewCombatParticles;
+    }
+
+    public static boolean isSoundsDisableShoulderEntityAmbientSound() {
+        ensureLoaded();
+        return soundsDisableShoulderEntityAmbientSound;
+    }
+
+    public static boolean isSoundsDisableFootStepSounds() {
+        ensureLoaded();
+        return soundsDisableFootStepSounds;
+    }
+
+    public static boolean isSoundsDisableNewCombatSounds() {
+        ensureLoaded();
+        return soundsDisableNewCombatSounds;
     }
 
     public static boolean isBehaviorAllowTeleportationWithPassengers() {
@@ -998,6 +1200,39 @@ public final class UlyxConfig {
         }
 
         return parsed.isEmpty() ? Map.of() : Collections.unmodifiableMap(parsed);
+    }
+
+    private static Map<String, Integer> parseKeyIntSection(String path, Map<String, Integer> defaults) {
+        final Map<String, Integer> fallback = defaults == null || defaults.isEmpty()
+            ? Map.of()
+            : Collections.unmodifiableMap(new HashMap<>(defaults));
+
+        final ConfigurationSection section = config.getConfigurationSection(path);
+        if (section == null) {
+            config.addDefault(path, fallback);
+            return fallback;
+        }
+
+        final Map<String, Integer> parsed = new HashMap<>();
+        for (String key : section.getKeys(false)) {
+            if (key == null || key.isBlank()) {
+                continue;
+            }
+
+            final String normalized = key.trim().toUpperCase(Locale.ROOT);
+            final int value = section.getInt(key, fallback.getOrDefault(normalized, 0));
+            if (value < 0) {
+                logger().warning("[UlyxSpigot] " + path + "." + key + " must be >= 0, got " + value);
+                continue;
+            }
+
+            parsed.put(normalized, value);
+        }
+
+        if (parsed.isEmpty()) {
+            return fallback;
+        }
+        return Collections.unmodifiableMap(parsed);
     }
 
     private static void set(String path, Object value) {

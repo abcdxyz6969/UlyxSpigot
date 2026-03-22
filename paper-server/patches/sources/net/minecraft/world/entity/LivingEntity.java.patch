@@ -51,9 +51,9 @@
                  int i = (int)(150.0 * d1);
 -                serverLevel.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, state), x, y1, z, i, 0.0, 0.0, 0.0, 0.15F);
 +                // CraftBukkit start - visibility api
-+                if (this instanceof ServerPlayer) {
++                if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isParticlesDisableFallParticles() && this instanceof ServerPlayer) {
 +                    serverLevel.sendParticlesSource((ServerPlayer) this, new BlockParticleOption(ParticleTypes.BLOCK, state), false, false, x, y1, z, i, 0.0, 0.0, 0.0, 0.15F);
-+                } else {
++                } else if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isParticlesDisableFallParticles()) {
 +                    serverLevel.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, state), x, y1, z, i, 0.0, 0.0, 0.0, 0.15F);
 +                }
 +                // CraftBukkit end
@@ -73,7 +73,7 @@
 @@ -556,7 +_,7 @@
          this.deathTime++;
          if (this.deathTime >= 20 && !this.level().isClientSide() && !this.isRemoved()) {
-             this.level().broadcastEntityEvent(this, EntityEvent.POOF);
+             if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isParticlesDisableDeathParticles()) this.level().broadcastEntityEvent(this, EntityEvent.POOF);
 -            this.remove(Entity.RemovalReason.KILLED);
 +            this.remove(Entity.RemovalReason.KILLED, org.bukkit.event.entity.EntityRemoveEvent.Cause.DEATH); // CraftBukkit - add Bukkit remove cause
          }

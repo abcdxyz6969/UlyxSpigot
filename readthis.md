@@ -214,6 +214,16 @@
 
 ### Fixes update (turn nay)
 - Da wire code hoat dong cho:
+  - `fixes.useSecureSeedLogic`
+- Pham vi ban nay (an toan, de merge):
+  - Khi bat config, slime chunk logic se dung seed da obfuscate thay vi seed raw.
+  - Ap dung ca 2 duong:
+    - `Chunk#isSlimeChunk` (Bukkit API)
+    - Slime spawn check trong NMS (`Slime.java`)
+- File chinh:
+  - `paper-server/src/main/java/org/bukkit/craftbukkit/CraftChunk.java`
+  - `paper-server/patches/sources/net/minecraft/world/entity/monster/Slime.java.patch`
+- Da wire code hoat dong cho:
   - `fixes.fixPluginPlaceholderExploits`
 - Diem hook:
   - `paper-server/src/main/java/io/papermc/paper/adventure/ChatProcessor.java`
@@ -222,3 +232,83 @@
   - Giam rui ro format token ngoai y muon (`%placeholder%`, `%x`, `%...`) gay parse sai/exception.
   - Van giu `%s`, `%1$s`, `%2$s`, `%%` nhu binh thuong.
 
+
+
+### Limiters update (turn nay)
+- Da them block `limiters` vao ca 2 file config:
+  - `paper-server/src/main/resources/configurations/ulyxspigot.yml`
+  - `ulyxspigot/ulyxspigot.yml`
+- Vi tri: dat ngay duoi `fixes`.
+- Da wire logic cho nhom `limiters.redstone.*`:
+  - `maxRedstonePerTick`: gioi han neighbor-update lien quan redstone
+  - `maxPistonPerTick`: gioi han trigger piston moi tick
+  - `maxHopperPerTick`: gioi han hopper transfer tick
+  - `maxDispenserPerTick`: gioi han dispenser tick
+  - `maxDropperPerTick`: gioi han dropper tick
+  - `maxObserverPerTick`: gioi han observer tick
+  - `maxPistonPush`: gioi han so block piston co the day (toi da 12)
+  - `block-threshold.OBSERVER`: ap dung nguong bo sung cho observer
+- File chinh:
+  - `paper-server/src/main/java/org/ulyxspigot/ulyxspigot/UlyxConfig.java`
+  - `paper-server/src/main/java/org/ulyxspigot/ulyxspigot/limiters/UlyxRedstoneLimiter.java`
+  - `paper-server/patches/sources/net/minecraft/world/level/redstone/NeighborUpdater.java.patch`
+  - `paper-server/patches/sources/net/minecraft/world/level/block/ObserverBlock.java.patch`
+  - `paper-server/patches/sources/net/minecraft/world/level/block/piston/PistonBaseBlock.java.patch`
+  - `paper-server/patches/sources/net/minecraft/world/level/block/entity/HopperBlockEntity.java.patch`
+  - `paper-server/patches/sources/net/minecraft/world/level/block/DispenserBlock.java.patch`
+  - `paper-server/patches/sources/net/minecraft/world/level/block/DropperBlock.java.patch`
+- Da wire logic cho `limiters.remove-excess.*`:
+  - `removeExcessMinecarts`
+  - `removeExcessBoats`
+  - `excessMinecartsLimit`
+  - `excessBoatsLimit`
+- Cach hoat dong:
+  - Khi vehicle va cham, neu so luong minecart/boat cung cum va cham vuot nguong thi se remove bot entity du (uu tien remove entity dang va cham, bo qua entity dang co passenger/vehicle).
+- File chinh bo sung:
+  - `paper-server/src/main/java/org/ulyxspigot/ulyxspigot/limiters/UlyxVehicleLimiter.java`
+  - `paper-server/patches/sources/net/minecraft/world/entity/vehicle/boat/AbstractBoat.java.patch`
+  - `paper-server/patches/sources/net/minecraft/world/entity/vehicle/minecart/AbstractMinecart.java.patch`
+- Da wire logic cho `limiters.non-tickable-entities`:
+  - Hook trong vong tick entity tai `ServerLevel#tickNonPassenger` va `ServerLevel#tickPassenger`.
+  - Neu entity type nam trong danh sach thi bo qua tick (khong chay `tick()/rideTick()`).
+  - Co chan an toan: `PLAYER` van duoc tick de tranh gay loi nang server/gameplay.
+- File chinh bo sung:
+  - `paper-server/patches/sources/net/minecraft/server/level/ServerLevel.java.patch`
+
+
+### Particles + Sounds update (turn nay)
+- Da them doc config + getter cho nhom key `particles.*` va `sounds.*` trong `UlyxConfig`.
+- Da wire code hoat dong (5 key de truoc):
+  - `particles.disableSprintParticles`
+  - `particles.disableFallParticles`
+  - `particles.disableDeathParticles`
+  - `particles.disableNewCombatParticles`
+  - `sounds.disableShoulderEntityAmbientSound`
+- Diem hook:
+  - `paper-server/patches/sources/net/minecraft/world/entity/Entity.java.patch`
+  - `paper-server/patches/sources/net/minecraft/world/entity/LivingEntity.java.patch`
+  - `paper-server/patches/sources/net/minecraft/server/level/ServerLevel.java.patch`
+  - `paper-server/patches/sources/net/minecraft/server/level/ServerPlayer.java.patch`
+  - `paper-server/src/main/java/org/ulyxspigot/ulyxspigot/UlyxConfig.java`
+
+
+- Da wire them 5 key (dot nay):
+  - `particles.disableBlockBreakParticles`
+  - `particles.disableWaterSplashParticles`
+  - `particles.disableBubbleColumnParticles`
+  - `particles.disableEffectParticles`
+  - `sounds.disableNewCombatSounds`
+- Cach hook:
+  - Particle filters duoc xu ly tap trung trong `ServerLevel#sendParticlesSource` theo particle key name.
+  - Combat attack sounds duoc gate trong `Player#playServerSideSound` va nhanh deflect projectile.
+
+- Da wire them 2 key cuoi (dot nay):
+  - `particles.disableSpawnerParticles`
+  - `sounds.disableFootStepSounds`
+- Cach hook:
+  - Packet-level filter trong `ServerCommonPacketListenerImpl#send(...)`.
+  - `disableFootStepSounds`: chan packet sound co sound-key chua `step`.
+  - `disableSpawnerParticles`: chan packet particle `smoke`/`flame` neu vi tri particle trung/gan block `SPAWNER`.
+- File bo sung:
+  - `paper-server/src/main/java/org/ulyxspigot/ulyxspigot/network/UlyxPacketFilters.java`
+  - `paper-server/patches/sources/net/minecraft/server/network/ServerCommonPacketListenerImpl.java.patch`

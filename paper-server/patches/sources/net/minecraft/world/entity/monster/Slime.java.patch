@@ -94,13 +94,16 @@
                  float value = level.environmentAttributes().getValue(EnvironmentAttributes.SURFACE_SLIME_SPAWN_CHANCE, pos);
                  if (random.nextFloat() < value && level.getMaxLocalRawBrightness(pos) <= random.nextInt(8)) {
                      return checkMobSpawnRules(entityType, level, spawnReason, pos, random);
-@@ -291,8 +_,11 @@
+@@ -291,8 +_,14 @@
              }
  
              ChunkPos chunkPos = new ChunkPos(pos);
 -            boolean flag = WorldgenRandom.seedSlimeChunk(chunkPos.x, chunkPos.z, ((WorldGenLevel)level).getSeed(), 987234911L).nextInt(10) == 0;
 -            if (random.nextInt(10) == 0 && flag && pos.getY() < 40) {
-+            boolean flag = level.getMinecraftWorld().paperConfig().entities.spawning.allChunksAreSlimeChunks || WorldgenRandom.seedSlimeChunk(chunkPos.x, chunkPos.z, ((WorldGenLevel) level).getSeed(), level.getMinecraftWorld().spigotConfig.slimeSeed).nextInt(10) == 0; // Paper
++            final long ulyxSlimeSeed = org.ulyxspigot.ulyxspigot.UlyxConfig.isFixesUseSecureSeedLogic()
++                ? net.minecraft.world.level.biome.BiomeManager.obfuscateSeed(((WorldGenLevel) level).getSeed())
++                : ((WorldGenLevel) level).getSeed();
++            boolean flag = level.getMinecraftWorld().paperConfig().entities.spawning.allChunksAreSlimeChunks || WorldgenRandom.seedSlimeChunk(chunkPos.x, chunkPos.z, ulyxSlimeSeed, level.getMinecraftWorld().spigotConfig.slimeSeed).nextInt(10) == 0; // Paper
 +                // Paper start - Replace rules for Height in Slime Chunks
 +                final double maxHeightSlimeChunk = level.getMinecraftWorld().paperConfig().entities.spawning.slimeSpawnHeight.slimeChunk.maximum;
 +                if (random.nextInt(10) == 0 && flag && pos.getY() < maxHeightSlimeChunk) {

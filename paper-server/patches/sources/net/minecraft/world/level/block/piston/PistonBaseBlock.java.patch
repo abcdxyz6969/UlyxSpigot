@@ -1,9 +1,12 @@
 --- a/net/minecraft/world/level/block/piston/PistonBaseBlock.java
 +++ b/net/minecraft/world/level/block/piston/PistonBaseBlock.java
-@@ -152,6 +_,12 @@
+@@ -152,6 +_,15 @@
      @Override
      protected boolean triggerEvent(BlockState state, Level level, BlockPos pos, int id, int param) {
          Direction direction = state.getValue(FACING);
++        if (!org.ulyxspigot.ulyxspigot.limiters.UlyxRedstoneLimiter.tryAcquirePiston(level)) {
++            return false;
++        }
 +        // Paper start - Protect Bedrock and End Portal/Frames from being destroyed; prevent retracting when we're facing the wrong way (we were replaced before retraction could occur)
 +        Direction directionQueuedAs = Direction.from3DDataValue(param & 7); // Paper - copied from below
 +        if (!io.papermc.paper.configuration.GlobalConfiguration.get().unsupportedSettings.allowPermanentBlockBreakExploits && direction != directionQueuedAs) {
@@ -70,10 +73,14 @@
              return false;
          } else if (state.isAir()) {
              return true;
-@@ -283,12 +_,54 @@
+@@ -283,12 +_,58 @@
              BlockState[] blockStates = new BlockState[toPush.size() + toDestroy.size()];
              Direction direction = extending ? facing : facing.getOpposite();
              int i = 0;
++            final int ulyxMaxPistonPush = org.ulyxspigot.ulyxspigot.limiters.UlyxRedstoneLimiter.getEffectiveMaxPistonPush();
++            if (toPush.size() > ulyxMaxPistonPush) {
++                return false;
++            }
 +            // CraftBukkit start
 +            final org.bukkit.block.Block bukkitBlock = org.bukkit.craftbukkit.block.CraftBlock.at(level, pos);
 +

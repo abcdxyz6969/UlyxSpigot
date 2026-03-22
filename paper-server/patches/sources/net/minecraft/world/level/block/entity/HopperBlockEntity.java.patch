@@ -41,8 +41,11 @@
      public HopperBlockEntity(BlockPos pos, BlockState blockState) {
          super(BlockEntityType.HOPPER, pos, blockState);
          this.facing = blockState.getValue(HopperBlock.FACING);
-@@ -99,7 +_,14 @@
+@@ -99,7 +_,17 @@
          blockEntity.tickedGameTime = level.getGameTime();
++        if (!org.ulyxspigot.ulyxspigot.limiters.UlyxRedstoneLimiter.tryAcquireHopper(level)) {
++            return;
++        }
          if (!blockEntity.isOnCooldown()) {
              blockEntity.setCooldown(0);
 -            tryMoveItems(level, pos, state, blockEntity, () -> suckInItems(level, blockEntity));

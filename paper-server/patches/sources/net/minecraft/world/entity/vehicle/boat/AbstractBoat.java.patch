@@ -25,12 +25,15 @@
          return true;
      }
  
-@@ -175,11 +_,30 @@
+@@ -175,11 +_,33 @@
  
      @Override
      public void push(Entity entity) {
 +        if (!this.level().paperConfig().collisions.allowVehicleCollisions && this.level().paperConfig().collisions.onlyPlayersCollide && !(entity instanceof Player)) return; // Paper - Collision option for requiring a player participant
          if (entity instanceof AbstractBoat) {
++            if (org.ulyxspigot.ulyxspigot.limiters.UlyxVehicleLimiter.tryCullExcessBoat(this, (AbstractBoat) entity)) {
++                return;
++            }
              if (entity.getBoundingBox().minY < this.getBoundingBox().maxY) {
 +                // CraftBukkit start
 +                if (!this.isPassengerOfSameVehicle(entity)) {

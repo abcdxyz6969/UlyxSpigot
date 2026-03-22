@@ -318,9 +318,11 @@
                  }
  
                  float saturationLevel = this.foodData.getSaturationLevel();
-@@ -757,6 +_,7 @@
-         this.playShoulderEntityAmbientSound(this.getShoulderEntityLeft());
-         this.playShoulderEntityAmbientSound(this.getShoulderEntityRight());
+@@ -757,6 +_,9 @@
+-        this.playShoulderEntityAmbientSound(this.getShoulderEntityLeft());
+-        this.playShoulderEntityAmbientSound(this.getShoulderEntityRight());
++        if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isSoundsDisableShoulderEntityAmbientSound()) this.playShoulderEntityAmbientSound(this.getShoulderEntityLeft());
++        if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isSoundsDisableShoulderEntityAmbientSound()) this.playShoulderEntityAmbientSound(this.getShoulderEntityRight());
          if (this.fallDistance > 0.5 || this.isInWater() || this.getAbilities().flying || this.isSleeping() || this.isInPowderSnow) {
 +            if (!this.level().paperConfig().entities.behavior.parrotsAreUnaffectedByPlayerMovement) // Paper - Add option to make parrots stay
              this.removeEntitiesOnShoulder();

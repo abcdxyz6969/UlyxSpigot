@@ -216,6 +216,14 @@
 +            serverGamePacketListener.player.compassTarget = org.bukkit.craftbukkit.util.CraftLocation.toBukkit(defaultSpawnPositionPacket.respawnData().pos(), serverGamePacketListener.getPlayer().level());
 +        }
 +        // CraftBukkit end
++        if (this instanceof ServerGamePacketListenerImpl serverGamePacketListener) {
++            if (org.ulyxspigot.ulyxspigot.UlyxConfig.isSoundsDisableFootStepSounds() && org.ulyxspigot.ulyxspigot.network.UlyxPacketFilters.shouldBlockFootstepSound(packet)) {
++                return;
++            }
++            if (org.ulyxspigot.ulyxspigot.UlyxConfig.isParticlesDisableSpawnerParticles() && org.ulyxspigot.ulyxspigot.network.UlyxPacketFilters.shouldBlockSpawnerParticles(serverGamePacketListener.player.level(), packet)) {
++                return;
++            }
++        }
          if (packet.isTerminal()) {
              this.close();
          }

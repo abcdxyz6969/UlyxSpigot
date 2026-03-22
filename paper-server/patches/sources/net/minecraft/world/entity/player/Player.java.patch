@@ -332,7 +332,7 @@
  
      private void playServerSideSound(SoundEvent sound) {
 -        this.level().playSound(null, this.getX(), this.getY(), this.getZ(), sound, this.getSoundSource(), 1.0F, 1.0F);
-+        sendSoundEffect(this, this.getX(), this.getY(), this.getZ(), sound, this.getSoundSource(), 1.0F, 1.0F); // Paper - send while respecting visibility
++        if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isSoundsDisableNewCombatSounds()) sendSoundEffect(this, this.getX(), this.getY(), this.getZ(), sound, this.getSoundSource(), 1.0F, 1.0F); // Paper - send while respecting visibility
      }
  
      private DamageSource createAttackSource(ItemStack stack) {
@@ -347,7 +347,7 @@
 +            && callEvent.getAsBoolean() // Paper - damage events
              && projectile.deflect(ProjectileDeflection.AIM_DEFLECT, this, EntityReference.of(this), true)) {
 -            this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.PLAYER_ATTACK_NODAMAGE, this.getSoundSource());
-+            this.makeSound(SoundEvents.PLAYER_ATTACK_NODAMAGE); // Paper - Use makeSound to avoid duplicating client-side sound for source player
++            if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isSoundsDisableNewCombatSounds()) this.makeSound(SoundEvents.PLAYER_ATTACK_NODAMAGE); // Paper - Use makeSound to avoid duplicating client-side sound for source player
              return true;
          } else {
              return false;

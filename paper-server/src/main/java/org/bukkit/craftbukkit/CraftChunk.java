@@ -24,6 +24,7 @@ import net.minecraft.world.level.chunk.PalettedContainer;
 import net.minecraft.world.level.chunk.PalettedContainerRO;
 import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.minecraft.world.level.chunk.storage.SerializableChunkData;
+import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.WorldgenRandom;
 import net.minecraft.world.level.lighting.LevelLightEngine;
@@ -193,7 +194,10 @@ public class CraftChunk implements Chunk {
     @Override
     public boolean isSlimeChunk() {
         // 987234911L is taken from Slime when seeing if a slime can spawn in a chunk
-        return this.level.paperConfig().entities.spawning.allChunksAreSlimeChunks || WorldgenRandom.seedSlimeChunk(this.getX(), this.getZ(), this.getWorld().getSeed(), level.spigotConfig.slimeSeed).nextInt(10) == 0; // Paper
+        final long ulyxSlimeSeed = org.ulyxspigot.ulyxspigot.UlyxConfig.isFixesUseSecureSeedLogic()
+            ? BiomeManager.obfuscateSeed(this.getWorld().getSeed())
+            : this.getWorld().getSeed();
+        return this.level.paperConfig().entities.spawning.allChunksAreSlimeChunks || WorldgenRandom.seedSlimeChunk(this.getX(), this.getZ(), ulyxSlimeSeed, level.spigotConfig.slimeSeed).nextInt(10) == 0; // Paper
     }
 
     @Override

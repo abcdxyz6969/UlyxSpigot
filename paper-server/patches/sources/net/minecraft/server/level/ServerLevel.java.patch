@@ -488,6 +488,12 @@
 +                currentlyTickingEntity.lazySet(entity);
 +            }
 +            // Paper end - log detailed entity tick information
++            if (!(entity instanceof Player)) {
++                final net.minecraft.resources.Identifier ulyxEntityTypeKey = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
++                if (ulyxEntityTypeKey != null && org.ulyxspigot.ulyxspigot.UlyxConfig.isLimitersNonTickableEntity(ulyxEntityTypeKey.getPath())) {
++                    return;
++                }
++            }
          entity.setOldPosAndRot();
          ProfilerFiller profilerFiller = Profiler.get();
          entity.tickCount++;
@@ -513,6 +519,12 @@
      private void tickPassenger(Entity ridingEntity, Entity passengerEntity) {
 @@ -833,10 +_,12 @@
          } else if (passengerEntity instanceof Player || this.entityTickList.contains(passengerEntity)) {
++            if (!(passengerEntity instanceof Player)) {
++                final net.minecraft.resources.Identifier ulyxPassengerTypeKey = BuiltInRegistries.ENTITY_TYPE.getKey(passengerEntity.getType());
++                if (ulyxPassengerTypeKey != null && org.ulyxspigot.ulyxspigot.UlyxConfig.isLimitersNonTickableEntity(ulyxPassengerTypeKey.getPath())) {
++                    return;
++                }
++            }
              passengerEntity.setOldPosAndRot();
              passengerEntity.tickCount++;
 +            passengerEntity.totalEntityAge++; // Paper - age-like counter for all entities
@@ -914,7 +926,21 @@
 +        double speed
 +    ) {
 +        // Paper end - visibility api support
-+        if (org.ulyxspigot.ulyxspigot.UlyxConfig.isCombatDisableSweepingEdge() && options.getType() == net.minecraft.core.particles.ParticleTypes.SWEEP_ATTACK) {
++        final net.minecraft.resources.Identifier ulyxParticleKey = BuiltInRegistries.PARTICLE_TYPE.getKey(options.getType());
++        final String ulyxParticleName = ulyxParticleKey == null ? "" : ulyxParticleKey.getPath();
++        if ((org.ulyxspigot.ulyxspigot.UlyxConfig.isCombatDisableSweepingEdge() || org.ulyxspigot.ulyxspigot.UlyxConfig.isParticlesDisableNewCombatParticles()) && "sweep_attack".equals(ulyxParticleName)) {
++            return 0;
++        }
++        if (org.ulyxspigot.ulyxspigot.UlyxConfig.isParticlesDisableWaterSplashParticles() && "splash".equals(ulyxParticleName)) {
++            return 0;
++        }
++        if (org.ulyxspigot.ulyxspigot.UlyxConfig.isParticlesDisableBubbleColumnParticles() && ("bubble_column_up".equals(ulyxParticleName) || "current_down".equals(ulyxParticleName))) {
++            return 0;
++        }
++        if (org.ulyxspigot.ulyxspigot.UlyxConfig.isParticlesDisableEffectParticles() && ("entity_effect".equals(ulyxParticleName) || "ambient_entity_effect".equals(ulyxParticleName) || "instant_effect".equals(ulyxParticleName) || "effect".equals(ulyxParticleName))) {
++            return 0;
++        }
++        if (org.ulyxspigot.ulyxspigot.UlyxConfig.isParticlesDisableBlockBreakParticles() && sender instanceof net.minecraft.world.entity.player.Player && ("block".equals(ulyxParticleName) || "block_crumble".equals(ulyxParticleName))) {
 +            return 0;
 +        }
          ClientboundLevelParticlesPacket clientboundLevelParticlesPacket = new ClientboundLevelParticlesPacket(

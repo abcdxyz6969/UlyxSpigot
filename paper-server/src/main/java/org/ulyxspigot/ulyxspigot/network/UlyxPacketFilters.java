@@ -1,0 +1,107 @@
+package org.ulyxspigot.ulyxspigot.network;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.level.block.Blocks;
+
+public final class UlyxPacketFilters {
+
+    private UlyxPacketFilters() {
+    }
+
+    public static boolean shouldBlockFootstepSound(final Packet<?> packet) {
+        if (!(packet instanceof ClientboundSoundPacket) && !"ClientboundSoundEntityPacket".equals(packet.getClass().getSimpleName())) {
+            return false;
+        }
+
+        final Identifier key = resolveSoundKey(packet);
+        return key != null && key.getPath().contains("step");
+    }
+
+    public static boolean shouldBlockSpawnerParticles(final ServerLevel level, final Packet<?> packet) {
+        if (!(packet instanceof ClientboundLevelParticlesPacket particlesPacket)) {
+            return false;
+        }
+
+        final Identifier particleKey = resolveParticleKey(particlesPacket);
+        if (particleKey == null) {
+            return false;
+        }
+
+        final String particleName = particleKey.getPath();
+        if (!("smoke".equals(particleName) || "flame".equals(particleName))) {
+            return false;
+        }
+
+        final Double x = readDouble(particlesPacket, "x", "getX");
+        final Double y = readDouble(particlesPacket, "y", "getY");
+        final Double z = readDouble(particlesPacket, "z", "getZ");
+        if (x == null || y == null || z == null) {
+            return false;
+        }
+
+        final BlockPos pos = BlockPos.containing(x, y, z);
+        return isSpawnerAt(level, pos)
+            || isSpawnerAt(level, pos.below())
+            || isSpawnerAt(level, pos.above())
+            || isSpawnerAt(level, pos.north())
+            || isSpawnerAt(level, pos.south())
+            || isSpawnerAt(level, pos.east())
+            || isSpawnerAt(level, pos.west());
+    }
+
+    private static boolean isSpawnerAt(final ServerLevel level, final BlockPos pos) {
+        return level.getBlockState(pos).is(Blocks.SPAWNER);
+    }
+
+    private static Identifier resolveSoundKey(final Object packet) {
+        final Object holderObj = invokeNoArg(packet, "sound", "getSound");
+        if (!(holderObj instanceof Holder<?> holder)) {
+            return null;
+        }
+
+        final Object value = holder.value();
+        if (!(value instanceof SoundEvent soundEvent)) {
+            return null;
+        }
+
+        return BuiltInRegistries.SOUND_EVENT.getKey(soundEvent);
+    }
+
+    private static Identifier resolveParticleKey(final Object packet) {
+        final Object particleObj = invokeNoArg(packet, "particle", "getParticle");
+        if (!(particleObj instanceof ParticleOptions particleOptions)) {
+            return null;
+        }
+
+        return BuiltInRegistries.PARTICLE_TYPE.getKey(particleOptions.getType());
+    }
+
+    private static Double readDouble(final Object target, final String... methodNames) {
+        final Object value = invokeNoArg(target, methodNames);
+        if (value instanceof Number number) {
+            return number.doubleValue();
+        }
+
+        return null;
+    }
+
+    private static Object invokeNoArg(final Object target, final String... methodNames) {
+        for (String methodName : methodNames) {
+            try {
+                return target.getClass().getMethod(methodName).invoke(target);
+            } catch (ReflectiveOperationException ignored) {
+            }
+        }
+
+        return null;
+    }
+}
