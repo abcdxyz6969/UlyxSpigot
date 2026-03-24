@@ -37,6 +37,7 @@ public final class UlyxConfig {
 
     private static String serverBrandNameDisplay = "UlyxSpigot";
 
+    private static boolean useSparkTpsAtTpsCommand = false;
     private static boolean asyncTrackerEnabled = true;
     private static boolean asyncPathfindingEnabled = true;
     private static int asyncPathfindingThreads = 2;
@@ -105,13 +106,16 @@ public final class UlyxConfig {
     private static boolean performanceOptimiseBlockEntities = true;
     private static boolean performanceVirtualThreadsEnabled = true;
     private static boolean performanceVirtualThreadsCommandLogging = false;
+    private static boolean performanceVirtualThreadsCommandSending = true;
     private static boolean performanceVirtualThreadsChatTextFiltering = true;
     private static boolean performanceVirtualThreadsAuthenticatorScheduler = true;
     private static boolean performanceAlwaysMoistFarmland = false;
     private static boolean performanceAlwaysMoistSugarcane = false;
     private static boolean performanceCheckIfCactusCanSurviveBeforeGrowth = false;
     private static boolean performanceOnlyPlayersUnpackLootTable = true;
+    private static boolean performanceOptimisePlayerMovement = true;
     private static boolean performanceOptimisePlayerPickup = true;
+    private static boolean performanceOptimiseRails = false;
     private static boolean performanceDisableCriterionTrigger = true;
     private static boolean performanceDisableBlockEntityTicking = true;
     private static boolean performanceDisableTileSnapshotCreation = false;
@@ -289,6 +293,7 @@ public final class UlyxConfig {
         set("config-version", CURRENT_CONFIG_VERSION);
 
         serverBrandNameDisplay = getString("server-brand-name-display", serverBrandNameDisplay);
+        useSparkTpsAtTpsCommand = getBoolean("use-spark-tps-at-tps-command", useSparkTpsAtTpsCommand);
 
         asyncTrackerEnabled = getBoolean("asynchronous.tracker.enabled", asyncTrackerEnabled);
         asyncPathfindingEnabled = getBoolean("asynchronous.pathfinding.enabled", asyncPathfindingEnabled);
@@ -357,12 +362,15 @@ public final class UlyxConfig {
         performanceOptimiseBlockEntities = getBoolean("performance.optimiseBlockEntities", performanceOptimiseBlockEntities);
         performanceVirtualThreadsEnabled = getBoolean("performance.virtual-threads.enabled", performanceVirtualThreadsEnabled);
         performanceVirtualThreadsCommandLogging = getBoolean("performance.virtual-threads.command-logging", performanceVirtualThreadsCommandLogging);
+        performanceVirtualThreadsCommandSending = getBoolean("performance.virtual-threads.command-sending", performanceVirtualThreadsCommandSending);
         performanceVirtualThreadsChatTextFiltering = getBoolean("performance.virtual-threads.chat-text-filtering", performanceVirtualThreadsChatTextFiltering);
         performanceVirtualThreadsAuthenticatorScheduler = getBoolean("performance.virtual-threads.authenticator-scheduler", performanceVirtualThreadsAuthenticatorScheduler);
         performanceAlwaysMoistFarmland = getBoolean("performance.alwaysMoistFarmland", performanceAlwaysMoistFarmland);
         performanceAlwaysMoistSugarcane = getBoolean("performance.alwaysMoistSugarcane", performanceAlwaysMoistSugarcane);
         performanceCheckIfCactusCanSurviveBeforeGrowth = getBoolean("performance.checkIfCactusCanSurviveBeforeGrowth", performanceCheckIfCactusCanSurviveBeforeGrowth);
         performanceOnlyPlayersUnpackLootTable = getBoolean("performance.onlyPlayersUnpackLootTable", performanceOnlyPlayersUnpackLootTable);
+        performanceOptimisePlayerMovement = getBoolean("performance.optimisePlayerMovement", performanceOptimisePlayerMovement);
+        performanceOptimiseRails = getBoolean("performance.optimiseRails", performanceOptimiseRails);
         performanceOptimisePlayerPickup = getBoolean("performance.optimisePlayerPickup", performanceOptimisePlayerPickup);
         performanceDisableCriterionTrigger = getBoolean("performance.disableCriterionTrigger", performanceDisableCriterionTrigger);
         performanceDisableBlockEntityTicking = getBoolean("performance.disableBlockEntityTicking", performanceDisableBlockEntityTicking);
@@ -461,6 +469,11 @@ public final class UlyxConfig {
     public static String getServerBrandNameDisplay() {
         ensureLoaded();
         return serverBrandNameDisplay;
+    }
+
+    public static boolean isUseSparkTpsAtTpsCommand() {
+        ensureLoaded();
+        return useSparkTpsAtTpsCommand;
     }
 
     public static boolean isAsyncTrackerEnabled() {
@@ -764,6 +777,11 @@ public final class UlyxConfig {
         return performanceVirtualThreadsCommandLogging;
     }
 
+    public static boolean isPerformanceVirtualThreadsCommandSending() {
+        ensureLoaded();
+        return performanceVirtualThreadsCommandSending;
+    }
+
     public static boolean isPerformanceVirtualThreadsChatTextFiltering() {
         ensureLoaded();
         return performanceVirtualThreadsChatTextFiltering;
@@ -794,9 +812,19 @@ public final class UlyxConfig {
         return performanceOnlyPlayersUnpackLootTable;
     }
 
+    public static boolean isPerformanceOptimisePlayerMovement() {
+        ensureLoaded();
+        return performanceOptimisePlayerMovement;
+    }
+
     public static boolean isPerformanceOptimisePlayerPickup() {
         ensureLoaded();
         return performanceOptimisePlayerPickup;
+    }
+
+    public static boolean isPerformanceOptimiseRails() {
+        ensureLoaded();
+        return performanceOptimiseRails;
     }
 
     public static boolean isPerformanceDisableCriterionTrigger() {

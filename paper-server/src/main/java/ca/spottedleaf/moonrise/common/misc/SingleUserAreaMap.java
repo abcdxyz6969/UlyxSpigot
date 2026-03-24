@@ -1,5 +1,7 @@
 package ca.spottedleaf.moonrise.common.misc;
 
+import org.ulyxspigot.ulyxspigot.UlyxConfig;
+
 public abstract class SingleUserAreaMap<T> {
 
     public static final int NOT_SET = Integer.MIN_VALUE;
@@ -86,6 +88,10 @@ public abstract class SingleUserAreaMap<T> {
         if (fromX == NOT_SET) {
             return false;
         }
+        if (UlyxConfig.isPerformanceOptimisePlayerMovement() && fromX == toX && fromZ == toZ && oldViewDistance == newViewDistance) {
+            return true;
+        }
+
 
         this.lastChunkX = toX;
         this.lastChunkZ = toZ;

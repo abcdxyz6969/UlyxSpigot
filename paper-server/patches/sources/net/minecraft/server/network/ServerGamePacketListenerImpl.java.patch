@@ -1610,7 +1610,7 @@
 -            this.server.execute(handler);
 +            // CraftBukkit start
 +            if (sync) {
-+                this.server.execute(handler);
++                if (org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceVirtualThreadsEnabled() && org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceVirtualThreadsCommandSending()) Thread.ofVirtual().name("Ulyx-CommandSend-", 0).start(() -> this.server.execute(handler)); else this.server.execute(handler);
 +            } else {
 +                handler.run();
 +            }

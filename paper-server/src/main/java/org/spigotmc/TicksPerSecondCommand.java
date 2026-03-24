@@ -38,6 +38,18 @@ public class TicksPerSecondCommand extends Command {
             return true;
         }
 
+        if (org.ulyxspigot.ulyxspigot.UlyxConfig.isUseSparkTpsAtTpsCommand()) {
+            final Command sparkCommand = sender.getServer().getCommandMap().getCommand("spark");
+            if (sparkCommand != null) {
+                try {
+                    if (sparkCommand.execute(sender, "spark", new String[] {"tps"})) {
+                        return true;
+                    }
+                } catch (Throwable ignored) {
+                }
+            }
+        }
+
         // Paper start - Further improve tick handling
         double[] tps = org.bukkit.Bukkit.getTPS();
         Component[] tpsAvg = new Component[tps.length];

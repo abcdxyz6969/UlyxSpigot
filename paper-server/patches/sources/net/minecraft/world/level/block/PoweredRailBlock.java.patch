@@ -1,8 +1,13 @@
 --- a/net/minecraft/world/level/block/PoweredRailBlock.java
 +++ b/net/minecraft/world/level/block/PoweredRailBlock.java
-@@ -127,6 +_,13 @@
-             || this.findPoweredRailSignal(level, pos, state, true, 0)
-             || this.findPoweredRailSignal(level, pos, state, false, 0);
+@@ -127,6 +_,16 @@
+-            || this.findPoweredRailSignal(level, pos, state, true, 0)
+-            || this.findPoweredRailSignal(level, pos, state, false, 0);
++            || (!org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceOptimiseRails() && this.findPoweredRailSignal(level, pos, state, true, 0))
++            || (!org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceOptimiseRails() && this.findPoweredRailSignal(level, pos, state, false, 0));
++        if (org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceOptimiseRails()) {
++            flag = org.ulyxspigot.ulyxspigot.rails.UlyxRailOptimizations.computePoweredState(this, level, pos, state);
++        }
          if (flag != poweredValue) {
 +            // CraftBukkit start
 +            int power = flag ? 15 : 0;

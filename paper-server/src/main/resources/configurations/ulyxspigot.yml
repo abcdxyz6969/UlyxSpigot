@@ -6,6 +6,8 @@ config-version: 1
 # Brand name shown in server list ping and F3 brand info.
 server-brand-name-display: UlyxSpigot
 
+# Uses /spark tps output when running /tps command.
+use-spark-tps-at-tps-command: false
 asynchronous:
   tracker:
     # Enables Asynchronous Entity Tracker.
