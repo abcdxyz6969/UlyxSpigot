@@ -36,6 +36,30 @@ public final class UlyxPacketFilters {
             return false;
         }
 
+        if (Bukkit.isPrimaryThread()) {
+            return shouldBlockSpawnerParticlesSync(level, particlesPacket);
+        }
+
+        final java.util.concurrent.CompletableFuture<Boolean> result = new java.util.concurrent.CompletableFuture<>();
+        level.getServer().scheduleOnMain(() -> {
+            try {
+                result.complete(shouldBlockSpawnerParticlesSync(level, particlesPacket));
+            } catch (Throwable throwable) {
+                result.complete(false);
+            }
+        });
+
+        try {
+            return result.get(25L, java.util.concurrent.TimeUnit.MILLISECONDS);
+        } catch (java.lang.InterruptedException exception) {
+            Thread.currentThread().interrupt();
+            return false;
+        } catch (java.util.concurrent.ExecutionException | java.util.concurrent.TimeoutException exception) {
+            return false;
+        }
+    }
+
+    private static boolean shouldBlockSpawnerParticlesSync(final ServerLevel level, final ClientboundLevelParticlesPacket particlesPacket) {
         final Identifier particleKey = resolveParticleKey(particlesPacket);
         if (particleKey == null) {
             return false;
