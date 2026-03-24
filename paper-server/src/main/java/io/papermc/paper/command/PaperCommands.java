@@ -25,6 +25,8 @@ public final class PaperCommands {
         COMMANDS.put("paper", new PaperCommand("paper"));
         COMMANDS.put("mspt", new MSPTCommand("mspt"));
         COMMANDS.put("ulyx", new UlyxCommand("ulyx"));
+        COMMANDS.put("threadslist", new ThreadsListCommand("threadslist"));
+        COMMANDS.put("thread", new ThreadCommand("thread"));
 
         COMMANDS.forEach((s, command) -> {
             server.server.getCommandMap().register(s, "Paper", command);

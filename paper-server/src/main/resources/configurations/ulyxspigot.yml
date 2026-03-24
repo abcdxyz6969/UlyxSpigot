@@ -212,6 +212,8 @@ developer:
   # Skips world session.lock file validation
   # Requires restart while enabled; /ulyx reload is blocked until this is false.
   disableSessionLockFile: false
+  # Enables thread inspection commands /threadslist and /thread.
+  enable-threads-command: false
 
 misc:
   log-cleaner:

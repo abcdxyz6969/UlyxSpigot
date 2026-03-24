@@ -53,6 +53,7 @@ public final class UlyxConfig {
     private static boolean developerAllowInvalidEnchantLevels = false;
     private static boolean developerDisableAsyncCatcher = false;
     private static boolean developerDisableSessionLockFile = false;
+    private static boolean developerEnableThreadsCommand = false;
 
     private static boolean miscLogCleanerEnabled = true;
     private static int miscLogCleanerOlderThan = 30;
@@ -310,6 +311,7 @@ public final class UlyxConfig {
         developerAllowInvalidEnchantLevels = getBoolean("developer.allowInvalidEnchantLevels", developerAllowInvalidEnchantLevels);
         developerDisableAsyncCatcher = getBoolean("developer.disableAsyncCatcher", developerDisableAsyncCatcher);
         developerDisableSessionLockFile = getBoolean("developer.disableSessionLockFile", developerDisableSessionLockFile);
+        developerEnableThreadsCommand = getBoolean("developer.enable-threads-command", developerEnableThreadsCommand);
 
         miscLogCleanerEnabled = getBoolean("misc.log-cleaner.enabled", miscLogCleanerEnabled);
         miscLogCleanerOlderThan = getInt("misc.log-cleaner.older-than", miscLogCleanerOlderThan);
@@ -539,6 +541,11 @@ public final class UlyxConfig {
     public static boolean isDeveloperDisableSessionLockFile() {
         ensureLoaded();
         return developerDisableSessionLockFile;
+    }
+
+    public static boolean isDeveloperEnableThreadsCommand() {
+        ensureLoaded();
+        return developerEnableThreadsCommand;
     }
 
     public static boolean isMiscLogCleanerEnabled() {
