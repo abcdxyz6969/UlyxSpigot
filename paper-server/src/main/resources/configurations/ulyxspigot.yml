@@ -201,6 +201,8 @@ experimental:
   # Disables the Paper chunk load version check (This allows, for example, to load chunks from 1.20.2 to 1.20.1).
   # Requires restart while enabled; /ulyx reload is blocked until this is false.
   disableChunkNewerVersionLoadCheck: false
+  # Pre-starts Ulyx virtual thread workers at startup (instead of creating them on first use).
+  prestartVirtualThreads: false
 
 developer:
   # Allows the recalculation of out of bounds region files to allow instantaneous region pasting.

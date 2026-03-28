@@ -135,7 +135,7 @@
 +                };
 +                if (org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceVirtualThreadsEnabled()
 +                    && org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceVirtualThreadsAuthenticatorScheduler()) {
-+                    Thread.ofVirtual().start(authTask);
++                    org.ulyxspigot.ulyxspigot.virtual.UlyxVirtualThreadDispatcher.executeAuthenticator(authTask);
 +                } else {
 +                    authenticatorPool.execute(authTask);
 +                }
@@ -230,7 +230,7 @@
 +        };
 +        if (org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceVirtualThreadsEnabled()
 +            && org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceVirtualThreadsAuthenticatorScheduler()) {
-+            Thread.ofVirtual().start(authTask);
++            org.ulyxspigot.ulyxspigot.virtual.UlyxVirtualThreadDispatcher.executeAuthenticator(authTask);
 +        } else {
 +            authenticatorPool.execute(authTask);
 +        }
@@ -343,7 +343,7 @@
 +            };
 +            if (org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceVirtualThreadsEnabled()
 +                && org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceVirtualThreadsAuthenticatorScheduler()) {
-+                Thread.ofVirtual().start(authTask);
++                org.ulyxspigot.ulyxspigot.virtual.UlyxVirtualThreadDispatcher.executeAuthenticator(authTask);
 +            } else {
 +                authenticatorPool.execute(authTask);
 +            }

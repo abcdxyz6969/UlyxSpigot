@@ -1472,7 +1472,7 @@
 +                final java.util.concurrent.Executor ulyxChatTextFilteringExecutor;
 +                if (org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceVirtualThreadsEnabled()
 +                    && org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceVirtualThreadsChatTextFiltering()) {
-+                    ulyxChatTextFilteringExecutor = runnable -> Thread.ofVirtual().name("Ulyx-ChatFilter-", 0).start(runnable);
++                    ulyxChatTextFilteringExecutor = org.ulyxspigot.ulyxspigot.virtual.UlyxVirtualThreadDispatcher.chatTextFilteringExecutor();
 +                } else {
 +                    ulyxChatTextFilteringExecutor = this.server.chatExecutor;
 +                }
@@ -1509,7 +1509,7 @@
 +        if (org.spigotmc.SpigotConfig.logCommands) { // Paper - Add missing SpigotConfig logCommands check
 +            if (org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceVirtualThreadsEnabled()
 +                && org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceVirtualThreadsCommandLogging()) {
-+                Thread.ofVirtual().name("Ulyx-CommandLog-", 0).start(() -> LOGGER.info("{} issued server command: {}", this.player.getScoreboardName(), prefixedCommand));
++                org.ulyxspigot.ulyxspigot.virtual.UlyxVirtualThreadDispatcher.executeCommandLogging(() -> LOGGER.info("{} issued server command: {}", this.player.getScoreboardName(), prefixedCommand));
 +            } else {
 +                LOGGER.info("{} issued server command: {}", this.player.getScoreboardName(), prefixedCommand);
 +            }
@@ -1550,7 +1550,7 @@
 +            final String commandForLogging = command;
 +            if (org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceVirtualThreadsEnabled()
 +                && org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceVirtualThreadsCommandLogging()) {
-+                Thread.ofVirtual().name("Ulyx-CommandLog-", 0).start(() -> LOGGER.info("{} issued server command: {}", this.player.getScoreboardName(), commandForLogging));
++                org.ulyxspigot.ulyxspigot.virtual.UlyxVirtualThreadDispatcher.executeCommandLogging(() -> LOGGER.info("{} issued server command: {}", this.player.getScoreboardName(), commandForLogging));
 +            } else {
 +                LOGGER.info("{} issued server command: {}", this.player.getScoreboardName(), commandForLogging);
 +            }
@@ -1610,7 +1610,7 @@
 -            this.server.execute(handler);
 +            // CraftBukkit start
 +            if (sync) {
-+                if (org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceVirtualThreadsEnabled() && org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceVirtualThreadsCommandSending()) Thread.ofVirtual().name("Ulyx-CommandSend-", 0).start(() -> this.server.execute(handler)); else this.server.execute(handler);
++                if (org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceVirtualThreadsEnabled() && org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceVirtualThreadsCommandSending()) org.ulyxspigot.ulyxspigot.virtual.UlyxVirtualThreadDispatcher.executeCommandSending(() -> this.server.execute(handler)); else this.server.execute(handler);
 +            } else {
 +                handler.run();
 +            }
@@ -2512,7 +2512,7 @@
 +        final java.util.concurrent.Executor ulyxChatTextFilteringExecutor;
 +        if (org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceVirtualThreadsEnabled()
 +            && org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceVirtualThreadsChatTextFiltering()) {
-+            ulyxChatTextFilteringExecutor = runnable -> Thread.ofVirtual().name("Ulyx-ChatFilter-", 0).start(runnable);
++            ulyxChatTextFilteringExecutor = org.ulyxspigot.ulyxspigot.virtual.UlyxVirtualThreadDispatcher.chatTextFilteringExecutor();
 +        } else {
 +            ulyxChatTextFilteringExecutor = this.server;
 +        }

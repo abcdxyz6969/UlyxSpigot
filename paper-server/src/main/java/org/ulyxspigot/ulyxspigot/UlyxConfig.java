@@ -23,6 +23,7 @@ import org.ulyxspigot.ulyxspigot.async.UlyxAsyncInventoryUpdates;
 import org.ulyxspigot.ulyxspigot.async.UlyxAsyncPacketSending;
 import org.ulyxspigot.ulyxspigot.async.UlyxAsyncPathfinding;
 import org.ulyxspigot.ulyxspigot.async.UlyxAsyncTracker;
+import org.ulyxspigot.ulyxspigot.virtual.UlyxVirtualThreadDispatcher;
 
 public final class UlyxConfig {
     private static final String HEADER = "This is the main configuration file for UlyxSpigot.\n"
@@ -48,6 +49,7 @@ public final class UlyxConfig {
     private static boolean experimentalReducePlayerChunkSourceUpdates = true;
     private static boolean experimentalReduceChunkMidTickTaskExecution = true;
     private static boolean experimentalDisableChunkNewerVersionLoadCheck = false;
+    private static boolean experimentalPrestartVirtualThreads = false;
 
     private static boolean developerRecalculateChunksOutOfBounds = false;
     private static boolean developerAllowInvalidEnchantLevels = false;
@@ -306,6 +308,7 @@ public final class UlyxConfig {
         experimentalReducePlayerChunkSourceUpdates = getBoolean("experimental.reducePlayerChunkSourceUpdates", experimentalReducePlayerChunkSourceUpdates);
         experimentalReduceChunkMidTickTaskExecution = getBoolean("experimental.reduceChunkMidTickTaskExecution", experimentalReduceChunkMidTickTaskExecution);
         experimentalDisableChunkNewerVersionLoadCheck = getBoolean("experimental.disableChunkNewerVersionLoadCheck", experimentalDisableChunkNewerVersionLoadCheck);
+        experimentalPrestartVirtualThreads = getBoolean("experimental.prestartVirtualThreads", experimentalPrestartVirtualThreads);
 
         developerRecalculateChunksOutOfBounds = getBoolean("developer.recalculateChunksOutOfBounds", developerRecalculateChunksOutOfBounds);
         developerAllowInvalidEnchantLevels = getBoolean("developer.allowInvalidEnchantLevels", developerAllowInvalidEnchantLevels);
@@ -367,6 +370,13 @@ public final class UlyxConfig {
         performanceVirtualThreadsCommandSending = getBoolean("performance.virtual-threads.command-sending", performanceVirtualThreadsCommandSending);
         performanceVirtualThreadsChatTextFiltering = getBoolean("performance.virtual-threads.chat-text-filtering", performanceVirtualThreadsChatTextFiltering);
         performanceVirtualThreadsAuthenticatorScheduler = getBoolean("performance.virtual-threads.authenticator-scheduler", performanceVirtualThreadsAuthenticatorScheduler);
+        UlyxVirtualThreadDispatcher.reconfigure(
+            experimentalPrestartVirtualThreads && performanceVirtualThreadsEnabled,
+            performanceVirtualThreadsCommandSending,
+            performanceVirtualThreadsCommandLogging,
+            performanceVirtualThreadsChatTextFiltering,
+            performanceVirtualThreadsAuthenticatorScheduler
+        );
         performanceAlwaysMoistFarmland = getBoolean("performance.alwaysMoistFarmland", performanceAlwaysMoistFarmland);
         performanceAlwaysMoistSugarcane = getBoolean("performance.alwaysMoistSugarcane", performanceAlwaysMoistSugarcane);
         performanceCheckIfCactusCanSurviveBeforeGrowth = getBoolean("performance.checkIfCactusCanSurviveBeforeGrowth", performanceCheckIfCactusCanSurviveBeforeGrowth);
@@ -521,6 +531,11 @@ public final class UlyxConfig {
     public static boolean isExperimentalDisableChunkNewerVersionLoadCheck() {
         ensureLoaded();
         return experimentalDisableChunkNewerVersionLoadCheck;
+    }
+
+    public static boolean isExperimentalPrestartVirtualThreads() {
+        ensureLoaded();
+        return experimentalPrestartVirtualThreads;
     }
 
     public static boolean isDeveloperRecalculateChunksOutOfBounds() {
