@@ -1054,7 +1054,7 @@
 +        }
 +    }
 +
-    protected void tickChildren(BooleanSupplier hasTimeLeft) {
+     protected void tickChildren(BooleanSupplier hasTimeLeft) {
          ProfilerFiller profilerFiller = Profiler.get();
          this.getPlayerList().getPlayers().forEach(serverPlayer1 -> serverPlayer1.connection.suspendFlushing());
 +        this.server.getScheduler().mainThreadHeartbeat(); // CraftBukkit
