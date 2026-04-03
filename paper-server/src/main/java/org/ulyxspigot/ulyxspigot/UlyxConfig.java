@@ -116,6 +116,7 @@ public final class UlyxConfig {
     private static boolean performanceOptimiseBlockEntities = true;
     private static boolean performanceVirtualThreadsEnabled = true;
     private static boolean performanceVirtualThreadsCommandLogging = false;
+    private static boolean performanceVirtualThreadsTabCompleting = true;
     private static boolean performanceVirtualThreadsCommandSending = true;
     private static boolean performanceVirtualThreadsChatTextFiltering = true;
     private static boolean performanceVirtualThreadsAuthenticatorScheduler = true;
@@ -245,12 +246,15 @@ public final class UlyxConfig {
             throw new RuntimeException(ex);
         }
 
-        final List<String> blockedOptions = new ArrayList<>(2);
+        final List<String> blockedOptions = new ArrayList<>(3);
         if (preview.getBoolean("experimental.disableChunkNewerVersionLoadCheck", false)) {
             blockedOptions.add("experimental.disableChunkNewerVersionLoadCheck");
         }
         if (preview.getBoolean("developer.disableSessionLockFile", false)) {
             blockedOptions.add("developer.disableSessionLockFile");
+        }
+        if (preview.getBoolean("asynchronous.world-ticking.enabled", false)) {
+            blockedOptions.add("asynchronous.world-ticking.enabled");
         }
         return blockedOptions;
     }
@@ -381,6 +385,7 @@ public final class UlyxConfig {
         performanceOptimiseBlockEntities = getBoolean("performance.optimiseBlockEntities", performanceOptimiseBlockEntities);
         performanceVirtualThreadsEnabled = getBoolean("performance.virtual-threads.enabled", performanceVirtualThreadsEnabled);
         performanceVirtualThreadsCommandLogging = getBoolean("performance.virtual-threads.command-logging", performanceVirtualThreadsCommandLogging);
+        performanceVirtualThreadsTabCompleting = getBoolean("performance.virtual-threads.tab-completing", performanceVirtualThreadsTabCompleting);
         performanceVirtualThreadsCommandSending = getBoolean("performance.virtual-threads.command-sending", performanceVirtualThreadsCommandSending);
         performanceVirtualThreadsChatTextFiltering = getBoolean("performance.virtual-threads.chat-text-filtering", performanceVirtualThreadsChatTextFiltering);
         performanceVirtualThreadsAuthenticatorScheduler = getBoolean("performance.virtual-threads.authenticator-scheduler", performanceVirtualThreadsAuthenticatorScheduler);
@@ -389,6 +394,7 @@ public final class UlyxConfig {
             performanceVirtualThreadsCommandSending,
             performanceVirtualThreadsCommandLogging,
             performanceVirtualThreadsChatTextFiltering,
+            performanceVirtualThreadsTabCompleting,
             performanceVirtualThreadsAuthenticatorScheduler
         );
         performanceAlwaysMoistFarmland = getBoolean("performance.alwaysMoistFarmland", performanceAlwaysMoistFarmland);
@@ -836,6 +842,11 @@ public final class UlyxConfig {
     public static boolean isPerformanceVirtualThreadsCommandLogging() {
         ensureLoaded();
         return performanceVirtualThreadsCommandLogging;
+    }
+
+    public static boolean isPerformanceVirtualThreadsTabCompleting() {
+        ensureLoaded();
+        return performanceVirtualThreadsTabCompleting;
     }
 
     public static boolean isPerformanceVirtualThreadsCommandSending() {

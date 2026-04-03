@@ -17,6 +17,7 @@ public final class UlyxVirtualThreadDispatcher {
     private static volatile WorkerGroup commandSendingGroup;
     private static volatile WorkerGroup commandLoggingGroup;
     private static volatile WorkerGroup chatTextFilteringGroup;
+    private static volatile WorkerGroup tabCompletingGroup;
     private static volatile WorkerGroup authenticatorGroup;
 
     static {
@@ -31,6 +32,7 @@ public final class UlyxVirtualThreadDispatcher {
         final boolean commandSendingEnabled,
         final boolean commandLoggingEnabled,
         final boolean chatTextFilteringEnabled,
+        final boolean tabCompletingEnabled,
         final boolean authenticatorEnabled
     ) {
         shutdown();
@@ -47,6 +49,9 @@ public final class UlyxVirtualThreadDispatcher {
         }
         if (chatTextFilteringEnabled) {
             chatTextFilteringGroup = new WorkerGroup("Ulyx-ChatFilter-Worker-", WORKERS_PER_CHANNEL);
+        }
+        if (tabCompletingEnabled) {
+            tabCompletingGroup = new WorkerGroup("Ulyx-TabComplete-Worker-", WORKERS_PER_CHANNEL);
         }
         if (authenticatorEnabled) {
             authenticatorGroup = new WorkerGroup("Ulyx-Authenticator-Worker-", WORKERS_PER_CHANNEL);
@@ -73,6 +78,14 @@ public final class UlyxVirtualThreadDispatcher {
         return runnable -> Thread.ofVirtual().name("Ulyx-ChatFilter-", 0).start(runnable);
     }
 
+    public static Executor tabCompletingExecutor() {
+        final WorkerGroup localGroup = tabCompletingGroup;
+        if (localGroup != null) {
+            return localGroup;
+        }
+        return runnable -> Thread.ofVirtual().name("Ulyx-TabComplete-", 0).start(runnable);
+    }
+
     private static void execute(final Runnable task, final WorkerGroup group, final String fallbackThreadPrefix) {
         Objects.requireNonNull(task, "task");
 
@@ -88,11 +101,13 @@ public final class UlyxVirtualThreadDispatcher {
         final WorkerGroup oldCommandSending = commandSendingGroup;
         final WorkerGroup oldCommandLogging = commandLoggingGroup;
         final WorkerGroup oldChatTextFiltering = chatTextFilteringGroup;
+        final WorkerGroup oldTabCompleting = tabCompletingGroup;
         final WorkerGroup oldAuthenticator = authenticatorGroup;
 
         commandSendingGroup = null;
         commandLoggingGroup = null;
         chatTextFilteringGroup = null;
+        tabCompletingGroup = null;
         authenticatorGroup = null;
 
         if (oldCommandSending != null) {
@@ -103,6 +118,9 @@ public final class UlyxVirtualThreadDispatcher {
         }
         if (oldChatTextFiltering != null) {
             oldChatTextFiltering.shutdown();
+        }
+        if (oldTabCompleting != null) {
+            oldTabCompleting.shutdown();
         }
         if (oldAuthenticator != null) {
             oldAuthenticator.shutdown();

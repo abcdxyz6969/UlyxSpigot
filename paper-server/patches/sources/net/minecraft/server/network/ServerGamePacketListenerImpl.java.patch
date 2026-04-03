@@ -437,7 +437,7 @@
 +        }
 +        // Paper end
 +        // Paper start - AsyncTabCompleteEvent
-+        TAB_COMPLETE_EXECUTOR.execute(() -> this.handleCustomCommandSuggestions0(packet));
++        (org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceVirtualThreadsEnabled() && org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceVirtualThreadsTabCompleting() ? org.ulyxspigot.ulyxspigot.virtual.UlyxVirtualThreadDispatcher.tabCompletingExecutor() : TAB_COMPLETE_EXECUTOR).execute(() -> this.handleCustomCommandSuggestions0(packet));
 +    }
 +
 +    private void handleCustomCommandSuggestions0(final ServerboundCommandSuggestionPacket packet) {

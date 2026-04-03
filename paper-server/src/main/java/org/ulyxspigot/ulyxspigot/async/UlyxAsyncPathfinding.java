@@ -51,7 +51,7 @@ public final class UlyxAsyncPathfinding {
     }
 
     public static boolean canOffload() {
-        return enabled && executor != null && !IN_WORKER.get();
+        return enabled && executor != null && !IN_WORKER.get() && Bukkit.isPrimaryThread();
     }
 
     public static <T> T supply(Supplier<T> supplier) {

@@ -34,6 +34,7 @@ asynchronous:
     # Ticks worlds in parallel using asynchronous tick worker threads.
     # This is highly experimental and can break plugins not designed for parallel world ticking.
     # Recommended value: false
+    # Requires restart while enabled; /ulyx reload is blocked until this is false.
     enabled: false
     # Configure the maximum amount of threads for world ticking.
     # 0 = available processor / 2.

@@ -1133,7 +1133,7 @@
              profilerFiller.push("tick");
 +            if (org.ulyxspigot.ulyxspigot.async.UlyxAsyncWorldTicking.isEnabled()) {
 +                final ServerLevel ulyxLevel = serverLevel;
-+                ulyxParallelWorldTicks.add(org.ulyxspigot.ulyxspigot.async.UlyxAsyncWorldTicking.submit(() -> this.tickLevel(ulyxLevel, hasTimeLeft)));
++                ulyxParallelWorldTicks.add(org.ulyxspigot.ulyxspigot.async.UlyxAsyncWorldTicking.submitWorldTick(ulyxLevel, () -> this.tickLevel(ulyxLevel, hasTimeLeft)));
 +                profilerFiller.pop();
 +                profilerFiller.pop();
 +                continue;

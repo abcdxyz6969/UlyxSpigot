@@ -36,27 +36,12 @@ public final class UlyxPacketFilters {
             return false;
         }
 
-        if (Bukkit.isPrimaryThread()) {
-            return shouldBlockSpawnerParticlesSync(level, particlesPacket);
-        }
-
-        final java.util.concurrent.CompletableFuture<Boolean> result = new java.util.concurrent.CompletableFuture<>();
-        level.getServer().scheduleOnMain(() -> {
-            try {
-                result.complete(shouldBlockSpawnerParticlesSync(level, particlesPacket));
-            } catch (Throwable throwable) {
-                result.complete(false);
-            }
-        });
-
-        try {
-            return result.get(25L, java.util.concurrent.TimeUnit.MILLISECONDS);
-        } catch (java.lang.InterruptedException exception) {
-            Thread.currentThread().interrupt();
-            return false;
-        } catch (java.util.concurrent.ExecutionException | java.util.concurrent.TimeoutException exception) {
+        if (!Bukkit.isPrimaryThread()) {
+            // Avoid blocking async packet sender threads (e.g. async tracker) by waiting on main-thread work.
             return false;
         }
+
+        return shouldBlockSpawnerParticlesSync(level, particlesPacket);
     }
 
     private static boolean shouldBlockSpawnerParticlesSync(final ServerLevel level, final ClientboundLevelParticlesPacket particlesPacket) {
@@ -92,27 +77,12 @@ public final class UlyxPacketFilters {
             return false;
         }
 
-        if (Bukkit.isPrimaryThread()) {
-            return shouldBlockFirePacketsSync(level, packet, ignoreInvisible);
-        }
-
-        final java.util.concurrent.CompletableFuture<Boolean> result = new java.util.concurrent.CompletableFuture<>();
-        level.getServer().scheduleOnMain(() -> {
-            try {
-                result.complete(shouldBlockFirePacketsSync(level, packet, ignoreInvisible));
-            } catch (Throwable throwable) {
-                result.complete(false);
-            }
-        });
-
-        try {
-            return result.get(25L, java.util.concurrent.TimeUnit.MILLISECONDS);
-        } catch (java.lang.InterruptedException exception) {
-            Thread.currentThread().interrupt();
-            return false;
-        } catch (java.util.concurrent.ExecutionException | java.util.concurrent.TimeoutException exception) {
+        if (!Bukkit.isPrimaryThread()) {
+            // Avoid blocking async packet sender threads (e.g. async tracker) by waiting on main-thread work.
             return false;
         }
+
+        return shouldBlockFirePacketsSync(level, packet, ignoreInvisible);
     }
 
     private static boolean shouldBlockFirePacketsSync(final ServerLevel level, final Packet<?> packet, final boolean ignoreInvisible) {

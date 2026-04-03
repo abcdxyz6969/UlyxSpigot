@@ -46,9 +46,14 @@ public final class MSPTCommand extends Command {
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
         if (!testPermission(sender)) return true;
 
-        MinecraftServer server = MinecraftServer.getServer();
+        sendMsptMessage(sender);
+        return true;
+    }
 
-        List<Component> times = new ArrayList<>();
+    public static void sendMsptMessage(final CommandSender sender) {
+        final MinecraftServer server = MinecraftServer.getServer();
+
+        final List<Component> times = new ArrayList<>();
         times.addAll(eval(server.tickTimes5s));
         times.addAll(eval(server.tickTimes10s));
         times.addAll(eval(server.tickTimes1m));
@@ -82,7 +87,6 @@ public final class MSPTCommand extends Command {
                 )
             )
         );
-        return true;
     }
 
     private static List<Component> eval(TickData tickData) {
