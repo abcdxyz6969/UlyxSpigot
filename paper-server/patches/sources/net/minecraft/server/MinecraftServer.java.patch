@@ -1043,7 +1043,7 @@
              ObjectArrayList<NameAndId> list = new ObjectArrayList<>(min);
              int randomInt = Mth.nextInt(this.random, 0, players.size() - min);
  
-@@ -1121,17 +_,95 @@
+@@ -1121,18 +_,95 @@
 +    private void tickLevel(ServerLevel serverLevel, BooleanSupplier hasTimeLeft) {
 +        try {
 +            serverLevel.tick(hasTimeLeft);
@@ -1117,7 +1117,7 @@
 +
 +        this.isIteratingOverLevels = true; // Paper - Throw exception on world create while being ticked
 +        final java.util.ArrayList<java.util.concurrent.Future<?>> ulyxParallelWorldTicks = new java.util.ArrayList<>();
-+        for (ServerLevel serverLevel : this.getAllLevels()) {
+         for (ServerLevel serverLevel : this.getAllLevels()) {
 +            serverLevel.hasPhysicsEvent = org.bukkit.event.block.BlockPhysicsEvent.getHandlerList().getRegisteredListeners().length > 0; // Paper - BlockPhysicsEvent
 +            serverLevel.hasEntityMoveEvent = io.papermc.paper.event.entity.EntityMoveEvent.getHandlerList().getRegisteredListeners().length > 0; // Paper - Add EntityMoveEvent
 +            serverLevel.updateLagCompensationTick(); // Paper - lag compensation
