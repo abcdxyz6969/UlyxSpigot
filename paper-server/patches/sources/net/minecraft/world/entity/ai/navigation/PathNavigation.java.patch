@@ -64,16 +64,6 @@
              ProfilerFiller profilerFiller = Profiler.get();
              profilerFiller.push("pathfind");
              BlockPos blockPos = offsetUpward ? this.mob.blockPosition().above() : this.mob.blockPosition();
-@@ -158,7 +_,11 @@
-             int i = (int)(followRange + (float)regionOffset);
-             PathNavigationRegion pathNavigationRegion = new PathNavigationRegion(this.level, blockPos.offset(-i, -i, -i), blockPos.offset(i, i, i));
--            Path path = this.pathFinder.findPath(pathNavigationRegion, this.mob, targets, followRange, reachRange, this.maxVisitedNodesMultiplier);
-+            final Set<BlockPos> ulyxTargets = targets;
-+            Path path = org.ulyxspigot.ulyxspigot.async.UlyxAsyncPathfinding.supply(
-+                () -> this.pathFinder.findPath(pathNavigationRegion, this.mob, ulyxTargets, followRange, reachRange, this.maxVisitedNodesMultiplier)
-+            );
-             profilerFiller.pop();
-
 @@ -166,6 +_,11 @@
          }
      }
