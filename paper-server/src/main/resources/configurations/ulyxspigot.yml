@@ -41,6 +41,11 @@ asynchronous:
     # 0 = available processor / 2.
     threads: 0
 
+network:
+  # Enables TCP Fast Open on the server listener socket.
+  # Recommended value: false
+  tcp-fast-open: false
+
 behavior:
   # Allows the Bukkit API to teleport entities with passengers.
   allowTeleportationWithPassengers: false
@@ -234,6 +239,10 @@ misc:
     # Retains only X number of log files on server startup.
     # Recommended value: -1 (disabled)
     max-count: -1
+  # Disables vanilla join messages broadcast to all players.
+  disableJoinMessage: false
+  # Disables vanilla quit messages broadcast to all players.
+  disableQuitMessage: false
 
 
 fixes:

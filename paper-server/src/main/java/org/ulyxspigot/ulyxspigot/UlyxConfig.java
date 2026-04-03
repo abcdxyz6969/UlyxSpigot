@@ -49,6 +49,8 @@ public final class UlyxConfig {
     private static boolean asyncWorldTickingEnabled = false;
     private static int asyncWorldTickingThreads = 0;
 
+    private static boolean networkTcpFastOpen = false;
+
     private static boolean experimentalReducePlayerChunkSourceUpdates = true;
     private static boolean experimentalReduceChunkMidTickTaskExecution = true;
     private static boolean experimentalDisableChunkNewerVersionLoadCheck = false;
@@ -63,6 +65,8 @@ public final class UlyxConfig {
     private static boolean miscLogCleanerEnabled = true;
     private static int miscLogCleanerOlderThan = 30;
     private static int miscLogCleanerMaxCount = -1;
+    private static boolean miscDisableJoinMessage = false;
+    private static boolean miscDisableQuitMessage = false;
     private static volatile boolean startupLogCleanerExecuted;
 
     private static boolean fixesDisableUnacknowledgedChatKick = true;
@@ -311,6 +315,8 @@ public final class UlyxConfig {
         asyncWorldTickingEnabled = getBoolean("asynchronous.world-ticking.enabled", asyncWorldTickingEnabled);
         asyncWorldTickingThreads = Math.max(0, getInt("asynchronous.world-ticking.threads", asyncWorldTickingThreads));
 
+        networkTcpFastOpen = getBoolean("network.tcp-fast-open", networkTcpFastOpen);
+
         experimentalReducePlayerChunkSourceUpdates = getBoolean("experimental.reducePlayerChunkSourceUpdates", experimentalReducePlayerChunkSourceUpdates);
         experimentalReduceChunkMidTickTaskExecution = getBoolean("experimental.reduceChunkMidTickTaskExecution", experimentalReduceChunkMidTickTaskExecution);
         experimentalDisableChunkNewerVersionLoadCheck = getBoolean("experimental.disableChunkNewerVersionLoadCheck", experimentalDisableChunkNewerVersionLoadCheck);
@@ -325,6 +331,8 @@ public final class UlyxConfig {
         miscLogCleanerEnabled = getBoolean("misc.log-cleaner.enabled", miscLogCleanerEnabled);
         miscLogCleanerOlderThan = getInt("misc.log-cleaner.older-than", miscLogCleanerOlderThan);
         miscLogCleanerMaxCount = getInt("misc.log-cleaner.max-count", miscLogCleanerMaxCount);
+        miscDisableJoinMessage = getBoolean("misc.disableJoinMessage", miscDisableJoinMessage);
+        miscDisableQuitMessage = getBoolean("misc.disableQuitMessage", miscDisableQuitMessage);
 
         fixesDisableUnacknowledgedChatKick = getBoolean("fixes.disableUnacknowledgedChatKick", fixesDisableUnacknowledgedChatKick);
         fixesFixPluginPlaceholderExploits = getBoolean("fixes.fixPluginPlaceholderExploits", fixesFixPluginPlaceholderExploits);
@@ -534,6 +542,11 @@ public final class UlyxConfig {
         return asyncWorldTickingThreads;
     }
 
+    public static boolean isNetworkTcpFastOpen() {
+        ensureLoaded();
+        return networkTcpFastOpen;
+    }
+
     public static boolean isExperimentalReducePlayerChunkSourceUpdates() {
         ensureLoaded();
         return experimentalReducePlayerChunkSourceUpdates;
@@ -592,6 +605,16 @@ public final class UlyxConfig {
     public static int getMiscLogCleanerMaxCount() {
         ensureLoaded();
         return miscLogCleanerMaxCount;
+    }
+
+    public static boolean isMiscDisableJoinMessage() {
+        ensureLoaded();
+        return miscDisableJoinMessage;
+    }
+
+    public static boolean isMiscDisableQuitMessage() {
+        ensureLoaded();
+        return miscDisableQuitMessage;
     }
 
     public static boolean isFixesDisableUnacknowledgedChatKick() {

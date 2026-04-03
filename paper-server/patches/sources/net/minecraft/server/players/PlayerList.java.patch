@@ -130,7 +130,7 @@
 +
 +        final net.kyori.adventure.text.Component jm = playerJoinEvent.joinMessage();
 +
-+        if (jm != null && !jm.equals(net.kyori.adventure.text.Component.empty())) { // Paper - Adventure
++        if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isMiscDisableJoinMessage() && jm != null && !jm.equals(net.kyori.adventure.text.Component.empty())) { // Paper - Adventure
 +            joinMessage = io.papermc.paper.adventure.PaperAdventure.asVanilla(jm); // Paper - Adventure
 +            this.server.getPlayerList().broadcastSystemMessage(joinMessage, false); // Paper - Adventure
 +        }
@@ -266,7 +266,7 @@
              }
  
              @Override
-@@ -290,56 +_,137 @@
+@@ -290,56 +_,140 @@
      }
  
      protected void save(ServerPlayer player) {
@@ -396,6 +396,9 @@
 +        // This removes the scoreboard (and player reference) for the specific player in the manager
 +        this.cserver.getScoreboardManager().removePlayer(player.getBukkitEntity());
 +        // CraftBukkit end
++        if (org.ulyxspigot.ulyxspigot.UlyxConfig.isMiscDisableQuitMessage()) {
++            return null;
++        }
 +        return playerQuitEvent.quitMessage(); // Paper - Adventure
 +    }
 +
