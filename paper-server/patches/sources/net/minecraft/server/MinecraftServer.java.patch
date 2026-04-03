@@ -1043,8 +1043,18 @@
              ObjectArrayList<NameAndId> list = new ObjectArrayList<>(min);
              int randomInt = Mth.nextInt(this.random, 0, players.size() - min);
  
-@@ -1121,18 +_,77 @@
-     protected void tickChildren(BooleanSupplier hasTimeLeft) {
+@@ -1121,16 +_,95 @@
++    private void tickLevel(ServerLevel serverLevel, BooleanSupplier hasTimeLeft) {
++        try {
++            serverLevel.tick(hasTimeLeft);
++        } catch (Throwable levelTickingException) {
++            CrashReport crashReport = CrashReport.forThrowable(levelTickingException, "Exception ticking world");
++            serverLevel.fillReportDetails(crashReport);
++            throw new ReportedException(crashReport);
++        }
++    }
++
++    protected void tickChildren(BooleanSupplier hasTimeLeft) {
          ProfilerFiller profilerFiller = Profiler.get();
          this.getPlayerList().getPlayers().forEach(serverPlayer1 -> serverPlayer1.connection.suspendFlushing());
 +        this.server.getScheduler().mainThreadHeartbeat(); // CraftBukkit
@@ -1106,7 +1116,8 @@
 +        }
 +
 +        this.isIteratingOverLevels = true; // Paper - Throw exception on world create while being ticked
-         for (ServerLevel serverLevel : this.getAllLevels()) {
++        final java.util.ArrayList<java.util.concurrent.Future<?>> ulyxParallelWorldTicks = new java.util.ArrayList<>();
++        for (ServerLevel serverLevel : this.getAllLevels()) {
 +            serverLevel.hasPhysicsEvent = org.bukkit.event.block.BlockPhysicsEvent.getHandlerList().getRegisteredListeners().length > 0; // Paper - BlockPhysicsEvent
 +            serverLevel.hasEntityMoveEvent = io.papermc.paper.event.entity.EntityMoveEvent.getHandlerList().getRegisteredListeners().length > 0; // Paper - Add EntityMoveEvent
 +            serverLevel.updateLagCompensationTick(); // Paper - lag compensation
@@ -1120,13 +1131,26 @@
 +            // CraftBukkit end */
  
              profilerFiller.push("tick");
++            if (org.ulyxspigot.ulyxspigot.async.UlyxAsyncWorldTicking.isEnabled()) {
++                final ServerLevel ulyxLevel = serverLevel;
++                ulyxParallelWorldTicks.add(org.ulyxspigot.ulyxspigot.async.UlyxAsyncWorldTicking.submit(() -> this.tickLevel(ulyxLevel, hasTimeLeft)));
++                profilerFiller.pop();
++                profilerFiller.pop();
++                continue;
++            }
  
-@@ -1146,7 +_,9 @@
+@@ -1146,7 +_,15 @@
  
              profilerFiller.pop();
              profilerFiller.pop();
 +            serverLevel.explosionDensityCache.clear(); // Paper - Optimize explosions
          }
++        if (!ulyxParallelWorldTicks.isEmpty()) {
++            org.ulyxspigot.ulyxspigot.async.UlyxAsyncWorldTicking.joinAll(ulyxParallelWorldTicks);
++            for (ServerLevel serverLevel : this.getAllLevels()) {
++                serverLevel.explosionDensityCache.clear();
++            }
++        }
 +        this.isIteratingOverLevels = false; // Paper - Throw exception on world create while being ticked
  
          profilerFiller.popPush("connection");

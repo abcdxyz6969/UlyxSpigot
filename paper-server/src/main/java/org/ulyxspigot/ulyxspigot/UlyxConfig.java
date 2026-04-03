@@ -21,6 +21,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.ulyxspigot.ulyxspigot.async.UlyxAsyncDataSaving;
 import org.ulyxspigot.ulyxspigot.async.UlyxAsyncInventoryUpdates;
 import org.ulyxspigot.ulyxspigot.async.UlyxAsyncPacketSending;
+import org.ulyxspigot.ulyxspigot.async.UlyxAsyncWorldTicking;
 import org.ulyxspigot.ulyxspigot.async.UlyxAsyncPathfinding;
 import org.ulyxspigot.ulyxspigot.async.UlyxAsyncTracker;
 import org.ulyxspigot.ulyxspigot.virtual.UlyxVirtualThreadDispatcher;
@@ -45,6 +46,8 @@ public final class UlyxConfig {
     private static boolean asyncDataSavingEnabled = true;
     private static boolean asyncInventoryUpdatesEnabled = false;
     private static boolean asyncPacketSendingEnabled = false;
+    private static boolean asyncWorldTickingEnabled = false;
+    private static int asyncWorldTickingThreads = 0;
 
     private static boolean experimentalReducePlayerChunkSourceUpdates = true;
     private static boolean experimentalReduceChunkMidTickTaskExecution = true;
@@ -261,6 +264,7 @@ public final class UlyxConfig {
             UlyxAsyncTracker.reconfigure(asyncTrackerEnabled);
             UlyxAsyncPathfinding.reconfigure(asyncPathfindingEnabled, asyncPathfindingThreads);
             UlyxAsyncPacketSending.reconfigure(asyncPacketSendingEnabled);
+            UlyxAsyncWorldTicking.reconfigure(asyncWorldTickingEnabled, asyncWorldTickingThreads);
             UlyxAsyncDataSaving.reconfigure(asyncDataSavingEnabled);
             UlyxAsyncInventoryUpdates.reconfigure(asyncInventoryUpdatesEnabled);
             asyncSystemsConfigured = true;
@@ -304,6 +308,8 @@ public final class UlyxConfig {
         asyncDataSavingEnabled = getBoolean("asynchronous.data-saving.enabled", asyncDataSavingEnabled);
         asyncInventoryUpdatesEnabled = getBoolean("asynchronous.inventory-updates.enabled", asyncInventoryUpdatesEnabled);
         asyncPacketSendingEnabled = getBoolean("asynchronous.packet-sending.enabled", asyncPacketSendingEnabled);
+        asyncWorldTickingEnabled = getBoolean("asynchronous.world-ticking.enabled", asyncWorldTickingEnabled);
+        asyncWorldTickingThreads = Math.max(0, getInt("asynchronous.world-ticking.threads", asyncWorldTickingThreads));
 
         experimentalReducePlayerChunkSourceUpdates = getBoolean("experimental.reducePlayerChunkSourceUpdates", experimentalReducePlayerChunkSourceUpdates);
         experimentalReduceChunkMidTickTaskExecution = getBoolean("experimental.reduceChunkMidTickTaskExecution", experimentalReduceChunkMidTickTaskExecution);
@@ -516,6 +522,16 @@ public final class UlyxConfig {
     public static boolean isAsyncPacketSendingEnabled() {
         ensureLoaded();
         return asyncPacketSendingEnabled;
+    }
+
+    public static boolean isAsyncWorldTickingEnabled() {
+        ensureLoaded();
+        return asyncWorldTickingEnabled;
+    }
+
+    public static int getAsyncWorldTickingThreads() {
+        ensureLoaded();
+        return asyncWorldTickingThreads;
     }
 
     public static boolean isExperimentalReducePlayerChunkSourceUpdates() {

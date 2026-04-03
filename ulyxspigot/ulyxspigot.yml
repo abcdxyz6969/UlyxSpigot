@@ -30,6 +30,14 @@ asynchronous:
     # Optimizes packet sending through multiple threads.
     # Recommended value: false
     enabled: false
+  world-ticking:
+    # Ticks worlds in parallel using asynchronous tick worker threads.
+    # This is highly experimental and can break plugins not designed for parallel world ticking.
+    # Recommended value: false
+    enabled: false
+    # Configure the maximum amount of threads for world ticking.
+    # 0 = available processor / 2.
+    threads: 0
 
 behavior:
   # Allows the Bukkit API to teleport entities with passengers.
@@ -199,6 +207,8 @@ experimental:
   # Disables the Paper chunk load version check (This allows, for example, to load chunks from 1.20.2 to 1.20.1).
   # Requires restart while enabled; /ulyx reload is blocked until this is false.
   disableChunkNewerVersionLoadCheck: false
+  # Pre-starts Ulyx virtual thread workers at startup (instead of creating them on first use).
+  prestartVirtualThreads: false
 
 developer:
   # Allows the recalculation of out of bounds region files to allow instantaneous region pasting.
@@ -210,6 +220,8 @@ developer:
   # Skips world session.lock file validation
   # Requires restart while enabled; /ulyx reload is blocked until this is false.
   disableSessionLockFile: false
+  # Enables thread inspection commands /threadslist and /thread.
+  enable-threads-command: false
 
 misc:
   log-cleaner:
