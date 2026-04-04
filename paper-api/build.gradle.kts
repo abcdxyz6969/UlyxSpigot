@@ -243,6 +243,14 @@ tasks.compileTestJava {
     options.compilerArgs.add("-parameters")
 }
 
+tasks.withType<org.gradle.api.tasks.compile.JavaCompile>().configureEach {
+    options.compilerArgs.add("--add-modules=jdk.incubator.vector")
+}
+
+tasks.withType<org.gradle.api.tasks.testing.Test>().configureEach {
+    jvmArgs("--add-modules=jdk.incubator.vector")
+}
+
 val scanJarForBadCalls by tasks.registering(io.papermc.paperweight.tasks.ScanJarForBadCalls::class) {
     badAnnotations.add("Lio/papermc/paper/annotation/DoNotUse;")
     jarToScan.set(tasks.jar.flatMap { it.archiveFile })

@@ -11,6 +11,7 @@ import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.PluginManager;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;
+import gg.pufferfish.pufferfish.PufferfishConfig;
 import org.ulyxspigot.ulyxspigot.UlyxConfig;
 import org.ulyxspigot.ulyxspigot.async.UlyxAsyncWorldTicking;
 
@@ -85,7 +86,8 @@ public final class UlyxCommand extends Command {
                 }
 
                 UlyxConfig.reload();
-                sender.sendMessage(text("[UlyxSpigot] Reloaded ulyxspigot/ulyxspigot.yml", GREEN));
+                PufferfishConfig.reload();
+                sender.sendMessage(text("[UlyxSpigot] Reloaded ulyxspigot/ulyxspigot.yml and pufferfish.yml", GREEN));
             } catch (Throwable throwable) {
                 sender.sendMessage(text("[UlyxSpigot] Reload failed. Check console for details.", RED));
                 Bukkit.getLogger().severe("[UlyxSpigot] Failed to reload config via /ulyx reload: " + throwable.getMessage());

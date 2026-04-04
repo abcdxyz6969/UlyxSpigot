@@ -65,11 +65,28 @@
          if (this.isAlive() && this.level() instanceof ServerLevel serverLevel1) {
              boolean flag = this instanceof Player;
 -            if (this.isInWall()) {
-+            if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableEntitySuffocationCheck() && this.isInWall()) {
++            if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableEntitySuffocationCheck() && this.shouldCheckForSuffocation() && this.isInWall()) {
                  this.hurtServer(serverLevel1, this.damageSources().inWall(), 1.0F);
 -            } else if (flag && !serverLevel1.getWorldBorder().isWithinBounds(this.getBoundingBox())) {
 +            } else if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableEntityWorldBorderDamageCheck() && flag && !serverLevel1.getWorldBorder().isWithinBounds(this.getBoundingBox())) {
                  double d = serverLevel1.getWorldBorder().getDistanceToBorder(this) + serverLevel1.getWorldBorder().getSafeZone();
+@@ -525,6 +_,19 @@
+         return this.getAirSupply() <= -20;
+     }
+
++    // Pufferfish start - optimize suffocation
++    public boolean couldPossiblyBeHurt(float amount) {
++        if ((float) this.invulnerableTime > (float) this.invulnerableDuration / 2.0F && amount <= this.lastHurt) {
++            return false;
++        }
++        return true;
++    }
++
++    public boolean shouldCheckForSuffocation() {
++        return !gg.pufferfish.pufferfish.PufferfishConfig.isEnableSuffocationOptimization() || (this.tickCount % 10 == 0 && this.couldPossiblyBeHurt(1.0F));
++    }
++    // Pufferfish end
++
 @@ -556,7 +_,7 @@
          this.deathTime++;
          if (this.deathTime >= 20 && !this.level().isClientSide() && !this.isRemoved()) {

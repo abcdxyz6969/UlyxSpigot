@@ -1,5 +1,25 @@
 --- a/net/minecraft/world/entity/ai/attributes/AttributeMap.java
 +++ b/net/minecraft/world/entity/ai/attributes/AttributeMap.java
+@@ -18,9 +_,11 @@
+     private final Set<AttributeInstance> attributesToSync = new ObjectOpenHashSet<>();
+     private final Set<AttributeInstance> attributesToUpdate = new ObjectOpenHashSet<>();
+     private final AttributeSupplier supplier;
++    private final java.util.function.Function<Holder<Attribute>, AttributeInstance> createInstance; // Pufferfish
+ 
+     public AttributeMap(AttributeSupplier supplier) {
+         this.supplier = supplier;
++        this.createInstance = holder -> this.supplier.createInstance(this::onAttributeModified, holder); // Pufferfish
+     }
+@@ -42,9 +_,10 @@
+         return this.attributes.values().stream().filter(instance -> instance.getAttribute().value().isClientSyncable()).collect(Collectors.toList());
+     }
+ 
+     
+     public AttributeInstance getInstance(Holder<Attribute> attribute) {
+-        return this.attributes.computeIfAbsent(attribute, holder -> this.supplier.createInstance(this::onAttributeModified, (Holder<Attribute>)holder));
++        return this.attributes.computeIfAbsent(attribute, createInstance);
+     }
+ 
 @@ -147,4 +_,12 @@
              }
          }

@@ -255,6 +255,7 @@ import org.bukkit.structure.StructureManager;
 import org.bukkit.util.permissions.DefaultPermissions;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import gg.pufferfish.pufferfish.PufferfishConfig;
 import org.ulyxspigot.ulyxspigot.UlyxConfig;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
@@ -413,6 +414,7 @@ public final class CraftServer implements Server {
 
         Bukkit.setServer(this);
         UlyxConfig.ensureLoaded();
+        PufferfishConfig.ensureLoaded();
         // Paper start
         this.commandMap = new CraftCommandMap(this);
         this.pluginManager = new SimplePluginManager(this, commandMap);

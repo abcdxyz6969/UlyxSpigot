@@ -22,7 +22,7 @@
                          level.addFreshEntity(endCrystal);
                          level.gameEvent(context.getPlayer(), GameEvent.ENTITY_PLACE, blockPos);
                          EndDragonFight dragonFight = ((ServerLevel)level).getDragonFight();
-                         if (dragonFight != null) {
+                         if (dragonFight != null && gg.pufferfish.pufferfish.PufferfishConfig.isAllowEndCrystalRespawn()) { // Pufferfish
 -                            dragonFight.tryRespawn();
 +                            dragonFight.tryRespawn(aboveBlockPos); // Paper - Perf: Do crystal-portal proximity check before entity lookup
                          }

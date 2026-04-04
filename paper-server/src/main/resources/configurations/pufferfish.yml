@@ -1,0 +1,26 @@
+# Pufferfish compatibility configuration for UlyxSpigot.
+# Only a subset is currently active. More options can be mapped gradually.
+
+info:
+  version: "1.0"
+
+# If true, server may run faster after lag spikes to catch up.
+tps-catchup: true
+
+# Whether or not books should be writable.
+enable-books: true
+
+# Optimizes the suffocation check in a way that can slightly differ from strict vanilla.
+enable-suffocation-optimization: true
+
+# Throttles AI goal selector during inactive ticks.
+inactive-goal-selector-throttle: true
+
+# Allows end crystals to respawn the dragon.
+allow-end-crystal-respawn: true
+
+projectile:
+  # How many chunks are allowed to be sync-loaded by projectiles per tick.
+  max-loads-per-tick: 10
+  # How many chunks a projectile can load in its lifetime before removal.
+  max-loads-per-projectile: 10
