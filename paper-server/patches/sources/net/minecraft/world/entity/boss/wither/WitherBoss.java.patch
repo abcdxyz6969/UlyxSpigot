@@ -8,10 +8,10 @@
      public final ServerBossEvent bossEvent = (ServerBossEvent)new ServerBossEvent(
              this.getDisplayName(), BossEvent.BossBarColor.PURPLE, BossEvent.BossBarOverlay.PROGRESS
          )
-@@ -137,6 +_,13 @@
+@@ -137,3 +_,10 @@
          this.bossEvent.setName(this.getDisplayName());
      }
-
+ 
 +    // Pufferfish start - optimize suffocation
 +    @Override
 +    public boolean shouldCheckForSuffocation() {

@@ -614,7 +614,7 @@
              if (!merchantMenu.stillValid(this.player)) {
                  LOGGER.debug("Player {} interacted with invalid menu {}", this.player, merchantMenu);
                  return;
-@@ -944,6 +_,51 @@
+@@ -944,6 +_,52 @@
  
      @Override
      public void handleEditBook(ServerboundEditBookPacket packet) {

@@ -8,7 +8,7 @@
  
      protected Projectile(EntityType<? extends Projectile> type, Level level) {
          super(type, level);
-@@ -51,12 +_,55 @@
+@@ -51,12 +_,57 @@
  
 +    // Pufferfish start - reduce projectile chunk loading
 +    private static int loadedThisTick = 0;

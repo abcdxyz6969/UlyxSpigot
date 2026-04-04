@@ -70,10 +70,10 @@
 -            } else if (flag && !serverLevel1.getWorldBorder().isWithinBounds(this.getBoundingBox())) {
 +            } else if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableEntityWorldBorderDamageCheck() && flag && !serverLevel1.getWorldBorder().isWithinBounds(this.getBoundingBox())) {
                  double d = serverLevel1.getWorldBorder().getDistanceToBorder(this) + serverLevel1.getWorldBorder().getSafeZone();
-@@ -525,6 +_,19 @@
+@@ -525,3 +_,16 @@
          return this.getAirSupply() <= -20;
      }
-
+ 
 +    // Pufferfish start - optimize suffocation
 +    public boolean couldPossiblyBeHurt(float amount) {
 +        if ((float) this.invulnerableTime > (float) this.invulnerableDuration / 2.0F && amount <= this.lastHurt) {
