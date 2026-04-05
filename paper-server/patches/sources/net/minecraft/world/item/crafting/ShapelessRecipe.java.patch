@@ -36,7 +36,7 @@
      @Override
      public RecipeSerializer<ShapelessRecipe> getSerializer() {
          return RecipeSerializer.SHAPELESS_RECIPE;
-@@ -72,3 +_,29 @@
+@@ -72,6 +_,28 @@
  
      @Override
      public boolean matches(CraftingInput input, Level level) {

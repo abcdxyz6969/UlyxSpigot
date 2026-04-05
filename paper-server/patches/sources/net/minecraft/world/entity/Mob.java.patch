@@ -46,7 +46,7 @@
      protected void registerGoals() {
      }
  
-@@ -222,11 +_,12 @@
+@@ -222,10 +_,12 @@
      @Override
      public void inactiveTick() {
          super.inactiveTick();

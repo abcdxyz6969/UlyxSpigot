@@ -9,7 +9,7 @@
              if (!level.isEmptyBlock(blockPos)) {
                  return InteractionResult.FAIL;
              } else {
-@@ -41,11 +_,17 @@
+@@ -41,10 +_,16 @@
                      if (level instanceof ServerLevel) {
                          EndCrystal endCrystal = new EndCrystal(level, d + 0.5, d1, d2 + 0.5);
                          endCrystal.setShowBottom(false);
@@ -23,8 +23,6 @@
                          level.gameEvent(context.getPlayer(), GameEvent.ENTITY_PLACE, blockPos);
                          EndDragonFight dragonFight = ((ServerLevel)level).getDragonFight();
                          if (dragonFight != null && gg.pufferfish.pufferfish.PufferfishConfig.isAllowEndCrystalRespawn()) { // Pufferfish
--                            dragonFight.tryRespawn();
-+                            dragonFight.tryRespawn(aboveBlockPos); // Paper - Perf: Do crystal-portal proximity check before entity lookup
                          }
                      }
  

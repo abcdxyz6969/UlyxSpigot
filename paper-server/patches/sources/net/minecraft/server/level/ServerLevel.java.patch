@@ -295,17 +295,18 @@
          if (hasActiveTickets) {
              this.resetEmptyTime();
          }
-@@ -498,11 +_,13 @@
+@@ -498,11 +_,14 @@
          ProfilerFiller profilerFiller = Profiler.get();
          profilerFiller.push("iceandsnow");
  
-+        if (!this.paperConfig().environment.disableIceAndSnow) { // Paper - Option to disable ice and snow
++        final int ulyxPrecipitationInterval = org.ulyxspigot.ulyxspigot.UlyxConfig.getPerformanceTickingWorldTicksBetweenPrecipitationUpdates();
++        if (!this.paperConfig().environment.disableIceAndSnow && (ulyxPrecipitationInterval <= 1 || this.getGameTime() % ulyxPrecipitationInterval == 0L)) { // Paper - Option to disable ice and snow
          for (int i = 0; i < randomTickSpeed; i++) {
              if (this.random.nextInt(48) == 0) {
                  this.tickPrecipitation(this.getBlockRandomPos(minBlockX, 0, minBlockZ, 15));
              }
          }
-+        } // Paper - Option to disable ice and snow
++        }
  
          profilerFiller.popPush("tickBlocks");
          if (randomTickSpeed > 0) {

@@ -134,6 +134,8 @@ public final class UlyxConfig {
     private static boolean performanceDisableSpawnerChunkTickIteration = true;
     private static int performanceTickingWorldTicksBetweenRaidTicking = 1;
     private static int performanceTickingWorldTicksBetweenStatisticUpdate = 20;
+    private static int performanceTickingWorldTicksBetweenPrecipitationUpdates = 5;
+    private static int performanceTickingWorldTicksBetweenChunkUpdate = 1;
     private static boolean performanceDisableBukkitVanishAPI = false;
 
     private static boolean behaviorAllowTeleportationWithPassengers = false;
@@ -411,6 +413,8 @@ public final class UlyxConfig {
         performanceDisableSpawnerChunkTickIteration = getBoolean("performance.disableSpawnerChunkTickIteration", performanceDisableSpawnerChunkTickIteration);
         performanceTickingWorldTicksBetweenRaidTicking = Math.max(1, getInt("performance.ticking.world.ticksBetweenRaidTicking", performanceTickingWorldTicksBetweenRaidTicking));
         performanceTickingWorldTicksBetweenStatisticUpdate = Math.max(1, getInt("performance.ticking.world.ticksBetweenStatisticUpdate", performanceTickingWorldTicksBetweenStatisticUpdate));
+        performanceTickingWorldTicksBetweenPrecipitationUpdates = Math.max(1, getInt("performance.ticking.world.ticksBetweenPrecipitationUpdates", performanceTickingWorldTicksBetweenPrecipitationUpdates));
+        performanceTickingWorldTicksBetweenChunkUpdate = Math.max(1, getInt("performance.ticking.world.ticksBetweenChunkUpdate", performanceTickingWorldTicksBetweenChunkUpdate));
         performanceDisableBukkitVanishAPI = getBoolean("performance.disableBukkitVanishAPI", performanceDisableBukkitVanishAPI);
 
         behaviorAllowTeleportationWithPassengers = getBoolean("behavior.allowTeleportationWithPassengers", behaviorAllowTeleportationWithPassengers);
@@ -932,6 +936,16 @@ public final class UlyxConfig {
     public static int getPerformanceTickingWorldTicksBetweenStatisticUpdate() {
         ensureLoaded();
         return performanceTickingWorldTicksBetweenStatisticUpdate;
+    }
+
+    public static int getPerformanceTickingWorldTicksBetweenPrecipitationUpdates() {
+        ensureLoaded();
+        return performanceTickingWorldTicksBetweenPrecipitationUpdates;
+    }
+
+    public static int getPerformanceTickingWorldTicksBetweenChunkUpdate() {
+        ensureLoaded();
+        return performanceTickingWorldTicksBetweenChunkUpdate;
     }
 
     public static boolean isPerformanceDisableBukkitVanishAPI() {

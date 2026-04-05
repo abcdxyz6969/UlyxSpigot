@@ -130,7 +130,7 @@
      }
  
      @Override
-@@ -309,17 +_,39 @@
+@@ -309,17 +_,45 @@
  
      @Override
      public void close() throws IOException {
@@ -165,6 +165,12 @@
 +
      @Override
      public void tick(BooleanSupplier hasTimeLeft, boolean tickChunks) {
++        if (tickChunks) {
++            final int ulyxChunkUpdateInterval = org.ulyxspigot.ulyxspigot.UlyxConfig.getPerformanceTickingWorldTicksBetweenChunkUpdate();
++            if (ulyxChunkUpdateInterval > 1 && this.level.getGameTime() % ulyxChunkUpdateInterval != 0L) {
++                tickChunks = false;
++            }
++        }
          ProfilerFiller profilerFiller = Profiler.get();
          profilerFiller.push("purge");
 -        if (this.level.tickRateManager().runsNormally() || !tickChunks) {

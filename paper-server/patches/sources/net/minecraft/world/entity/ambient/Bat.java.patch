@@ -34,7 +34,7 @@
                  this.setResting(true);
              }
          }
-@@ -202,8 +_,8 @@
+@@ -202,7 +_,7 @@
          if (this.isInvulnerableTo(level, damageSource)) {
              return false;
          } else {
@@ -44,7 +44,7 @@
              }
  
  
-@@ -246,9 +_,18 @@
+@@ -246,12 +_,21 @@
          }
      }
  

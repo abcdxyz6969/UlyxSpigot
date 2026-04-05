@@ -919,15 +919,19 @@
          this.mayHaveDelayedTasks = flag;
          return flag;
      }
-@@ -929,15 +_,16 @@
+@@ -929,15 +_,20 @@
          if (super.pollTask()) {
              return true;
          } else {
++            final boolean ulyxReduceChunkMidTick = org.ulyxspigot.ulyxspigot.UlyxConfig.isExperimentalReduceChunkMidTickTaskExecution();
 +            boolean ret = false; // Paper - force execution of all worlds, do not just bias the first
              if (this.tickRateManager.isSprinting() || this.shouldRunAllTasks() || this.haveTime()) {
                  for (ServerLevel serverLevel : this.getAllLevels()) {
                      if (serverLevel.getChunkSource().pollTask()) {
 -                        return true;
++                        if (ulyxReduceChunkMidTick) {
++                            return true;
++                        }
 +                        ret = true; // Paper - force execution of all worlds, do not just bias the first
                      }
                  }
