@@ -27,7 +27,6 @@
      private Leashable.@Nullable LeashData leashData;
      private BlockPos homePosition = BlockPos.ZERO;
      private int homeRadius = -1;
-+    int _pufferfish_inactiveTickDisableCounter = 0; // Pufferfish - throttle inactive goal selector ticking
 +    public boolean aware = true; // CraftBukkit
 +    public net.kyori.adventure.util.TriState despawnInPeacefulOverride = net.kyori.adventure.util.TriState.NOT_SET; // Paper - allow changing despawnInPeaceful
  
@@ -45,14 +44,6 @@
 +
      protected void registerGoals() {
      }
- 
-@@ -225,5 +_,6 @@
-     public void inactiveTick() {
-         super.inactiveTick();
--        if (this.goalSelector.inactiveTick()) {
-+        boolean isThrottled = gg.pufferfish.pufferfish.PufferfishConfig.isInactiveGoalSelectorThrottle() && this._pufferfish_inactiveTickDisableCounter++ % 20 != 0; // Pufferfish - throttle inactive goal selector ticking
-+        if (this.goalSelector.inactiveTick() && !isThrottled) {
-             this.goalSelector.tick();
  
 @@ -232,7 +_,39 @@
      }
