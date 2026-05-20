@@ -1,0 +1,12 @@
+--- a/net/minecraft/world/level/levelgen/structure/structures/MineshaftStructure.java
++++ b/net/minecraft/world/level/levelgen/structure/structures/MineshaftStructure.java
+@@ -117,7 +_,10 @@
+             structurePiecesBuilder.offsetPiecesVertically(j);
+             return j;
+         } else {
++            if (org.ulyxspigot.ulyxspigot.UlyxConfig.getBehaviorStructuresMineshaftMinYLevel() != -65) {
++                return structurePiecesBuilder.moveBelowSeaLevel(i, org.ulyxspigot.ulyxspigot.UlyxConfig.getBehaviorStructuresMineshaftMinYLevel(), random, 10);
++            }
+             return structurePiecesBuilder.moveBelowSeaLevel(i, chunkGenerator.getMinY(), random, 10);
+         }
+     }

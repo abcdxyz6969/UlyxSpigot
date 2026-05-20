@@ -31,6 +31,21 @@ public final class UlyxPacketFilters {
         return key != null && key.getPath().contains("step");
     }
 
+    public static boolean shouldBlockShieldSound(final Packet<?> packet) {
+        if (!(packet instanceof ClientboundSoundPacket) && !"ClientboundSoundEntityPacket".equals(packet.getClass().getSimpleName())) {
+            return false;
+        }
+
+        final Identifier key = resolveSoundKey(packet);
+        if (key == null) {
+            return false;
+        }
+
+        final String path = key.getPath();
+        return "item.shield.block".equals(path) || "item.shield.break".equals(path);
+    }
+
+
     public static boolean shouldBlockSpawnerParticles(final ServerLevel level, final Packet<?> packet) {
         if (!(packet instanceof ClientboundLevelParticlesPacket particlesPacket)) {
             return false;

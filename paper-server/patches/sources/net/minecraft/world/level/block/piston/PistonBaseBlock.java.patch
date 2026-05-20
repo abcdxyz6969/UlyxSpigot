@@ -63,7 +63,9 @@
 +                // Paper end - Protect Bedrock and End Portal/Frames from being destroyed
              }
  
-             level.playSound(null, pos, SoundEvents.PISTON_CONTRACT, SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.15F + 0.6F);
+             if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isSoundsDisablePistonSounds()) {
+                level.playSound(null, pos, SoundEvents.PISTON_CONTRACT, SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.15F + 0.6F);
+            }
 @@ -227,7 +_,7 @@
      }
  
@@ -163,3 +165,15 @@
                  blockStates[i++] = blockState1;
              }
  
+
+@@ -171,7 +_,9 @@
+                 level.blockUpdated(pos, movingPistonBlock);
+             }
+ 
+-            level.playSound(null, pos, SoundEvents.PISTON_EXTEND, SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.25F + 0.6F);
++            if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isSoundsDisablePistonSounds()) {
++                level.playSound(null, pos, SoundEvents.PISTON_EXTEND, SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.25F + 0.6F);
++            }
+         }
+ 
+         return true;

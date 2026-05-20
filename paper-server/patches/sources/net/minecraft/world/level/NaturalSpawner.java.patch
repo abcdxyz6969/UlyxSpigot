@@ -14,10 +14,14 @@
                      BlockPos blockPos = entity.blockPosition();
                      chunkGetter.query(ChunkPos.asLong(blockPos), chunk -> {
                          MobSpawnSettings.MobSpawnCost mobSpawnCost = getRoughBiome(blockPos, chunk).getMobSettings().getMobSpawnCost(entity.getType());
-@@ -100,17 +_,34 @@
+@@ -100,17 +_,39 @@
          return chunk.getNoiseBiome(QuartPos.fromBlock(pos.getX()), QuartPos.fromBlock(pos.getY()), QuartPos.fromBlock(pos.getZ())).value();
      }
  
++    public static NaturalSpawner.SpawnState createState(ServerLevel level, java.util.function.Supplier<NaturalSpawner.SpawnState> syncComputer) {
++        return org.ulyxspigot.ulyxspigot.async.UlyxAsyncMobSpawning.createState(level, syncComputer);
++    }
++
 +    // CraftBukkit start - add server
      public static List<MobCategory> getFilteredSpawningCategories(
 -        NaturalSpawner.SpawnState spawnState, boolean spawnFriendlies, boolean spawnEnemies, boolean spawnPassives

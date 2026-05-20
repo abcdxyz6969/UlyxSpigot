@@ -100,7 +100,10 @@
 +                        }
 +                    }
 +                    // Paper end - Fix items merging through walls
-                     this.tryToMerge(itemEntity);
+                     if (!org.ulyxspigot.ulyxspigot.limiters.UlyxItemMergeLimiter.tryAcquireMerge(this.level())) {
+                        break;
+                    }
+                    this.tryToMerge(itemEntity);
                      if (this.isRemoved()) {
                          break;
 @@ -209,7 +_,7 @@

@@ -1420,7 +1420,7 @@
 +
 +    // CraftBukkit start
 +    public boolean isDebugging() {
-+        return false;
++        return !org.ulyxspigot.ulyxspigot.UlyxConfig.isPerformanceDisableServerDebug() && LOGGER.isDebugEnabled();
 +    }
 +
 +    public static MinecraftServer getServer() {

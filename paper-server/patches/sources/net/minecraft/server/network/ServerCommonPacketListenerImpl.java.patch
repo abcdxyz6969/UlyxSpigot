@@ -220,6 +220,9 @@
 +            if (org.ulyxspigot.ulyxspigot.UlyxConfig.isSoundsDisableFootStepSounds() && org.ulyxspigot.ulyxspigot.network.UlyxPacketFilters.shouldBlockFootstepSound(packet)) {
 +                return;
 +            }
++            if (org.ulyxspigot.ulyxspigot.UlyxConfig.isSoundsDisableShieldSounds() && org.ulyxspigot.ulyxspigot.network.UlyxPacketFilters.shouldBlockShieldSound(packet)) {
++                return;
++            }
 +            if (org.ulyxspigot.ulyxspigot.UlyxConfig.isParticlesDisableSpawnerParticles() && org.ulyxspigot.ulyxspigot.network.UlyxPacketFilters.shouldBlockSpawnerParticles(serverGamePacketListener.player.level(), packet)) {
 +                return;
 +            }

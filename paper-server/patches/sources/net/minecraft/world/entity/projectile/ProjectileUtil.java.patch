@@ -1,0 +1,13 @@
+--- a/net/minecraft/world/entity/projectile/ProjectileUtil.java
++++ b/net/minecraft/world/entity/projectile/ProjectileUtil.java
+@@ -180,7 +_,13 @@
+     public static float computeMargin(Entity entity) {
+-        return Math.max(0.0F, Math.min(0.3F, (float)(entity.tickCount - 2) / 20.0F));
++        if (org.ulyxspigot.ulyxspigot.UlyxConfig.isBehaviorDisableProjectileMarginExpansion()) {
++            return 0.3F;
++        }
++
++        return Math.max(0.0F, Math.min(0.3F, (float)(entity.tickCount - 2) / 20.0F));
+     }
+ 
+     public static EntityHitResult getEntityHitResult(Level level, Entity projectile, Vec3 startVec, Vec3 endVec, AABB boundingBox, Predicate<Entity> filter, float margin) {

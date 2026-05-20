@@ -178,9 +178,14 @@
              this.ticketStorage.purgeStaleTickets(this.chunkMap);
          }
  
-@@ -375,12 +_,20 @@
-             naturalSpawnChunkCount, this.level.getAllEntities(), this::getFullChunk, new LocalMobCapCalculator(this.chunkMap)
-         );
+@@ -375,12 +_,24 @@
+-            naturalSpawnChunkCount, this.level.getAllEntities(), this::getFullChunk, new LocalMobCapCalculator(this.chunkMap)
+-        );
++            this.level,
++            () -> NaturalSpawner.createState(
++                naturalSpawnChunkCount, this.level.getAllEntities(), this::getFullChunk, new LocalMobCapCalculator(this.chunkMap)
++            )
++        );
          this.lastSpawnState = spawnState;
 -        boolean flag = this.level.getGameRules().get(GameRules.SPAWN_MOBS);
 +        boolean flag = this.level.getGameRules().get(GameRules.SPAWN_MOBS) && !this.level.players().isEmpty(); // CraftBukkit

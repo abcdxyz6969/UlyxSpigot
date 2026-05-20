@@ -26,6 +26,17 @@
      }
  
      private void playAngerSound() {
+@@ -145,7 +_,11 @@
+     }
+ 
+     private void playAngerSound() {
+-        this.playSound(SoundEvents.ZOMBIFIED_PIGLIN_ANGRY, this.getSoundVolume() * 2.0F, this.getVoicePitch() * 1.8F);
++        if (!org.ulyxspigot.ulyxspigot.UlyxConfig.isSoundsDisablePiglinAngerSound()) {
++            this.playSound(SoundEvents.ZOMBIFIED_PIGLIN_ANGRY, this.getSoundVolume() * 2.0F, this.getVoicePitch() * 1.8F);
++        }
+     }
+ 
+     @Override
 @@ -149,18 +_,27 @@
      }
  

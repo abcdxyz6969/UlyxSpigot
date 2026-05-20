@@ -6,6 +6,8 @@ config-version: 1
 # Brand name shown in server list ping and F3 brand info.
 server-brand-name-display: UlyxSpigot
 
+# Uses /spark tps output when running /tps command.
+use-spark-tps-at-tps-command: false
 asynchronous:
   tracker:
     # Enables Asynchronous Entity Tracker.
@@ -18,6 +20,14 @@ asynchronous:
     # Configure the maximum amount of threads for pathfinding.
     # 0 = available processor / 4.
     threads: 2
+  chunks-sending:
+    # Optimizes chunk packet sending through multiple threads.
+    # Recommended value: true
+    enabled: false
+  mob-spawning:
+    # Optimizes mob spawning through multiple threads.
+    # Recommended value: true
+    enabled: false
   data-saving:
     # Optimizes world/player data saving through multiple threads.
     # Recommended value: true
@@ -56,6 +66,8 @@ behavior:
   disableChatReporting: false
   # Disables entity portal tick handling (Affects players).
   disablePortalHandling: false
+  # Disables 1.21.6 projectile margin expansion logic.
+  disableProjectileMarginExpansion: false
   # Disables Spigot Activation Range System.
   disableActivationRange: false
   # Disables entity AI. Acts like Spigot's nerfSpawnerMobs but for all mobs.
@@ -96,6 +108,17 @@ behavior:
   disableSkyBrightnessUpdates: false
   # Disables dolphin treasure search goals.
   disableDolphinTreasureGoal: false
+  structures:
+    # Disables trial chambers structure generation.
+    disableTrialChambersGeneration: false
+    # Disables ancient debris structure generation.
+    disableAncientDebrisGeneration: false
+    # Allows controlling the minimum y level for mineshaft structures.
+    mineshaftMinYLevel: -65
+    # Allows controlling the minimum y level for stronghold structures.
+    strongholdMinYLevel: -65
+    # Allows controlling the maximum y level for stronghold structures.
+    strongholdMaxYLevel: 321
 
 load-chunks:
   # Specify which entities should load chunks when moving.
@@ -213,6 +236,12 @@ experimental:
   # Disables the Paper chunk load version check (This allows, for example, to load chunks from 1.20.2 to 1.20.1).
   # Requires restart while enabled; /ulyx reload is blocked until this is false.
   disableChunkNewerVersionLoadCheck: false
+  # Rewrites the block palette to be more compact which may reduce cache misses.
+  compactPalettes: false
+  # Allows changing the transport type used by Netty.
+  # Options: IO_URING, KQUEUE, EPOLL, NIO
+  # Recommended value: EPOLL
+  netty-transport-type: EPOLL
   # Pre-starts Ulyx virtual thread workers at startup (instead of creating them on first use).
   prestartVirtualThreads: false
 
@@ -242,6 +271,12 @@ misc:
   disableJoinMessage: false
   # Disables vanilla quit messages broadcast to all players.
   disableQuitMessage: false
+  sentry:
+    # Sentry DSN for improved error logging
+    dsn: ''
+    # Defines Sentry tags for easier data filter and sorting.
+    tags: []
+
 
 fixes:
   # Prevents tracking unacknowledged chat messages to avoid player kicks.
@@ -267,6 +302,10 @@ fixes:
 
 
 limiters:
+  item:
+    # Limits the amount of item merging attempts per tick.
+    # Recommended value: 100-200
+    max-merge-attempts-per-tick: -1
   redstone:
     # Enables Redstone Limiter.
     enabled: false
@@ -322,10 +361,17 @@ particles:
 sounds:
   # Disables shoulder entity ambient sound.
   disableShoulderEntityAmbientSound: false
+  # Disables piglin angry sound.
+  disablePiglinAngerSound: false
   # Disables entity footstep particle.
   disableFootStepSounds: false
   # Disables new combat sounds.
   disableNewCombatSounds: false
+  # Disables shield sounds.
+  disableShieldSounds: false
+  # Disables piston sounds.
+  disablePistonSounds: false
+
 
 performance:
   packet-reducer:
@@ -339,6 +385,31 @@ performance:
       enabled: true
       # Exempts invisible entities from fire packet reducing.
       ignore-invisible: true
+  # Optimises datapack operations.
+  # Recommended value: true
+  optimiseDataPacks: false
+  # Caches world configurations to reduce I/O operations.
+  cacheWorldConfigurations: false
+  # Disables server debug logging to improve performance.
+  # Recommended value: true
+  disableServerDebug: false
+  biome-seed:
+    # Optimises biome seed obfuscation by using a faster algorithm.
+    # Recommended value: true
+    enabled: false
+    # Defines the obfuscation key used for biome generation.
+    obfuscation-key: -5021727204291115347
+  dynamic-brain:
+    # Throttles entity brain logic based on distance to nearest player.
+    enabled: false
+    # Minimum distance before throttling starts.
+    minimum-distance: 12
+    # Max activation priority ticks for furthest entities.
+    maximum-activation-priority: 20
+    # Distance modifier used in activation frequency formula.
+    activation-distance-modifier: 9
+    # Entities excluded from dynamic brain logic.
+    disabled-entities: []
   # Disables the criterion trigger for achievements which can be heavier sometimes (Advancements will not work!).
   # Recommended value: true (causes lazy recipe suggestion updates)
   disableCriterionTrigger: true

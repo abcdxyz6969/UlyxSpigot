@@ -19,6 +19,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.ulyxspigot.ulyxspigot.async.UlyxAsyncDataSaving;
+import org.ulyxspigot.ulyxspigot.async.UlyxAsyncMobSpawning;
 import org.ulyxspigot.ulyxspigot.async.UlyxAsyncInventoryUpdates;
 import org.ulyxspigot.ulyxspigot.async.UlyxAsyncPacketSending;
 import org.ulyxspigot.ulyxspigot.async.UlyxAsyncWorldTicking;
@@ -43,6 +44,8 @@ public final class UlyxConfig {
     private static boolean asyncTrackerEnabled = true;
     private static boolean asyncPathfindingEnabled = true;
     private static int asyncPathfindingThreads = 2;
+    private static boolean asyncChunkSendingEnabled = false;
+    private static boolean asyncMobSpawningEnabled = false;
     private static boolean asyncDataSavingEnabled = true;
     private static boolean asyncInventoryUpdatesEnabled = false;
     private static boolean asyncPacketSendingEnabled = false;
@@ -54,6 +57,8 @@ public final class UlyxConfig {
     private static boolean experimentalReducePlayerChunkSourceUpdates = true;
     private static boolean experimentalReduceChunkMidTickTaskExecution = true;
     private static boolean experimentalDisableChunkNewerVersionLoadCheck = false;
+    private static boolean experimentalCompactPalettes = false;
+    private static String experimentalNettyTransportType = "EPOLL";
     private static boolean experimentalPrestartVirtualThreads = false;
 
     private static boolean developerRecalculateChunksOutOfBounds = false;
@@ -67,6 +72,8 @@ public final class UlyxConfig {
     private static int miscLogCleanerMaxCount = -1;
     private static boolean miscDisableJoinMessage = false;
     private static boolean miscDisableQuitMessage = false;
+    private static String miscSentryDsn = "";
+    private static List<String> miscSentryTags = List.of();
     private static volatile boolean startupLogCleanerExecuted;
 
     private static boolean fixesDisableUnacknowledgedChatKick = true;
@@ -88,6 +95,7 @@ public final class UlyxConfig {
     private static int limitersRedstoneMaxObserverPerTick = 2000;
     private static int limitersRedstoneMaxPistonPush = 12;
     private static Map<String, Integer> limitersRedstoneBlockThreshold = Map.of("OBSERVER", 2000);
+    private static int limitersItemMaxMergeAttemptsPerTick = -1;
     private static boolean limitersRemoveExcessMinecarts = true;
     private static boolean limitersRemoveExcessBoats = true;
     private static int limitersExcessMinecartsLimit = 5;
@@ -106,13 +114,26 @@ public final class UlyxConfig {
     private static boolean particlesDisableNewCombatParticles = false;
 
     private static boolean soundsDisableShoulderEntityAmbientSound = false;
+    private static boolean soundsDisablePiglinAngerSound = false;
     private static boolean soundsDisableFootStepSounds = false;
     private static boolean soundsDisableNewCombatSounds = false;
+    private static boolean soundsDisableShieldSounds = false;
+    private static boolean soundsDisablePistonSounds = false;
 
     private static boolean performancePacketReducerEnabled = true;
     private static boolean performancePacketReducerReduceHandSwingUpdates = true;
     private static boolean performancePacketReducerFirePacketsEnabled = true;
     private static boolean performancePacketReducerFirePacketsIgnoreInvisible = true;
+    private static boolean performanceOptimiseDataPacks = false;
+    private static boolean performanceCacheWorldConfigurations = false;
+    private static boolean performanceDisableServerDebug = false;
+    private static boolean performanceBiomeSeedEnabled = false;
+    private static long performanceBiomeSeedObfuscationKey = -5021727204291115347L;
+    private static boolean performanceDynamicBrainEnabled = false;
+    private static int performanceDynamicBrainMinimumDistance = 12;
+    private static int performanceDynamicBrainMaximumActivationPriority = 20;
+    private static int performanceDynamicBrainActivationDistanceModifier = 9;
+    private static List<String> performanceDynamicBrainDisabledEntities = List.of();
     private static boolean performanceOptimiseBlockEntities = true;
     private static boolean performanceVirtualThreadsEnabled = true;
     private static boolean performanceVirtualThreadsCommandLogging = false;
@@ -143,6 +164,7 @@ public final class UlyxConfig {
     private static boolean behaviorDisableWorldDataSaving = false;
     private static boolean behaviorDisableChatReporting = false;
     private static boolean behaviorDisablePortalHandling = false;
+    private static boolean behaviorDisableProjectileMarginExpansion = false;
     private static boolean behaviorDisableActivationRange = false;
     private static boolean behaviorDisableEntityAI = false;
     private static boolean behaviorDisableTurtleHelmetTicking = false;
@@ -163,6 +185,9 @@ public final class UlyxConfig {
     private static boolean behaviorDisableWeatherCycle = false;
     private static boolean behaviorDisableSkyBrightnessUpdates = false;
     private static boolean behaviorDisableDolphinTreasureGoal = false;
+    private static int behaviorStructuresMineshaftMinYLevel = -65;
+    private static int behaviorStructuresStrongholdMinYLevel = -65;
+    private static int behaviorStructuresStrongholdMaxYLevel = 321;
 
     private static List<String> loadChunksEntities = List.of("EXAMPLE");
     private static Set<String> loadChunksEntitiesSet = Set.of();
@@ -273,6 +298,7 @@ public final class UlyxConfig {
 
             UlyxAsyncTracker.reconfigure(asyncTrackerEnabled);
             UlyxAsyncPathfinding.reconfigure(asyncPathfindingEnabled, asyncPathfindingThreads);
+            UlyxAsyncMobSpawning.reconfigure(asyncMobSpawningEnabled);
             UlyxAsyncPacketSending.reconfigure(asyncPacketSendingEnabled);
             UlyxAsyncWorldTicking.reconfigure(asyncWorldTickingEnabled, asyncWorldTickingThreads);
             UlyxAsyncDataSaving.reconfigure(asyncDataSavingEnabled);
@@ -315,6 +341,8 @@ public final class UlyxConfig {
         asyncTrackerEnabled = getBoolean("asynchronous.tracker.enabled", asyncTrackerEnabled);
         asyncPathfindingEnabled = getBoolean("asynchronous.pathfinding.enabled", asyncPathfindingEnabled);
         asyncPathfindingThreads = Math.max(0, getInt("asynchronous.pathfinding.threads", asyncPathfindingThreads));
+        asyncChunkSendingEnabled = getBoolean("asynchronous.chunks-sending.enabled", asyncChunkSendingEnabled);
+        asyncMobSpawningEnabled = getBoolean("asynchronous.mob-spawning.enabled", asyncMobSpawningEnabled);
         asyncDataSavingEnabled = getBoolean("asynchronous.data-saving.enabled", asyncDataSavingEnabled);
         asyncInventoryUpdatesEnabled = getBoolean("asynchronous.inventory-updates.enabled", asyncInventoryUpdatesEnabled);
         asyncPacketSendingEnabled = getBoolean("asynchronous.packet-sending.enabled", asyncPacketSendingEnabled);
@@ -326,6 +354,8 @@ public final class UlyxConfig {
         experimentalReducePlayerChunkSourceUpdates = getBoolean("experimental.reducePlayerChunkSourceUpdates", experimentalReducePlayerChunkSourceUpdates);
         experimentalReduceChunkMidTickTaskExecution = getBoolean("experimental.reduceChunkMidTickTaskExecution", experimentalReduceChunkMidTickTaskExecution);
         experimentalDisableChunkNewerVersionLoadCheck = getBoolean("experimental.disableChunkNewerVersionLoadCheck", experimentalDisableChunkNewerVersionLoadCheck);
+        experimentalCompactPalettes = getBoolean("experimental.compactPalettes", experimentalCompactPalettes);
+        experimentalNettyTransportType = getString("experimental.netty-transport-type", experimentalNettyTransportType);
         experimentalPrestartVirtualThreads = getBoolean("experimental.prestartVirtualThreads", experimentalPrestartVirtualThreads);
 
         developerRecalculateChunksOutOfBounds = getBoolean("developer.recalculateChunksOutOfBounds", developerRecalculateChunksOutOfBounds);
@@ -339,6 +369,8 @@ public final class UlyxConfig {
         miscLogCleanerMaxCount = getInt("misc.log-cleaner.max-count", miscLogCleanerMaxCount);
         miscDisableJoinMessage = getBoolean("misc.disableJoinMessage", miscDisableJoinMessage);
         miscDisableQuitMessage = getBoolean("misc.disableQuitMessage", miscDisableQuitMessage);
+        miscSentryDsn = getString("misc.sentry.dsn", miscSentryDsn);
+        miscSentryTags = getStringList("misc.sentry.tags", miscSentryTags);
 
         fixesDisableUnacknowledgedChatKick = getBoolean("fixes.disableUnacknowledgedChatKick", fixesDisableUnacknowledgedChatKick);
         fixesFixPluginPlaceholderExploits = getBoolean("fixes.fixPluginPlaceholderExploits", fixesFixPluginPlaceholderExploits);
@@ -359,6 +391,7 @@ public final class UlyxConfig {
         limitersRedstoneMaxObserverPerTick = Math.max(0, getInt("limiters.redstone.maxObserverPerTick", limitersRedstoneMaxObserverPerTick));
         limitersRedstoneMaxPistonPush = Math.max(0, getInt("limiters.redstone.maxPistonPush", limitersRedstoneMaxPistonPush));
         limitersRedstoneBlockThreshold = parseKeyIntSection("limiters.redstone.block-threshold", limitersRedstoneBlockThreshold);
+        limitersItemMaxMergeAttemptsPerTick = getInt("limiters.item.max-merge-attempts-per-tick", limitersItemMaxMergeAttemptsPerTick);
         limitersRemoveExcessMinecarts = getBoolean("limiters.remove-excess.removeExcessMinecarts", limitersRemoveExcessMinecarts);
         limitersRemoveExcessBoats = getBoolean("limiters.remove-excess.removeExcessBoats", limitersRemoveExcessBoats);
         limitersExcessMinecartsLimit = Math.max(0, getInt("limiters.remove-excess.excessMinecartsLimit", limitersExcessMinecartsLimit));
@@ -377,13 +410,26 @@ public final class UlyxConfig {
         particlesDisableNewCombatParticles = getBoolean("particles.disableNewCombatParticles", particlesDisableNewCombatParticles);
 
         soundsDisableShoulderEntityAmbientSound = getBoolean("sounds.disableShoulderEntityAmbientSound", soundsDisableShoulderEntityAmbientSound);
+        soundsDisablePiglinAngerSound = getBoolean("sounds.disablePiglinAngerSound", soundsDisablePiglinAngerSound);
         soundsDisableFootStepSounds = getBoolean("sounds.disableFootStepSounds", soundsDisableFootStepSounds);
         soundsDisableNewCombatSounds = getBoolean("sounds.disableNewCombatSounds", soundsDisableNewCombatSounds);
+        soundsDisableShieldSounds = getBoolean("sounds.disableShieldSounds", soundsDisableShieldSounds);
+        soundsDisablePistonSounds = getBoolean("sounds.disablePistonSounds", soundsDisablePistonSounds);
 
         performancePacketReducerEnabled = getBoolean("performance.packet-reducer.enabled", performancePacketReducerEnabled);
         performancePacketReducerReduceHandSwingUpdates = getBoolean("performance.packet-reducer.reduceHandSwingUpdates", performancePacketReducerReduceHandSwingUpdates);
         performancePacketReducerFirePacketsEnabled = getBoolean("performance.packet-reducer.fire-packets.enabled", performancePacketReducerFirePacketsEnabled);
         performancePacketReducerFirePacketsIgnoreInvisible = getBoolean("performance.packet-reducer.fire-packets.ignore-invisible", performancePacketReducerFirePacketsIgnoreInvisible);
+        performanceOptimiseDataPacks = getBoolean("performance.optimiseDataPacks", performanceOptimiseDataPacks);
+        performanceCacheWorldConfigurations = getBoolean("performance.cacheWorldConfigurations", performanceCacheWorldConfigurations);
+        performanceDisableServerDebug = getBoolean("performance.disableServerDebug", performanceDisableServerDebug);
+        performanceBiomeSeedEnabled = getBoolean("performance.biome-seed.enabled", performanceBiomeSeedEnabled);
+        performanceBiomeSeedObfuscationKey = getLong("performance.biome-seed.obfuscation-key", performanceBiomeSeedObfuscationKey);
+        performanceDynamicBrainEnabled = getBoolean("performance.dynamic-brain.enabled", performanceDynamicBrainEnabled);
+        performanceDynamicBrainMinimumDistance = Math.max(0, getInt("performance.dynamic-brain.minimum-distance", performanceDynamicBrainMinimumDistance));
+        performanceDynamicBrainMaximumActivationPriority = Math.max(1, getInt("performance.dynamic-brain.maximum-activation-priority", performanceDynamicBrainMaximumActivationPriority));
+        performanceDynamicBrainActivationDistanceModifier = Math.max(0, getInt("performance.dynamic-brain.activation-distance-modifier", performanceDynamicBrainActivationDistanceModifier));
+        performanceDynamicBrainDisabledEntities = getStringList("performance.dynamic-brain.disabled-entities", performanceDynamicBrainDisabledEntities);
         performanceOptimiseBlockEntities = getBoolean("performance.optimiseBlockEntities", performanceOptimiseBlockEntities);
         performanceVirtualThreadsEnabled = getBoolean("performance.virtual-threads.enabled", performanceVirtualThreadsEnabled);
         performanceVirtualThreadsCommandLogging = getBoolean("performance.virtual-threads.command-logging", performanceVirtualThreadsCommandLogging);
@@ -422,6 +468,7 @@ public final class UlyxConfig {
         behaviorDisableWorldDataSaving = getBoolean("behavior.disableWorldDataSaving", behaviorDisableWorldDataSaving);
         behaviorDisableChatReporting = getBoolean("behavior.disableChatReporting", behaviorDisableChatReporting);
         behaviorDisablePortalHandling = getBoolean("behavior.disablePortalHandling", behaviorDisablePortalHandling);
+        behaviorDisableProjectileMarginExpansion = getBoolean("behavior.disableProjectileMarginExpansion", behaviorDisableProjectileMarginExpansion);
         behaviorDisableActivationRange = getBoolean("behavior.disableActivationRange", behaviorDisableActivationRange);
         behaviorDisableEntityAI = getBoolean("behavior.disableEntityAI", behaviorDisableEntityAI);
         behaviorDisableTurtleHelmetTicking = getBoolean("behavior.disableTurtleHelmetTicking", behaviorDisableTurtleHelmetTicking);
@@ -442,6 +489,9 @@ public final class UlyxConfig {
         behaviorDisableWeatherCycle = getBoolean("behavior.disableWeatherCycle", behaviorDisableWeatherCycle);
         behaviorDisableSkyBrightnessUpdates = getBoolean("behavior.disableSkyBrightnessUpdates", behaviorDisableSkyBrightnessUpdates);
         behaviorDisableDolphinTreasureGoal = getBoolean("behavior.disableDolphinTreasureGoal", behaviorDisableDolphinTreasureGoal);
+        behaviorStructuresMineshaftMinYLevel = getInt("behavior.structures.mineshaftMinYLevel", behaviorStructuresMineshaftMinYLevel);
+        behaviorStructuresStrongholdMinYLevel = getInt("behavior.structures.strongholdMinYLevel", behaviorStructuresStrongholdMinYLevel);
+        behaviorStructuresStrongholdMaxYLevel = getInt("behavior.structures.strongholdMaxYLevel", behaviorStructuresStrongholdMaxYLevel);
 
         loadChunksEntities = getStringList("load-chunks.entities", loadChunksEntities);
         waterSensitiveEntities = getStringList("water-sensitive.entities", waterSensitiveEntities);
@@ -527,6 +577,16 @@ public final class UlyxConfig {
         return asyncPathfindingThreads;
     }
 
+    public static boolean isAsyncChunkSendingEnabled() {
+        ensureLoaded();
+        return asyncChunkSendingEnabled;
+    }
+
+    public static boolean isAsyncMobSpawningEnabled() {
+        ensureLoaded();
+        return asyncMobSpawningEnabled;
+    }
+
     public static boolean isAsyncDataSavingEnabled() {
         ensureLoaded();
         return asyncDataSavingEnabled;
@@ -570,6 +630,16 @@ public final class UlyxConfig {
     public static boolean isExperimentalDisableChunkNewerVersionLoadCheck() {
         ensureLoaded();
         return experimentalDisableChunkNewerVersionLoadCheck;
+    }
+
+    public static boolean isExperimentalCompactPalettes() {
+        ensureLoaded();
+        return experimentalCompactPalettes;
+    }
+
+    public static String getExperimentalNettyTransportType() {
+        ensureLoaded();
+        return experimentalNettyTransportType;
     }
 
     public static boolean isExperimentalPrestartVirtualThreads() {
@@ -625,6 +695,16 @@ public final class UlyxConfig {
     public static boolean isMiscDisableQuitMessage() {
         ensureLoaded();
         return miscDisableQuitMessage;
+    }
+
+    public static String getMiscSentryDsn() {
+        ensureLoaded();
+        return miscSentryDsn;
+    }
+
+    public static List<String> getMiscSentryTags() {
+        ensureLoaded();
+        return miscSentryTags;
     }
 
     public static boolean isFixesDisableUnacknowledgedChatKick() {
@@ -720,6 +800,11 @@ public final class UlyxConfig {
         return limitersRedstoneBlockThreshold.getOrDefault(key.trim().toUpperCase(Locale.ROOT), -1);
     }
 
+    public static int getLimitersItemMaxMergeAttemptsPerTick() {
+        ensureLoaded();
+        return limitersItemMaxMergeAttemptsPerTick;
+    }
+
     public static boolean isLimitersRemoveExcessMinecarts() {
         ensureLoaded();
         return limitersRemoveExcessMinecarts;
@@ -803,6 +888,11 @@ public final class UlyxConfig {
         return soundsDisableShoulderEntityAmbientSound;
     }
 
+    public static boolean isSoundsDisablePiglinAngerSound() {
+        ensureLoaded();
+        return soundsDisablePiglinAngerSound;
+    }
+
     public static boolean isSoundsDisableFootStepSounds() {
         ensureLoaded();
         return soundsDisableFootStepSounds;
@@ -811,6 +901,16 @@ public final class UlyxConfig {
     public static boolean isSoundsDisableNewCombatSounds() {
         ensureLoaded();
         return soundsDisableNewCombatSounds;
+    }
+
+    public static boolean isSoundsDisableShieldSounds() {
+        ensureLoaded();
+        return soundsDisableShieldSounds;
+    }
+
+    public static boolean isSoundsDisablePistonSounds() {
+        ensureLoaded();
+        return soundsDisablePistonSounds;
     }
 
     public static boolean isPerformancePacketReducerEnabled() {
@@ -831,6 +931,56 @@ public final class UlyxConfig {
     public static boolean isPerformancePacketReducerFirePacketsIgnoreInvisible() {
         ensureLoaded();
         return performancePacketReducerFirePacketsIgnoreInvisible;
+    }
+
+    public static boolean isPerformanceOptimiseDataPacks() {
+        ensureLoaded();
+        return performanceOptimiseDataPacks;
+    }
+
+    public static boolean isPerformanceCacheWorldConfigurations() {
+        ensureLoaded();
+        return performanceCacheWorldConfigurations;
+    }
+
+    public static boolean isPerformanceDisableServerDebug() {
+        ensureLoaded();
+        return performanceDisableServerDebug;
+    }
+
+    public static boolean isPerformanceBiomeSeedEnabled() {
+        ensureLoaded();
+        return performanceBiomeSeedEnabled;
+    }
+
+    public static long getPerformanceBiomeSeedObfuscationKey() {
+        ensureLoaded();
+        return performanceBiomeSeedObfuscationKey;
+    }
+
+    public static boolean isPerformanceDynamicBrainEnabled() {
+        ensureLoaded();
+        return performanceDynamicBrainEnabled;
+    }
+
+    public static int getPerformanceDynamicBrainMinimumDistance() {
+        ensureLoaded();
+        return performanceDynamicBrainMinimumDistance;
+    }
+
+    public static int getPerformanceDynamicBrainMaximumActivationPriority() {
+        ensureLoaded();
+        return performanceDynamicBrainMaximumActivationPriority;
+    }
+
+    public static int getPerformanceDynamicBrainActivationDistanceModifier() {
+        ensureLoaded();
+        return performanceDynamicBrainActivationDistanceModifier;
+    }
+
+    public static List<String> getPerformanceDynamicBrainDisabledEntities() {
+        ensureLoaded();
+        return performanceDynamicBrainDisabledEntities;
     }
 
     public static boolean isPerformanceOptimiseBlockEntities() {
@@ -978,6 +1128,11 @@ public final class UlyxConfig {
         return behaviorDisablePortalHandling;
     }
 
+    public static boolean isBehaviorDisableProjectileMarginExpansion() {
+        ensureLoaded();
+        return behaviorDisableProjectileMarginExpansion;
+    }
+
     public static boolean isBehaviorDisableActivationRange() {
         ensureLoaded();
         return behaviorDisableActivationRange;
@@ -1076,6 +1231,21 @@ public final class UlyxConfig {
     public static boolean isBehaviorDisableDolphinTreasureGoal() {
         ensureLoaded();
         return behaviorDisableDolphinTreasureGoal;
+    }
+
+    public static int getBehaviorStructuresMineshaftMinYLevel() {
+        ensureLoaded();
+        return behaviorStructuresMineshaftMinYLevel;
+    }
+
+    public static int getBehaviorStructuresStrongholdMinYLevel() {
+        ensureLoaded();
+        return behaviorStructuresStrongholdMinYLevel;
+    }
+
+    public static int getBehaviorStructuresStrongholdMaxYLevel() {
+        ensureLoaded();
+        return behaviorStructuresStrongholdMaxYLevel;
     }
 
     public static List<String> getLoadChunksEntities() {
@@ -1528,6 +1698,11 @@ public final class UlyxConfig {
     private static int getInt(String path, int def) {
         config.addDefault(path, def);
         return config.getInt(path, def);
+    }
+
+    private static long getLong(String path, long def) {
+        config.addDefault(path, def);
+        return config.getLong(path, def);
     }
 
     private static double getDouble(String path, double def) {

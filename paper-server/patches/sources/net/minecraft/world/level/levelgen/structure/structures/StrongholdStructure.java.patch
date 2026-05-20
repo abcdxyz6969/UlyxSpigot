@@ -1,0 +1,12 @@
+--- a/net/minecraft/world/level/levelgen/structure/structures/StrongholdStructure.java
++++ b/net/minecraft/world/level/levelgen/structure/structures/StrongholdStructure.java
+@@ -78,8 +_,8 @@
+             list.remove(i1).addChildren(startPiece, structurePiecesBuilder, generationContext.random());
+         }
+ 
+-        int i = generationContext.chunkGenerator().getSeaLevel();
+-        int j = generationContext.chunkGenerator().getMinY();
++        int i = org.ulyxspigot.ulyxspigot.UlyxConfig.getBehaviorStructuresStrongholdMaxYLevel() == 321 ? generationContext.chunkGenerator().getSeaLevel() : org.ulyxspigot.ulyxspigot.UlyxConfig.getBehaviorStructuresStrongholdMaxYLevel();
++        int j = org.ulyxspigot.ulyxspigot.UlyxConfig.getBehaviorStructuresStrongholdMinYLevel() == -65 ? generationContext.chunkGenerator().getMinY() : org.ulyxspigot.ulyxspigot.UlyxConfig.getBehaviorStructuresStrongholdMinYLevel();
+         structurePiecesBuilder.moveBelowSeaLevel(i, j, generationContext.random(), 10);
+     }
