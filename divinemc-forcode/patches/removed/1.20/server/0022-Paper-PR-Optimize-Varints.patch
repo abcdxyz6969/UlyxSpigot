@@ -1,0 +1,85 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: NONPLAYT <76615486+NONPLAYT@users.noreply.github.com>
+Date: Mon, 12 Jun 2023 18:33:05 +0300
+Subject: [PATCH] Paper PR - Optimize Varints
+
+Original license: GPLv3
+Original project: https://github.com/PaperMC/Velocity
+Paper pull request: https://github.com/PaperMC/Paper/pull/8418
+UPD: it will be added back as soon as I figure out the minecraft network
+
+diff --git a/src/main/java/gq/bxteam/divinemc/configuration/DivineConfig.java b/src/main/java/gq/bxteam/divinemc/configuration/DivineConfig.java
+index 512afaa97e89e3beb92cf2ebc46248eddd22cf5c..50878e4948df45bc2928edbe373be639d133060f 100644
+--- a/src/main/java/gq/bxteam/divinemc/configuration/DivineConfig.java
++++ b/src/main/java/gq/bxteam/divinemc/configuration/DivineConfig.java
+@@ -162,4 +162,9 @@ public class DivineConfig {
+     private static void allowAnyUsername() {
+         allowAnyUsername = getBoolean("settings.player.allow-any-username", allowAnyUsername);
+     }
++
++    public static boolean doOptimizeVarints = true;
++    private static void doOptimizeVarints() {
++        doOptimizeVarints = getBoolean("settings.optimization.optimize-varints", doOptimizeVarints);
++    }
+ }
+\ No newline at end of file
+diff --git a/src/main/java/net/minecraft/network/FriendlyByteBuf.java b/src/main/java/net/minecraft/network/FriendlyByteBuf.java
+index 1f4b64a5f812376c499c98cb4be62469bd0b7dbe..2b1ae08ec33daedd0148f6731145a1d10a89277c 100644
+--- a/src/main/java/net/minecraft/network/FriendlyByteBuf.java
++++ b/src/main/java/net/minecraft/network/FriendlyByteBuf.java
+@@ -84,6 +84,8 @@ import org.joml.Vector3f;
+ 
+ import org.bukkit.craftbukkit.inventory.CraftItemStack; // CraftBukkit
+ 
++import gq.bxteam.divinemc.configuration.DivineConfig; // DivineMC
++
+ public class FriendlyByteBuf extends ByteBuf {
+ 
+     private static final int MAX_VARINT_SIZE = 5;
+@@ -104,7 +106,22 @@ public class FriendlyByteBuf extends ByteBuf {
+         this.source = parent;
+     }
+ 
++    // DivineMC start - Optimize varints
++    private static final int[] VARINT_EXACT_BYTE_LENGTHS = new int[33];
++    static {
++        for (int i = 0; i <= 32; ++i) {
++            VARINT_EXACT_BYTE_LENGTHS[i] = (int) Math.ceil((31d - (i - 1)) / 7d);
++        }
++        VARINT_EXACT_BYTE_LENGTHS[32] = 1; // Special case for the number 0.
++    }
++    // DivineMC end
++
+     public static int getVarIntSize(int value) {
++        // DivineMC start - Optimize varints
++        if (DivineConfig.doOptimizeVarints) {
++            return VARINT_EXACT_BYTE_LENGTHS[Integer.numberOfLeadingZeros(value)];
++        }
++        // DivineMC end
+         for (int j = 1; j < 5; ++j) {
+             if ((value & -1 << j * 7) == 0) {
+                 return j;
+@@ -615,6 +632,23 @@ public class FriendlyByteBuf extends ByteBuf {
+     }
+ 
+     public FriendlyByteBuf writeVarInt(int value) {
++        // DivineMC start - Optimize varints
++        if (DivineConfig.doOptimizeVarints) {
++            if ((value & (0xFFFFFFFF << 7)) == 0) {
++                writeByte(value);
++            } else if ((value & (0xFFFFFFFF << 14)) == 0) {
++                int w = (value & 0x7F | 0x80) << 8 | (value >>> 7);
++                writeShort(w);
++            } else {
++                while ((value & -128) != 0) {
++                    this.writeByte(value & 127 | 128);
++                    value >>>= 7;
++                }
++                this.writeByte(value);
++            }
++            return this;
++        }
++        // DivineMC end
+         while ((value & -128) != 0) {
+             this.writeByte(value & 127 | 128);
+             value >>>= 7;

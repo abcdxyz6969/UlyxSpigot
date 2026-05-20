@@ -1,0 +1,18 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Paul Sauve <paul@technove.co>
+Date: Sat, 19 Dec 2020 19:06:37 -0600
+Subject: [PATCH] Expose findClass for profiler
+
+
+diff --git a/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java b/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java
+index c53cac5cbaa65a1c984043f69d159118c80fa6dd..06c7e101796188c0245e4647657b190a5576cd6c 100644
+--- a/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java
++++ b/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java
+@@ -208,6 +208,7 @@ public final class PluginClassLoader extends URLClassLoader implements io.paperm
+         throw new ClassNotFoundException(name);
+     }
+ 
++    public boolean _airplane_hasClass(@NotNull String name) { return this.classes.containsKey(name); } // Pufferfish
+     @Override
+     protected Class<?> findClass(String name) throws ClassNotFoundException {
+         if (name.startsWith("org.bukkit.") || name.startsWith("net.minecraft.")) {

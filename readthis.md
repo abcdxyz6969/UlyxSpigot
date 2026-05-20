@@ -329,3 +329,47 @@
   - Neu config bat: pathfinding chay tren worker pool theo so thread da config.
 - File:
   - `paper-server/patches/sources/net/minecraft/world/level/pathfinder/PathFinder.java.patch`
+
+### Async + reference sync update (turn nay)
+- Da push batch code moi len `origin/main` truoc do voi commit `ba8e511`.
+- Noi dung chinh cua batch nay:
+  - Them `asynchronous.mob-spawning.enabled` va class `UlyxAsyncMobSpawning`.
+  - Cap nhat `UlyxAsyncWorldTicking`.
+  - Them limiter `limiters.item.max-merge-attempts-per-tick` qua `UlyxItemMergeLimiter` + hook trong `ItemEntity`.
+  - Them them cac toggle/config moi trong `UlyxConfig` va 2 file yaml cho nhom:
+    - `asynchronous.chunks-sending`
+    - `experimental.compactPalettes`
+    - `experimental.netty-transport-type`
+    - `misc.sentry.*`
+    - `sounds.disablePiglinAngerSound`
+    - `sounds.disableShieldSounds`
+    - `sounds.disablePistonSounds`
+    - `performance.optimiseDataPacks`
+    - `performance.cacheWorldConfigurations`
+    - `performance.disableServerDebug`
+    - `performance.biome-seed.*`
+    - `performance.dynamic-brain.*`
+    - `behavior.disableProjectileMarginExpansion`
+    - `behavior.structures.mineshaftMinYLevel`
+    - `behavior.structures.strongholdMinYLevel`
+    - `behavior.structures.strongholdMaxYLevel`
+- Patch/NMS hook moi trong batch nay:
+  - `NaturalSpawner.java.patch`
+  - `ProjectileUtil.java.patch`
+  - `MineshaftStructure.java.patch`
+  - `StrongholdStructure.java.patch`
+  - `PistonBaseBlock.java.patch`
+  - `EventLoopGroupHolder.java.patch`
+  - `ServerChunkCache.java.patch`
+  - `MinecraftServer.java.patch`
+  - `ZombifiedPiglin.java.patch`
+- Reference source da dua vao repo de doi chieu code:
+  - `divinemc-forcode/`
+  - `leaf-forcode/`
+  - `Pufferfish/`
+- Luu y reference folders:
+  - Chi de tham chieu code, khong duoc include trong `settings.gradle.kts` hay build graph cua repo chinh.
+  - `Pufferfish` goc la mot nested git repo; khi dua vao repo nay can add theo file content, khong add kieu embedded submodule.
+- Van giu quy tac local:
+  - khong push `.tmp-universe-classes/` vi >100MB
+  - khong build local tren Termux neu khong duoc yeu cau ro rang

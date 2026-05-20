@@ -1,0 +1,51 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: NONPLAYT <76615486+NONPLAYT@users.noreply.github.com>
+Date: Mon, 27 Jan 2025 20:53:24 +0300
+Subject: [PATCH] Configuration
+
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+index f2a1fd94c62fff6f233170c52e0ffc72c3e2955d..e5bde8b32ae09e769c1c0f95c069ab1df8649d73 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+@@ -1007,6 +1007,7 @@ public final class CraftServer implements Server {
+         org.spigotmc.SpigotConfig.init((File) this.console.options.valueOf("spigot-settings")); // Spigot
+         this.console.paperConfigurations.reloadConfigs(this.console);
+         org.purpurmc.purpur.PurpurConfig.init((File) console.options.valueOf("purpur-settings")); // Purpur - Purpur config files
++        org.bxteam.divinemc.config.DivineConfig.init((File) console.options.valueOf("divinemc-settings")); // DivineMC - Configuration
+         for (ServerLevel world : this.console.getAllLevels()) {
+             // world.serverLevelData.setDifficulty(config.difficulty); // Paper - per level difficulty
+             world.setSpawnSettings(world.isSpawningMonsters()); // Paper - per level difficulty (from MinecraftServer#setDifficulty(ServerLevel, Difficulty, boolean))
+@@ -1023,6 +1024,13 @@ public final class CraftServer implements Server {
+             }
+             world.spigotConfig.init(); // Spigot
+             world.purpurConfig.init(); // Purpur - Purpur config files
++            // DivineMC start - Configuration
++            try {
++                world.divineConfig.init();
++            } catch (IOException e) {
++                this.logger.log(Level.WARNING, "Failed to reload DivineMC configuration for world " + world.dimension().identifier(), e);
++            }
++            // DivineMC end - Configuration
+         }
+ 
+         Plugin[] pluginClone = pluginManager.getPlugins().clone(); // Paper
+diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
+index e6ea34b18c6db63efa77bb67d3484e4d66315ed6..533f389762da7e049d1ec078f486089398621543 100644
+--- a/src/main/java/org/bukkit/craftbukkit/Main.java
++++ b/src/main/java/org/bukkit/craftbukkit/Main.java
+@@ -147,6 +147,14 @@ public class Main {
+                     .describedAs("Yml file");
+                 // Purpur end - Purpur config files
+ 
++                // DivineMC start - Configuration
++                acceptsAll(asList("divinemc", "divinemc-settings"), "File for DivineMC settings")
++                    .withRequiredArg()
++                    .ofType(File.class)
++                    .defaultsTo(new File("divinemc.yml"))
++                    .describedAs("Yml file");
++                // DivineMC end - Configuration
++
+                 this.accepts("server-name", "Name of the server")
+                         .withRequiredArg()
+                         .ofType(String.class)

@@ -1,0 +1,16 @@
+# IDE and Gradle things
+build
+.gradle
+run
+.idea
+
+# Server things
+/divinemc-server/build.gradle.kts
+/divinemc-server/src/minecraft
+/paper-server
+/purpur-server
+/divinemc-api/build.gradle.kts
+/paper-api
+/purpur-api
+*.jar
+changelog.md
